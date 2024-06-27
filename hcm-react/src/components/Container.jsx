@@ -6,6 +6,8 @@ import './styles/styles.css';
 import './styles/table-styles.css';
 import details from "./Images And Icons/add_patient.png";
 import account from "./Images And Icons/user-doctor-solid.svg";
+import 'bootstrap/dist/js/bootstrap.bundle.min.js';
+
 
 const HomeopathicConsultancyManagement = () => {
 
