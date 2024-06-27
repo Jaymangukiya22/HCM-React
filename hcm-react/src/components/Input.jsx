@@ -1228,8 +1228,44 @@
 // export default Input;
 
 import React from "react";
+import { useState, useEffect } from "react";
 
 function Input() {
+  const [activeTab, setActiveTab] = useState("personal");
+
+  // Function to handle tab change
+  const handleTabChange = (tabName) => {
+    setActiveTab(tabName);
+  };
+  const [labFields, setLabFields] = useState([
+    { test: "", date: "", remarks: "", file: null },
+  ]);
+  const [isEditable, setIsEditable] = useState(true);
+
+  const savelab = () => {
+    setIsEditable(!isEditable);
+  };
+
+  const addlab = () => {
+    setLabFields([
+      ...labFields,
+      { test: "", date: "", remarks: "", file: null },
+    ]);
+  };
+
+  const deletelab = (index) => {
+    if (labFields.length > 1) {
+      const newLabFields = labFields.filter((_, i) => i !== index);
+      setLabFields(newLabFields);
+    }
+  };
+
+  const handleLabFieldChange = (index, field, value) => {
+    const newLabFields = [...labFields];
+    newLabFields[index][field] = value;
+    setLabFields(newLabFields);
+  };
+
   return (
     <div style={{ backgroundColor: "#0b6e4f" }}>
       <div className="">
@@ -1257,6 +1293,7 @@ function Input() {
                   >
                     History
                   </a>
+                             
                 </li>
                 <li className="nav-item">
                   <a
@@ -1660,6 +1697,398 @@ function Input() {
                           </div>
                         </div>
                       </div>
+                    </div>
+                  </form>
+                </div>
+                <div id="observations" className="tab-pane fade">
+                  <form action="">
+                    <div className="d-flex justify-content-between align-items-center mb-3">
+                      <h3>General Observations</h3>
+                      <button type="submit" className="btn btn-success ">
+                        Save
+                      </button>
+                    </div>
+                    <div id="content">
+                      <div className="form-floating">
+                        <textarea
+                          className="form-control"
+                          style={{ minHeight: "10vh" }}
+                          placeholder="head/neck"
+                          id="head"
+                        ></textarea>
+                        <label htmlFor="head">Head/Neck</label>
+                      </div>
+                      <br />
+                      <div className="form-floating">
+                        <textarea
+                          className="form-control"
+                          style={{ minHeight: "10vh" }}
+                          placeholder="mouth"
+                          id="mouth"
+                        ></textarea>
+                        <label htmlFor="mouth">Mouth/Tongue</label>
+                      </div>
+                      <br />
+                      <div className="form-floating">
+                        <textarea
+                          className="form-control"
+                          style={{ minHeight: "10vh" }}
+                          placeholder="eye"
+                          id="eye"
+                        ></textarea>
+                        <label htmlFor="eye">Eye/Ear</label>
+                      </div>
+                      <br />
+                      <div className="form-floating">
+                        <textarea
+                          className="form-control"
+                          style={{ minHeight: "10vh" }}
+                          placeholder="face"
+                          id="face"
+                        ></textarea>
+                        <label htmlFor="face">Face/Color</label>
+                      </div>
+                      <br />
+                      <div className="form-floating">
+                        <textarea
+                          className="form-control"
+                          style={{ minHeight: "10vh" }}
+                          placeholder="nose"
+                          id="nose"
+                        ></textarea>
+                        <label htmlFor="nose">Nose</label>
+                      </div>
+                      <br />
+                      <div className="input-group mb-3">
+                        <span className="input-group-text">Chest</span>
+                        <div className="form-floating">
+                          <textarea
+                            className="form-control"
+                            id="respiratory"
+                            placeholder="Respiratory"
+                          ></textarea>
+                          <label htmlFor="respiratory">Respiratory</label>
+                        </div>
+                        <div className="form-floating">
+                          <textarea
+                            className="form-control"
+                            id="cardiac"
+                            placeholder="Cardiac"
+                          ></textarea>
+                          <label htmlFor="cardiac">Cardiac</label>
+                        </div>
+                      </div>
+                      <br />
+                      <div className="form-floating">
+                        <textarea
+                          className="form-control"
+                          style={{ minHeight: "10vh" }}
+                          placeholder="abdomen"
+                          id="abdomen"
+                        ></textarea>
+                        <label htmlFor="abdomen">Abdomen/Pelvis</label>
+                      </div>
+                      <br />
+                      <div className="input-group mb-3">
+                        <span className="input-group-text">Genitalia</span>
+                        <div className="form-floating">
+                          <textarea
+                            className="form-control"
+                            id="menses"
+                            placeholder="Menses"
+                          ></textarea>
+                          <label htmlFor="menses">Menses</label>
+                        </div>
+                        <div className="form-floating">
+                          <textarea
+                            className="form-control"
+                            id="genitalia"
+                            placeholder="Genitalia"
+                          ></textarea>
+                          <label htmlFor="genitalia">Genitalia</label>
+                        </div>
+                      </div>
+                      <br />
+                      <div className="form-floating">
+                        <textarea
+                          className="form-control"
+                          style={{ minHeight: "10vh" }}
+                          placeholder="limb"
+                          id="limb"
+                        ></textarea>
+                        <label htmlFor="limb">Limb</label>
+                      </div>
+                      <br />
+                      <div className="form-floating">
+                        <textarea
+                          className="form-control"
+                          style={{ minHeight: "10vh" }}
+                          placeholder="back"
+                          id="back"
+                        ></textarea>
+                        <label htmlFor="back">Back/Lumber</label>
+                      </div>
+                      <br />
+                      <div className="form-floating">
+                        <textarea
+                          className="form-control"
+                          style={{ minHeight: "13vh" }}
+                          placeholder="skin"
+                          id="skin"
+                        ></textarea>
+                        <label htmlFor="skin">
+                          Skin/Condition/Perspiration
+                        </label>
+                      </div>
+                      <br />
+                    </div>
+                  </form>
+                </div>
+                <div id="vitals" className="tab-pane fade">
+                  <form action="">
+                    <div className="d-flex justify-content-between align-items-center mb-3">
+                      <h3>Vitals</h3>
+                      <button type="submit" className="btn btn-success ">
+                        Save
+                      </button>
+                    </div>
+
+                    <div id="content">
+                      <div className="form-floating">
+                        <textarea
+                          className="form-control"
+                          style={{ minHeight: "10vh" }}
+                          placeholder="appetite"
+                          id="appetite"
+                        ></textarea>
+                        <label htmlFor="appetite">Appetite</label>
+                      </div>
+                      <br />
+
+                      <div className="form-floating">
+                        <textarea
+                          className="form-control"
+                          style={{ minHeight: "10vh" }}
+                          placeholder="thirst"
+                          id="thirst"
+                        ></textarea>
+                        <label htmlFor="thirst">Thirst</label>
+                      </div>
+                      <br />
+
+                      <div className="form-floating">
+                        <textarea
+                          className="form-control"
+                          style={{ minHeight: "10vh" }}
+                          placeholder="stool"
+                          id="stool"
+                        ></textarea>
+                        <label htmlFor="stool">Stool</label>
+                      </div>
+                      <br />
+
+                      <div className="form-floating">
+                        <textarea
+                          className="form-control"
+                          style={{ minHeight: "10vh" }}
+                          placeholder="urine"
+                          id="urine"
+                        ></textarea>
+                        <label htmlFor="urine">Urine</label>
+                      </div>
+                      <br />
+
+                      <div className="form-floating">
+                        <textarea
+                          className="form-control"
+                          style={{ minHeight: "10vh" }}
+                          placeholder="sleep"
+                          id="sleep"
+                        ></textarea>
+                        <label htmlFor="sleep">Sleep/Dream</label>
+                      </div>
+                      <br />
+
+                      <div className="form-floating">
+                        <textarea
+                          className="form-control"
+                          style={{ minHeight: "10vh" }}
+                          placeholder="discharge"
+                          id="discharge"
+                        ></textarea>
+                        <label htmlFor="discharge">Discharge (if any)</label>
+                      </div>
+                      <br />
+                    </div>
+                  </form>
+                </div>
+                <div id="symptoms" className="tab-pane fade">
+                  <form action="">
+                    <div className="d-flex justify-content-between align-items-center mb-3">
+                      <h3>Symptoms and Conditions</h3>
+                      <button type="submit" className="btn btn-success ">
+                        Save
+                      </button>
+                    </div>
+                    <div id="content">
+                      <div className="form-floating">
+                        <textarea
+                          className="form-control"
+                          style={{ minHeight: "10vh" }}
+                          placeholder="addiction"
+                          id="addiction"
+                        ></textarea>
+                        <label htmlFor="addiction">Addiction (if any)</label>
+                      </div>
+                      <br />
+                      <div className="form-floating">
+                        <textarea
+                          className="form-control"
+                          style={{ minHeight: "10vh" }}
+                          placeholder="desire"
+                          id="desire"
+                        ></textarea>
+                        <label htmlFor="desire">Desire</label>
+                      </div>
+                      <br />
+                      <div className="form-floating">
+                        <textarea
+                          className="form-control"
+                          style={{ minHeight: "10vh" }}
+                          placeholder="aversion"
+                          id="aversion"
+                        ></textarea>
+                        <label htmlFor="aversion">Aversion</label>
+                      </div>
+                      <br />
+                      <div className="form-floating">
+                        <textarea
+                          className="form-control"
+                          style={{ minHeight: "10vh" }}
+                          placeholder="aggravation"
+                          id="aggravation"
+                        ></textarea>
+                        <label htmlFor="aggravation">Aggravation</label>
+                      </div>
+                      <br />
+                      <div className="form-floating">
+                        <textarea
+                          className="form-control"
+                          style={{ minHeight: "10vh" }}
+                          placeholder="amelioration"
+                          id="amelioration"
+                        ></textarea>
+                        <label htmlFor="amelioration">Amelioration</label>
+                      </div>
+                      <br />
+                    </div>
+                  </form>
+                </div>
+                <div
+                  id="lab"
+                  className={`tab-pane fade ${
+                    activeTab === "lab" && "show active"
+                  }`}
+                >
+                  <form>
+                    <div className="d-flex justify-content-between align-items-center mb-3">
+                      <h3>Lab Tests</h3>
+                      <button type="submit" className="btn btn-success">
+                        Save
+                      </button>
+                    </div>
+                    <div id="lab-fields">
+                      {labFields.map((field, index) => (
+                        <div className="input-group mb-2" key={index}>
+                          <select
+                            name="lab[]"
+                            className="form-select"
+                            aria-label="status-select"
+                            style={{
+                              borderTopLeftRadius: "10px",
+                              borderBottomLeftRadius: "10px",
+                            }}
+                            value={field.test}
+                            onChange={(e) =>
+                              handleLabFieldChange(
+                                index,
+                                "test",
+                                e.target.value
+                              )
+                            }
+                            disabled={!isEditable}
+                          >
+                            <option value="">Select Lab Test</option>
+                            <option value="Blood Test">Blood Test</option>
+                            <option value="Biopsy">Biopsy</option>
+                          </select>
+                          <input
+                            type="date"
+                            name="dt[]"
+                            className="form-control"
+                            value={field.date}
+                            onChange={(e) =>
+                              handleLabFieldChange(
+                                index,
+                                "date",
+                                e.target.value
+                              )
+                            }
+                            disabled={!isEditable}
+                          />
+                          <input
+                            name="remarks[]"
+                            style={{ width: "400px" }}
+                            type="text"
+                            className="form-control"
+                            value={field.remarks}
+                            onChange={(e) =>
+                              handleLabFieldChange(
+                                index,
+                                "remarks",
+                                e.target.value
+                              )
+                            }
+                            placeholder="Remarks"
+                            disabled={!isEditable}
+                          />
+                          <input
+                            className="form-control p-3 bg-light"
+                            style={{ width: "50px" }}
+                            type="file"
+                            name="file[]"
+                            onChange={(e) =>
+                              handleLabFieldChange(
+                                index,
+                                "file",
+                                e.target.files[0]
+                              )
+                            }
+                            disabled={!isEditable}
+                          />
+                          <button
+                            className="btn btn-success"
+                            type="button"
+                            onClick={savelab}
+                          >
+                            <i className="fa-solid fa-check"></i>
+                          </button>
+                          <button
+                            className="btn btn-danger"
+                            type="button"
+                            onClick={() => deletelab(index)}
+                          >
+                            <i className="fa-solid fa-trash"></i>
+                          </button>
+                          <button
+                            className="btn btn-primary"
+                            type="button"
+                            onClick={addlab}
+                          >
+                            <i className="fa-solid fa-plus"></i>
+                          </button>
+                        </div>
+                      ))}
                     </div>
                   </form>
                 </div>
