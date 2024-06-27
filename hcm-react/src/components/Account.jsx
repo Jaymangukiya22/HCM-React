@@ -1,6 +1,4 @@
-function Account(){
-    return(
-        <div></div>
-    )
+function Account() {
+  return <div></div>;
 }
-export default Account
+export default Account;
