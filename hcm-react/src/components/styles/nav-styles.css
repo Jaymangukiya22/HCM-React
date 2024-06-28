@@ -48,24 +48,43 @@ a {
 }
 
 .left-nav-item.active {
-    background-color: #d1d3ab00 !important;
+    /* background-color: #d1d3ab00 !important; */
     /* Yellowish tone background */
-    color: #000000 !important;
+    color: #ffffff !important;
+    background-color:  #0b6e4f  !important;
+    border: #0b6e4f 1px solid !important;
+
+
     /* Dark greenish text color */
-    font-weight: 600;
+    /* font-weight: 600; */
     /* text-decoration: underline; */
 
 }
 
 a.left-nav-item {
     color: #0b6e4f;
+    border: #00000025 1px solid !important;
+    border-radius: 10px;
+    padding:9px;
+    margin: 2px;
+
+
+}
+
+a.left-nav-item:hover {
+
+    background-color:  #0b6e4f13  !important;
+    border: #0b6e4f63 1px solid !important;
+    
 
 
 }
 
 a:hover {
-    opacity: 85%;
+    opacity: 80%;
+    /* background-color: #ffffff2f; */
     transition: all ease-in-out 0.4s;
+    
 
 
 }
