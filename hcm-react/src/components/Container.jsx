@@ -2,6 +2,7 @@ import React from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import '@fortawesome/fontawesome-free/css/all.min.css';
 import './styles/navbar.css';
+import './styles/details.css';
 import './styles/styles.css';
 import './styles/table-styles.css';
 import details from "./Images And Icons/add_patient.png";
@@ -13,6 +14,7 @@ const HomeopathicConsultancyManagement = () => {
 
   return (
 
+    
     
 
     
