@@ -1,6 +1,6 @@
 import React from "react";
 import "./styles/admin.css";
-
+import { Link } from "react-router-dom";
 function Admin() {
   return (
     <div>
@@ -49,16 +49,16 @@ function Admin() {
               </a>
             </li>
             <li className="sidebar-item mb-1">
-              <a href="lab_test.html" className="sidebar-link">
+              <Link to="/lab" className="sidebar-link">
                 <i className="fa-solid fa-microscope"></i>
                 <span className="ms-1">Lab Tests</span>
-              </a>
+              </Link>
             </li>
             <li className="sidebar-item mb-1">
-              <a href="index.html" className="sidebar-link">
+              <Link to="/lab" className="sidebar-link">
                 <i className="fa-solid fa-house"></i>
                 <span className="ms-1">Home</span>
-              </a>
+              </Link>
             </li>
           </ul>
           <div className="sidebar-footer">
