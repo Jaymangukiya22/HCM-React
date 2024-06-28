@@ -5,6 +5,7 @@ import Settings from "./components/Settings";
 import Account from "./components/Account";
 import Login from "./components/Login";
 import Admin from "./components/Admin";
+import AddLab from "./components/AddLab";
 
 function App() {
   return (
@@ -17,6 +18,7 @@ function App() {
         <Route exact path="/profile" element={<Account />} />
         <Route exact path="/login" element={<Login />} />
         <Route exact path="/admin" element={<Admin />} />
+        <Route exact path="/lab" element={<AddLab />} />
       </Routes>
     </Router>
   );
