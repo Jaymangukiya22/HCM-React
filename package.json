@@ -3,6 +3,7 @@
     "bootstrap": "^5.3.3",
     "datatables.net": "^2.0.8",
     "datatables.net-dt": "^2.0.8",
+    "font-awesome": "^4.7.0",
     "jquery": "^3.7.1"
   }
 }
