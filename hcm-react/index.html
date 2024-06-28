@@ -24,5 +24,22 @@
     <script type="module" src="/src/main.jsx"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/2.10.2/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/5.3.0/js/bootstrap.min.js"></script>
+    <script> function addInputFields() {
+      var container = document.getElementById('input-fields');
+      var newDiv = document.createElement('div');
+      newDiv.classList.add('input-group', 'mt-2', 'input-group-custom');
+      newDiv.innerHTML = `
+  <input type="text" class="form-control p-3 border-0 rounded-3 me-1" name="medicine[]" placeholder="Enter Medicine" style="background-color: #ffffff; color: black; min-width: 37% !important">
+  <input type="text" class="form-control p-3 border-0 rounded-3 ms-1 me-1" name="dose[]" placeholder="Enter Dose" style="background-color: #ffffff; color: black; min-width: 37%">
+  <button type="button" class="form-control p-2 border-0 rounded-3 me-1 ms-1" onclick="removeInputFields(this)" style="background-color: rgba(255, 0, 0, 0.654); color: bisque; min-width: 5%; text-align:center;">-</button>
+  <button type="button" class="form-control p-2 border-0 rounded-3 ms-1" onclick="addInputFields()" style="background-color: #1da453; color: bisque; min-width: 5%; text-align:center;">+</button>
+`;
+      container.appendChild(newDiv);
+  }
+
+  function removeInputFields(button) {
+      button.parentElement.remove();
+  }
+</script>
   </body>
 </html>
