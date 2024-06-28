@@ -17,7 +17,7 @@ function Login() {
     const admin_pass = "admin";
 
     if (email === email_final && password === pass_final) {
-      navigate("/checkup"); // replace with your route
+      navigate("/"); // replace with your route
     } else if (email === admin_email && password === admin_pass) {
       navigate("/admin"); // replace with your route
     } else {
