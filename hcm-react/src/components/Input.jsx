@@ -1,8 +1,6 @@
-
 import React, { useState, useEffect } from "react";
-import './styles/nav-styles.css';
-import './styles/details.css';
-
+import "./styles/nav-styles.css";
+import "./styles/details.css";
 
 function Input() {
   // State to manage left side tabs
@@ -106,7 +104,6 @@ function Input() {
                   >
                     History
                   </a>
-             
                 </li>
                 <li className="nav-item">
                   <a
@@ -161,10 +158,18 @@ function Input() {
                 style={{ maxHeight: "80vh", overflowY: "scroll", contentStyle }}
               >
                 <div id="personal" className="tab-pane fade show active">
-                  <form>
+                  <form id="personal1">
                     <div className="d-flex justify-content-between align-items-center mb-3">
                       <h3>Personal Details</h3>
-                      <button type="submit" className="btn btn-success">
+                      <button
+                        value="personal_btn"
+                        type="submit"
+                        className="btn btn-success"
+                        onClick={(e) => {
+                          e.preventDefault();
+                          PushData("personal1");
+                        }}
+                      >
                         Save
                       </button>
                     </div>
@@ -363,10 +368,14 @@ function Input() {
                   </form>
                 </div>
                 <div id="history" className="tab-pane fade">
-                  <form action="">
+                  <form action="" id="history">
                     <div className="d-flex justify-content-between align-items-center mb-3">
                       <h3>History</h3>
-                      <button type="submit" className="btn btn-success">
+                      <button
+                        value="history"
+                        type="submit"
+                        className="btn btn-success"
+                      >
                         Save
                       </button>
                     </div>
@@ -427,10 +436,14 @@ function Input() {
                   </form>
                 </div>
                 <div id="measurements" className="tab-pane fade">
-                  <form action="">
+                  <form action="" id="measurements">
                     <div className="d-flex justify-content-between align-items-center mb-3">
                       <h3>Measurements</h3>
-                      <button type="submit" className="btn btn-success">
+                      <button
+                        value="measurements"
+                        type="submit"
+                        className="btn btn-success"
+                      >
                         Save
                       </button>
                     </div>
@@ -498,7 +511,15 @@ function Input() {
                               />
                               <label htmlFor="systolic">Systolic (mm Hg)</label>
                             </div>
-                            <span className="input-group-text" style={{backgroundColor:"white", color:"black" }}>/</span>
+                            <span
+                              className="input-group-text"
+                              style={{
+                                backgroundColor: "white",
+                                color: "black",
+                              }}
+                            >
+                              /
+                            </span>
                             <div className="form-floating">
                               <input
                                 type="number"
@@ -517,7 +538,7 @@ function Input() {
                   </form>
                 </div>
                 <div id="observations" className="tab-pane fade">
-                  <form action="">
+                  <form action="" id="">
                     <div className="d-flex justify-content-between align-items-center mb-3">
                       <h3>General Observations</h3>
                       <button type="submit" className="btn btn-success ">
@@ -661,7 +682,7 @@ function Input() {
                   </form>
                 </div>
                 <div id="vitals" className="tab-pane fade">
-                  <form action="">
+                  <form action="" id="">
                     <div className="d-flex justify-content-between align-items-center mb-3">
                       <h3>Vitals</h3>
                       <button type="submit" className="btn btn-success ">
@@ -739,7 +760,7 @@ function Input() {
                   </form>
                 </div>
                 <div id="symptoms" className="tab-pane fade">
-                  <form action="">
+                  <form action="" id="">
                     <div className="d-flex justify-content-between align-items-center mb-3">
                       <h3>Symptoms and Conditions</h3>
                       <button type="submit" className="btn btn-success ">
@@ -1019,7 +1040,10 @@ function Input() {
                     <span
                       className="input-group-text fixed-width p-3 border-0"
                       id="inputGroup-sizing-default"
-                      style={{ color: "bisque", backgroundColor:"black !important" }}
+                      style={{
+                        color: "bisque",
+                        backgroundColor: "black !important",
+                      }}
                     >
                       Photos
                     </span>
@@ -1189,7 +1213,7 @@ function Input() {
                       To be paid
                     </span>
                     <input
-                    id="present_amt"
+                      id="present_amt"
                       type="number"
                       className="form-control border-0 right-align"
                       aria-label="Sizing example input"
@@ -1200,7 +1224,6 @@ function Input() {
                   </div>
                   <div className="input-group mt-2">
                     <span
-
                       className="input-group-text p-3 border-0"
                       id="inputGroup-sizing-default"
                       style={{
@@ -1213,7 +1236,7 @@ function Input() {
                       Amount paid
                     </span>
                     <input
-                    id="paid_amt"
+                      id="paid_amt"
                       type="number"
                       className="form-control border-0 right-align"
                       aria-label="Sizing example input"

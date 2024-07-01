@@ -23,7 +23,10 @@ class select
     }
     public function selectbyid($id)
     {
-        $data = "SELECT * FROM " . $this->table;
+        $key=array_keys($id);
+        $val=array_values($id);
+
+        $data = "SELECT * FROM " . $this->table . "WHERE" . $key. "=" . $val;
         $result = $this->conn->query($data);
 
         if ($result->num_rows > 0) {

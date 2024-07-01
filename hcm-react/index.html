@@ -90,6 +90,30 @@ function test() {
 
    
     </script>
+    <script>
+      async function PushData(val){
+        const form =document.getElementById(val);
+        const formdata = new FormData(form);
+
+        const url ="action.php";
+        const response =await fetch (url, 
+        {method: 'POST',
+        headers : { 'Content-Type': 'application/json',},  
+        body: JSON.stringify({data :formdata,action:"insert"})
+
+      });
+
+      const result= await response.json();
+      if(result.status===true){
+        console.log(result);
+      }else{
+        console.error('Error: ',result);
+        return;
+      }
+  } 
+    </script>
+
+
     <!-- <script>
       $(document).ready(function () {
         var currentDate = new Date();

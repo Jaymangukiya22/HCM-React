@@ -39,6 +39,10 @@ class DB
     static function update($table, $data, $id = null)
     {
         try {
+            if($id===null){
+            return json_encode(['status' => 'error', 'message' => "id is null"]);
+
+            }
             $host   = DB_HOST;
             $user   = DB_USER;
             $pass   = DB_PASS;
