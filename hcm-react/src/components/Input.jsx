@@ -162,12 +162,12 @@ function Input() {
                     <div className="d-flex justify-content-between align-items-center mb-3">
                       <h3>Personal Details</h3>
                       <button
-                        value="personal_btn"
-                        type="submit"
+                        type="button"
                         className="btn btn-success"
+                        value="personal1"
                         onClick={(e) => {
                           e.preventDefault();
-                          PushData("personal1");
+                          PushData(e.target.value);
                         }}
                       >
                         Save
@@ -181,6 +181,7 @@ function Input() {
                           className="form-control"
                           id="name"
                           placeholder="name"
+                          name="name"
                         />
                         <label htmlFor="name">Name</label>
                       </div>
@@ -255,6 +256,7 @@ function Input() {
                                 className="form-control"
                                 id="age"
                                 placeholder="age"
+                                name="age"
                               />
                               <label htmlFor="age">Age</label>
                             </div>
@@ -266,6 +268,7 @@ function Input() {
                                 className="form-control"
                                 id="date"
                                 placeholder="date"
+                                name="dob"
                               />
                               <label htmlFor="date">Date</label>
                             </div>
@@ -279,6 +282,7 @@ function Input() {
                               className="form-select"
                               id="marital"
                               aria-label="Marital Status"
+                              name="marital"
                             >
                               <option selected>Select</option>
                               <option value="married">Married</option>
@@ -307,6 +311,7 @@ function Input() {
                               className="form-control"
                               id="constitution"
                               placeholder="constitution"
+                              name="constitution"
                             />
                             <label htmlFor="constitution">Constitution</label>
                           </div>
@@ -317,6 +322,7 @@ function Input() {
                           className="form-control"
                           placeholder="Enter address"
                           id="address"
+                          name="address"
                         ></textarea>
                         <label htmlFor="address">Address</label>
                       </div>
@@ -329,6 +335,7 @@ function Input() {
                               className="form-control"
                               id="contact"
                               placeholder="contact"
+                              name="mobile"
                             />
                             <label htmlFor="contact">Contact</label>
                           </div>
@@ -340,6 +347,7 @@ function Input() {
                               className="form-control"
                               id="occupation"
                               placeholder="occupation"
+                              name="occupation"
                             />
                             <label htmlFor="occupation">Occupation</label>
                           </div>
@@ -351,6 +359,7 @@ function Input() {
                               className="form-control"
                               id="child"
                               placeholder="child"
+                              name="child"
                             />
                             <label htmlFor="child">Child</label>
                           </div>
@@ -362,6 +371,7 @@ function Input() {
                           type="file"
                           className="form-control"
                           id="photo"
+                          name="photo"
                         />
                       </div>
                     </div>

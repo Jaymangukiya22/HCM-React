@@ -91,26 +91,40 @@ function test() {
    
     </script>
     <script>
-      async function PushData(val){
-        const form =document.getElementById(val);
-        const formdata = new FormData(form);
+      async function PushData(val) {
+        const form = document.getElementById(val);
+        const formData = new FormData(form);
+      
+        // Convert formData to a plain object
+        const formDataObj = {};
+        formData.forEach((value, key) => {
+          formDataObj[key] = value;
+        });
+        console.log(formDataObj);
+      
+       // const url = "./action.php";
+        const response = await fetch( "http://localhost/HCM-React/hcm-react/action.php", {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ data: formDataObj, action: "insert" }
 
-        const url ="action.php";
-        const response =await fetch (url, 
-        {method: 'POST',
-        headers : { 'Content-Type': 'application/json',},  
-        body: JSON.stringify({data :formdata,action:"insert"})
+          )
 
-      });
-
-      const result= await response.json();
-      if(result.status===true){
-        console.log(result);
-      }else{
-        console.error('Error: ',result);
-        return;
+        });
+      
+        const responseText = await response.text(); // Get response as json
+        try {
+          const result = JSON.parse(responseText); // Parse the JSON
+          if (result.status) {
+            console.log(result);
+          } else {
+            console.error('Error: ', result.message);
+          }
+        } catch (error) {
+          console.error('Failed to parse JSON response: ', responseText);
+        }
       }
-  } 
+      
     </script>
 
 

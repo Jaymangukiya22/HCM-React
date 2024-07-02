@@ -66,7 +66,8 @@ class DB
             $db = new dbConnection($host, $user, $pass, $dbname);
             $insert = new insert($db->connection(), $table);
             $row = $insert->insertData($data);
-            return json_encode(['status' => 'success', 'message' => 'insert successful', 'data' => $row]);
+            // return json_encode(['status' => 'success', 'message' => 'insert successful', 'data' => $row]);
+            return  $row;            
         } catch (Exception $e) {
             return json_encode(['status' => 'error', 'message' => $e->getMessage()]);
         }

@@ -2,9 +2,9 @@
 
 include './config.php';
 include 'select.php';
-include 'update.php';
+// include 'update.php';
 include 'insert.php';
-include 'delete.php';
+// include 'delete.php';
 
 class dbConnection
 {
