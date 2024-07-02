@@ -1,6 +1,7 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Container from "./components/Container";
 import Input from "./components/Input";
+import FetchData from "./FetchData";
 import Settings from "./components/Settings";
 import Account from "./components/Account";
 import Login from "./components/Login";
@@ -19,6 +20,7 @@ function App() {
         <Route exact path="/login" element={<Login />} />
         <Route exact path="/admin" element={<Admin />} />
         <Route exact path="/lab" element={<AddLab />} />
+        <Route exact path="/fetch" element={<FetchData />} />
       </Routes>
     </Router>
   );
