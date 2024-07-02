@@ -15,7 +15,7 @@ try {
 
         switch ($action) {
             case 'insert':
-                $response = DB::insert('test_details', $input['data']);
+                $response = DB::insert(test_details, $input['data']);
                 if ($response == "Insert Successfully") {
                     echo json_encode(['status' => true, "message" => "Insert Successfully", 'data' => $response]);
                 } else {

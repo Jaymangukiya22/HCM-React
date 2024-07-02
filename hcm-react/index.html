@@ -91,7 +91,7 @@ function test() {
    
     </script>
     <script>
-      async function PushData(val) {
+      async function PushData(val) {//val is the id of the form
         const form = document.getElementById(val);
         const formData = new FormData(form);
       
@@ -101,7 +101,8 @@ function test() {
           formDataObj[key] = value;
         });
         console.log(formDataObj);
-      
+        //remove photo from formDataObj
+        delete formDataObj.photo;
        // const url = "./action.php";
         const response = await fetch( "http://localhost/HCM-React/hcm-react/action.php", {
           method: 'POST',
