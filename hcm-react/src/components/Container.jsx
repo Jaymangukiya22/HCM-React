@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import '@fortawesome/fontawesome-free/css/all.min.css';
 import './styles/navbar.css';
@@ -9,17 +9,71 @@ import details from "./Images And Icons/add_patient.png";
 import account from "./Images And Icons/user-doctor-solid.svg";
 import 'bootstrap/dist/js/bootstrap.bundle.min.js';
 
-
 const HomeopathicConsultancyManagement = () => {
+  const [data, setData] = useState([]);
+  const [searchTerm, setSearchTerm] = useState('');
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [selectedFilters, setSelectedFilters] = useState({
+    caseNo: true,
+    fileNo: true,
+    name: true,
+    mobileNo: true
+  });
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await fetch('http://localhost/HCM-React/hcm-react/fetch_data.php');
+        if (!response.ok) {
+          throw new Error(`Failed to fetch data: ${response.statusText}`);
+        }
+        const jsonData = await response.json();
+        console.log('Fetched data:', jsonData);
+
+        if (jsonData.status) {
+          setData(jsonData.data);
+        } else {
+          setError(jsonData.message);
+        }
+      } catch (error) {
+        console.error('Error fetching data:', error);
+        setError(error.message);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchData();
+  }, []);
+
+  const handleSearchChange = (e) => {
+    setSearchTerm(e.target.value);
+  };
+
+  const handleCheckboxChange = (e) => {
+    const { id, checked } = e.target;
+    setSelectedFilters((prevFilters) => ({
+      ...prevFilters,
+      [id]: checked
+    }));
+  };
+
+  const filteredData = data.filter((item) => {
+    const { caseNo, fileNo, name, mobileNo } = selectedFilters;
+    const search = searchTerm.toLowerCase();
+  
+    return (
+      (caseNo && item.caseno?.toString().toLowerCase().includes(search)) ||
+      (fileNo && item.fileno?.toString().toLowerCase().includes(search)) ||
+      (name && item.name?.toLowerCase().includes(search)) ||
+      (mobileNo && item.mobileno?.toLowerCase().includes(search))
+    );
+  });
+  
 
   return (
-
-    
-    
-
-    
     <div style={{ backgroundColor: '#0b6e4f' }}>
-      
       <nav className="navbar shadow navbar-expand-lg fixed-top">
         <div className="container-fluid">
           <a className="navbar-brand me-auto" id="spmsbranding" href="/">IDEAL</a>
@@ -29,6 +83,8 @@ const HomeopathicConsultancyManagement = () => {
               type="text"
               className="searchbar w-100"
               placeholder="Search"
+              value={searchTerm}
+              onChange={handleSearchChange}
             />
             <button className="btn rounded-5" id="searchbutton">
               <i style={{ color: 'white' }} className="fa-solid fa-magnifying-glass"></i>
@@ -128,10 +184,12 @@ const HomeopathicConsultancyManagement = () => {
                 <input
                   type="checkbox"
                   className="btn-check"
-                  id="btncheck1"
+                  id="caseNo"
                   autoComplete="off"
+                  checked={selectedFilters.caseNo}
+                  onChange={handleCheckboxChange}
                 />
-                <label className="btn rounded-3 btn-checker w-100" htmlFor="btncheck1">
+                <label className="btn rounded-3 btn-checker w-100" htmlFor="caseNo">
                   Case No.
                 </label>
               </div>
@@ -139,10 +197,12 @@ const HomeopathicConsultancyManagement = () => {
                 <input
                   type="checkbox"
                   className="btn-check"
-                  id="btncheck2"
+                  id="fileNo"
                   autoComplete="off"
+                  checked={selectedFilters.fileNo}
+                  onChange={handleCheckboxChange}
                 />
-                <label className="btn rounded-3 btn-checker w-100" htmlFor="btncheck2">
+                <label className="btn rounded-3 btn-checker w-100" htmlFor="fileNo">
                   File No.
                 </label>
               </div>
@@ -150,10 +210,12 @@ const HomeopathicConsultancyManagement = () => {
                 <input
                   type="checkbox"
                   className="btn-check"
-                  id="btncheck3"
+                  id="mobileNo"
                   autoComplete="off"
+                  checked={selectedFilters.mobileNo}
+                  onChange={handleCheckboxChange}
                 />
-                <label className="btn rounded-3 btn-checker w-100" htmlFor="btncheck3">
+                <label className="btn rounded-3 btn-checker w-100" htmlFor="mobileNo">
                   Mobile No.
                 </label>
               </div>
@@ -161,10 +223,12 @@ const HomeopathicConsultancyManagement = () => {
                 <input
                   type="checkbox"
                   className="btn-check"
-                  id="btncheck4"
+                  id="name"
                   autoComplete="off"
+                  checked={selectedFilters.name}
+                  onChange={handleCheckboxChange}
                 />
-                <label className="btn rounded-3 btn-checker w-100" htmlFor="btncheck4">
+                <label className="btn rounded-3 btn-checker w-100" htmlFor="name">
                   Name
                 </label>
               </div>
@@ -174,81 +238,65 @@ const HomeopathicConsultancyManagement = () => {
       </div>
 
       <div className="mt-3 bg-white mx-3 rounded-3 text-align-center p-3 fs-6 table-container">
-        <div className="table-responsive" style={{ maxHeight: '65vh', overflowY: 'scroll', overflowX: 'scroll' }}>
-          <table id="table" className="table table-striped p-3">
-            <thead>
-              <tr>
-                <th scope="col">Case No.</th>
-                <th scope="col">File No.</th>
-                <th scope="col">Name</th>
-                <th scope="col">Mobile No.</th>
-                <th scope="col">Last Visited</th>
-                <th scope="col">Actions</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td>001</td>
-                <td>A123</td>
-                <td>John Doe</td>
-                <td>1234567890</td>
-                <td>2023-12-31</td>
-                <td>
-                  <div className="btn-container">
-                    <a
-                      id="tooltip"
-                      className="btn rounded-4 mb-1 mt-1 w-100 edit-button action-button"
-                      href="/edit"
-                      style={{ backgroundColor: '#d1d3ab' }}
-                    >
-                      <span id="tooltiptext">Edit</span>
-                      <i className="fa-solid fa-pen-to-square" style={{ color: 'black' }}></i>
-                    </a>
-                    <a
-                      id="tooltip"
-                      className="btn rounded-4 mt-1 mb-1 w-100 checkup-button action-button"
-                      href="/checkup"
-                      style={{ backgroundColor: '#0b6e4f' }}
-                    >
-                      <span id="tooltiptext">Patient Checkup</span>
-                      <i className="fa-solid fa-notes-medical" style={{ color: 'white' }}></i>
-                    </a>
-                  </div>
-                </td>
-              </tr>
-              <tr>
-                <td>002</td>
-                <td>B456</td>
-                <td>Jane Smith</td>
-                <td>9876543210</td>
-                <td>2023-11-25</td>
-                <td>
-                  <div className="btn-container">
-                    <a
-                      id="tooltip"
-                      className="btn rounded-4 mb-1 mt-1 w-100 edit-button action-button"
-                      href="/edit"
-                      style={{ backgroundColor: '#d1d3ab' }}
-                    >
-                      <span id="tooltiptext">Edit</span>
-                      <i className="fa-solid fa-pen-to-square" style={{ color: 'black' }}></i>
-                    </a>
-                    <a
-                      id="tooltip"
-                      className="btn rounded-4 mt-1 mb-1 w-100 checkup-button action-button"
-                      href="/checkup"
-                      style={{ backgroundColor: '#0b6e4f' }}
-                    >
-                      <span id="tooltiptext">Patient Checkup</span>
-                      <i className="fa-solid fa-notes-medical" style={{ color: 'white' }}></i>
-                    </a>
-                  </div>
-                </td>
-              </tr>
-              {/* Add more static rows as needed */}
-            </tbody>
-          </table>
-        </div>
+        {loading ? (
+          <div>Loading...</div>
+        ) : error ? (
+          <div>Error: {error}</div>
+        ) : (
+          <div className="table-responsive" style={{ maxHeight: '65vh', overflowY: 'scroll', overflowX: 'hidden' }}>
+            <table id="my-table" className="table table-striped p-3">
+              <thead>
+                <tr>
+                  <th scope="col">Case No.</th>
+                  <th scope="col">File No.</th>
+                  <th scope="col">Name</th>
+                  <th scope="col">Mobile No.</th>
+                  <th scope="col">Last Visited</th>
+                  <th scope="col">Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                {filteredData.length > 0 ? (
+                  filteredData.map((entry) => (
+                    <tr key={entry.caseno}>
+                      <td>{entry.caseno}</td>
+                      <td>{entry.fileno}</td>
+                      <td>{entry.name}</td>
+                      <td>{entry.mobileno}</td>
+                      <td>{entry.lastvisited}</td>
+                      <td>
+                        <div className="btn-container">
+                          <a
+                            id="tooltip"
+                            className="btn rounded-4 mb-1 mt-1 w-100 edit-button action-button"
+                            href="/edit"
+                            style={{ backgroundColor: '#d1d3ab' }}
+                          >
+                            <span id="tooltiptext">Edit</span>
+                            <i className="fa-solid fa-pen-to-square" style={{ color: 'black' }}></i>
+                          </a>
+                          <a
+                            id="tooltip"
+                            className="btn rounded-4 mt-1 mb-1 w-100 checkup-button action-button"
+                            href="/checkup"
+                            style={{ backgroundColor: '#0b6e4f' }}
+                          >
+                            <span id="tooltiptext">Patient Checkup</span>
+                            <i className="fa-solid fa-notes-medical" style={{ color: 'white' }}></i>
+                          </a>
+                        </div>
+                      </td>
+                    </tr>
+                  ))
+                ) : (
+                  <tr>
+                    <td colSpan="6">No data found</td>
+                  </tr>
+                )}
+              </tbody>
+            </table>
+          </div>
+        )}
       </div>
     </div>
   );
