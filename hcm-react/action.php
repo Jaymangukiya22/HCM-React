@@ -16,12 +16,24 @@ try {
         switch ($action) {
             case 'insert':
                 $response = DB::insert(test_details, $input['data']);
-                if ($response == "Insert Successfully") {
-                    echo json_encode(['status' => true, "message" => "Insert Successfully", 'data' => $response]);
+                if ($response['status']=="Insert Successfully") {
+                    echo json_encode(['status' => true, "message" => "Inserted Successfully", 'data' => $response]);
                 } else {
                     echo json_encode(['status' => false, "message" => "Could not insert", 'data' => $response]);
                 }
                 break;
+
+                case 'update':
+                   
+                    print_r($id);
+                    exit();
+                    $response = DB::update(test_details, $input['data'], $id);
+                    if ($response == "Insert Successfully") {
+                        echo json_encode(['status' => true, "message" => "Updated Successfully", 'data' => $response]);
+                    } else {
+                        echo json_encode(['status' => false, "message" => "Could not update", 'data' => $response]);
+                    }
+                    break;
 
             default:
                 echo json_encode(['status' => false, "message" => "Invalid action"]);

@@ -383,8 +383,12 @@ function Input() {
                       <h3>History</h3>
                       <button
                         value="history"
-                        type="submit"
+                        type="button"
                         className="btn btn-success"
+                        onClick={(e) => {
+                          e.preventDefault();
+                          UpdateData(e.target.value);
+                        }}
                       >
                         Save
                       </button>
@@ -397,6 +401,7 @@ function Input() {
                           style={{ minHeight: "13vh" }}
                           placeholder="Past History"
                           id="past"
+                          name="past"
                         ></textarea>
                         <label htmlFor="past">Past History</label>
                       </div>
@@ -407,6 +412,7 @@ function Input() {
                           style={{ minHeight: "13vh" }}
                           placeholder="Family History"
                           id="family"
+                          name="family"
                         ></textarea>
                         <label htmlFor="family">Family History</label>
                       </div>
@@ -417,6 +423,7 @@ function Input() {
                           style={{ minHeight: "13vh" }}
                           placeholder="Present Complain"
                           id="present"
+                          name="present"
                         ></textarea>
                         <label htmlFor="present">Present Complain</label>
                       </div>
@@ -427,6 +434,7 @@ function Input() {
                           style={{ minHeight: "13vh" }}
                           placeholder="disease"
                           id="disease"
+                          name="disease"
                         ></textarea>
                         <label htmlFor="disease">
                           Suffering from other disease
@@ -439,6 +447,7 @@ function Input() {
                           style={{ minHeight: "13vh" }}
                           placeholder="cause"
                           id="cause"
+                          name="cause"
                         ></textarea>
                         <label htmlFor="cause">Cause of Disease if any</label>
                       </div>

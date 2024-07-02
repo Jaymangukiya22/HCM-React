@@ -2,7 +2,7 @@
 
 include './config.php';
 include 'select.php';
-// include 'update.php';
+ include 'update.php';
 include 'insert.php';
 // include 'delete.php';
 
@@ -12,6 +12,7 @@ class dbConnection
     private $user;
     private $pass;
     private $dbname;
+    private $conn;
 
     public function __construct($host, $user, $pass, $dbname)
     {
@@ -23,12 +24,13 @@ class dbConnection
 
     public function connection()
     {
-        
-        $conn = new mysqli($this->host, $this->user, $this->pass, $this->dbname);
-        
-        if ($conn->connect_error) {
-            echo "Database Not Connected !!";
+        try {
+            $this->conn = new PDO("mysql:host=$this->host;dbname=$this->dbname", $this->user, $this->pass);
+            $this->conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+        } catch (PDOException $e) {
+            die("Database Not Connected: " . $e->getMessage());
         }
-        return $conn;
+        return $this->conn;
     }
 }
+?>

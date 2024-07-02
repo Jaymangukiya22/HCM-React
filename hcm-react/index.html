@@ -127,6 +127,45 @@ function test() {
       }
       
     </script>
+    <script>
+      async function UpdateData(val) {//val is the id of the form
+        const form = document.getElementById(val);
+        const formData = new FormData(form);
+      
+        // Convert formData to a plain object
+        const formDataObj = {};
+        formData.forEach((value, key) => {
+          formDataObj[key] = value;
+        });
+        console.log(formDataObj);
+        //remove photo from formDataObj
+        delete formDataObj.photo;
+       // const url = "./action.php";
+        const response = await fetch( "http://localhost/HCM-React/hcm-react/action.php", {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ data: formDataObj, action: "update" }
+
+          )
+
+        });
+      
+        const responseText = await response.text(); // Get response as json
+        try {
+          const result = JSON.parse(responseText); // Parse the JSON
+          if (result.status) {
+            console.log(result.data.lastInsertedId);
+            console.log(result.data.lastInsertedId);
+
+
+          } else {
+            console.error('Error: ', result.message);
+          }
+        } catch (error) {
+          console.error('Failed to parse JSON response: ', responseText);
+        }
+      }
+    </script>
 
 
     <!-- <script>

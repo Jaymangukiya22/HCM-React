@@ -50,11 +50,13 @@ class DB
             $db = new dbConnection($host, $user, $pass, $dbname);
             $update = new update($db->connection(), $table);
             $row = $update->updateData($data, $id);
-            return json_encode(['status' => 'success', 'message' => 'update successful', 'data' => $row]);
+            //return json_encode(['status' => 'success', 'message' => 'update successful', 'data' => $row]);
+            return  $row;
         } catch (Exception $e) {
             return json_encode(['status' => 'error', 'message' => $e->getMessage()]);
         }
     }
+
 
     static function insert($table, $data)
     {
