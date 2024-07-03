@@ -64,14 +64,15 @@ const HomeopathicConsultancyManagement = () => {
   const filteredData = data.filter((item) => {
     const { caseNo, fileNo, name, mobileNo } = selectedFilters;
     const search = searchTerm.toLowerCase();
-
+  
     return (
       (caseNo && item.caseno?.toString().toLowerCase().includes(search)) ||
       (fileNo && item.fileno?.toString().toLowerCase().includes(search)) ||
       (name && item.name?.toLowerCase().includes(search)) ||
-      (mobileNo && item.mobileno?.toLowerCase().includes(search))
+      (mobileNo && item.mobile.toString().toLowerCase().includes(search)) // Check if item.mobile is a string before calling toLowerCase()
     );
   });
+  
 
   return (
     <div style={{ backgroundColor: "#0b6e4f" }}>
@@ -317,7 +318,7 @@ const HomeopathicConsultancyManagement = () => {
                       <td>{entry.date}</td>
                       <td>
                         <div className="btn-container">
-                          <a
+                          {/* <a
                             id="tooltip"
                             className="btn rounded-4 mb-1 mt-1 w-100 edit-button action-button"
                             href="/edit"
@@ -328,14 +329,19 @@ const HomeopathicConsultancyManagement = () => {
                               className="fa-solid fa-pen-to-square"
                               style={{ color: "black" }}
                             ></i>
-                          </a>
+                          </a> */}
                           <a
                             id="tooltip"
                             className="btn rounded-4 mt-1 mb-1 w-100 checkup-button action-button"
-                            href="/checkup"
+                            href="/details"
                             style={{ backgroundColor: "#0b6e4f" }}
                           >
                             <span id="tooltiptext">Patient Checkup</span>
+                            <i
+                              className="fa-solid fa-pen-to-square"
+                              style={{ color: "white" }}
+                            ></i>
+                             <div style={{display:"inline",margin:"10px",color:"white"}}>|</div>
                             <i
                               className="fa-solid fa-notes-medical"
                               style={{ color: "white" }}
