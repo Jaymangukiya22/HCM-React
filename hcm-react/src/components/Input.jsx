@@ -118,6 +118,15 @@ function Input() {
                   <a
                     className="nav-link left-nav-item"
                     data-toggle="tab"
+                    href="#mind"
+                  >
+                    Mind
+                  </a>
+                </li>
+                <li className="nav-item">
+                  <a
+                    className="nav-link left-nav-item"
+                    data-toggle="tab"
                     href="#observations"
                   >
                     General Observations
@@ -556,6 +565,82 @@ function Input() {
                     </div>
                   </form>
                 </div>
+                <div id="mind" className="tab-pane fade">
+                  <form action="" id="mind1">
+                    <div className="d-flex justify-content-between align-items-center mb-3">
+                      <h3>Mind</h3>
+                      <button
+                        value="mind1"
+                        type="button"
+                        className="btn btn-success"
+                        onClick={(e) => {
+                          e.preventDefault();
+                          updateData(e.target.value);
+                        }}
+                      >
+                        Save
+                      </button>
+                    </div>
+                    {/* Rest of history form */}
+                    <div id="content">
+                      <div className="input-group mt-3">
+                        <div
+                          className="btn-group p-3 bg-white row rounded-3 ms-1"
+                          role="group"
+                          aria-label="Basic checkbox toggle button group"
+                          style={{ width: "100%" }}
+                        >
+                          {[
+                            "Absent Mind",
+                            "Forgetfulness",
+                            "Timid",
+                            "Jealousness",
+                            "Suspicious",
+                            "Confuse Minded",
+                            "Over Sensitive",
+                            "Sadness",
+                            "Aggressive",
+                            "Angerness",
+                            "Hot Temprament",
+                            "Overthinking",
+                            "Proudy",
+                            "Over Proudy",
+                          ].map((label, index) => (
+                            <div
+                              className="col-md-4 d-flex align-items-center"
+                              key={index}
+                            >
+                              <input
+                                type="checkbox"
+                                name="mind[]"
+                                value={label}
+                                className="btn-check"
+                                id={`btncheck${index + 1}`}
+                                autoComplete="off"
+                              />
+                              <label
+                                className="btn rounded-3 btn-checker w-100"
+                                htmlFor={`btncheck${index + 1}`}
+                              >
+                                {label}
+                              </label>
+                            </div>
+                          ))}
+                          <div className="col-md-4 d-flex align-items-center">
+                            <button
+                              type="reset"
+                              id="clear-selection-button"
+                              className="btn rounded-3 w-100"
+                            >
+                              Clear Selection
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </form>
+                </div>
+
                 <div id="observations" className="tab-pane fade">
                   <form action="" id="">
                     <div className="d-flex justify-content-between align-items-center mb-3">
