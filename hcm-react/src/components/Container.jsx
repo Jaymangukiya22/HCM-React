@@ -1,35 +1,37 @@
-import React, { useState, useEffect } from 'react';
-import 'bootstrap/dist/css/bootstrap.min.css';
-import '@fortawesome/fontawesome-free/css/all.min.css';
-import './styles/navbar.css';
-import './styles/details.css';
-import './styles/styles.css';
-import './styles/table-styles.css';
+import React, { useState, useEffect } from "react";
+import "bootstrap/dist/css/bootstrap.min.css";
+import "@fortawesome/fontawesome-free/css/all.min.css";
+import "./styles/navbar.css";
+import "./styles/details.css";
+import "./styles/styles.css";
+import "./styles/table-styles.css";
 import details from "./Images And Icons/add_patient.png";
 import account from "./Images And Icons/user-doctor-solid.svg";
-import 'bootstrap/dist/js/bootstrap.bundle.min.js';
+import "bootstrap/dist/js/bootstrap.bundle.min.js";
 
 const HomeopathicConsultancyManagement = () => {
   const [data, setData] = useState([]);
-  const [searchTerm, setSearchTerm] = useState('');
+  const [searchTerm, setSearchTerm] = useState("");
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [selectedFilters, setSelectedFilters] = useState({
     caseNo: true,
     fileNo: true,
     name: true,
-    mobileNo: true
+    mobileNo: true,
   });
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch('http://localhost/HCM-React/hcm-react/fetch_data.php');
+        const response = await fetch(
+          "http://localhost/HCM-React/hcm-react/fetch_data.php"
+        );
         if (!response.ok) {
           throw new Error(`Failed to fetch data: ${response.statusText}`);
         }
         const jsonData = await response.json();
-        console.log('Fetched data:', jsonData);
+        console.log("Fetched data:", jsonData);
 
         if (jsonData.status) {
           setData(jsonData.data);
@@ -37,7 +39,7 @@ const HomeopathicConsultancyManagement = () => {
           setError(jsonData.message);
         }
       } catch (error) {
-        console.error('Error fetching data:', error);
+        console.error("Error fetching data:", error);
         setError(error.message);
       } finally {
         setLoading(false);
@@ -55,14 +57,14 @@ const HomeopathicConsultancyManagement = () => {
     const { id, checked } = e.target;
     setSelectedFilters((prevFilters) => ({
       ...prevFilters,
-      [id]: checked
+      [id]: checked,
     }));
   };
 
   const filteredData = data.filter((item) => {
     const { caseNo, fileNo, name, mobileNo } = selectedFilters;
     const search = searchTerm.toLowerCase();
-  
+
     return (
       (caseNo && item.caseno?.toString().toLowerCase().includes(search)) ||
       (fileNo && item.fileno?.toString().toLowerCase().includes(search)) ||
@@ -70,13 +72,14 @@ const HomeopathicConsultancyManagement = () => {
       (mobileNo && item.mobileno?.toLowerCase().includes(search))
     );
   });
-  
 
   return (
-    <div style={{ backgroundColor: '#0b6e4f' }}>
+    <div style={{ backgroundColor: "#0b6e4f" }}>
       <nav className="navbar shadow navbar-expand-lg fixed-top">
         <div className="container-fluid">
-          <a className="navbar-brand me-auto" id="spmsbranding" href="/">IDEAL</a>
+          <a className="navbar-brand me-auto" id="spmsbranding" href="/">
+            IDEAL
+          </a>
           <div className="d-flex align-items-center justify-content-center w-50 position-relative searchbar">
             <input
               id="searchbar-input"
@@ -87,7 +90,10 @@ const HomeopathicConsultancyManagement = () => {
               onChange={handleSearchChange}
             />
             <button className="btn rounded-5" id="searchbutton">
-              <i style={{ color: 'white' }} className="fa-solid fa-magnifying-glass"></i>
+              <i
+                style={{ color: "white" }}
+                className="fa-solid fa-magnifying-glass"
+              ></i>
             </button>
           </div>
           <a
@@ -99,7 +105,11 @@ const HomeopathicConsultancyManagement = () => {
             <img
               className="nav-buttons"
               src={details}
-              style={{ height: '28px', opacity: '85%', transform: 'translateY(-10%)' }}
+              style={{
+                height: "28px",
+                opacity: "85%",
+                transform: "translateY(-10%)",
+              }}
               alt=""
             />
           </a>
@@ -115,20 +125,27 @@ const HomeopathicConsultancyManagement = () => {
               <img
                 className="nav-buttons"
                 src={account}
-                style={{ height: '25px', opacity: '85%', transform: 'translateY(-9%)' }}
+                style={{
+                  height: "25px",
+                  opacity: "85%",
+                  transform: "translateY(-9%)",
+                }}
                 alt=""
               />
             </button>
-            <ul className="dropdown-menu border-0 p-2" style={{ transform: 'translateX(-75%)' }}>
+            <ul
+              className="dropdown-menu border-0 p-2"
+              style={{ transform: "translateX(-75%)" }}
+            >
               <li>
                 <a
                   className="dropdown-item p-2 rounded-3 btn mb-1 profile-setting-button justify-content-center d-flex"
                   href="/profile"
                 >
-                  <div className="me-auto w-100" style={{ display: 'inline' }}>
+                  <div className="me-auto w-100" style={{ display: "inline" }}>
                     <i className="fa-solid fa-user-doctor"></i>
                   </div>
-                  <span className="w-100" style={{ textAlign: 'right' }}>
+                  <span className="w-100" style={{ textAlign: "right" }}>
                     Profile
                   </span>
                 </a>
@@ -138,10 +155,13 @@ const HomeopathicConsultancyManagement = () => {
                   className="dropdown-item p-2 rounded-3 btn mt-2 profile-setting-button justify-content-center d-flex"
                   href="/settings"
                 >
-                  <div className="me-auto w-100" style={{ display: 'inline' }}>
-                    <i style={{ fontSize: '13px' }} className="fa-solid fa-gear"></i>
+                  <div className="me-auto w-100" style={{ display: "inline" }}>
+                    <i
+                      style={{ fontSize: "13px" }}
+                      className="fa-solid fa-gear"
+                    ></i>
                   </div>
-                  <span className="w-100" style={{ textAlign: 'right' }}>
+                  <span className="w-100" style={{ textAlign: "right" }}>
                     Settings
                   </span>
                 </a>
@@ -153,12 +173,18 @@ const HomeopathicConsultancyManagement = () => {
                 <a
                   href="/login"
                   className="dropdown-item p-3 rounded-3 btn btn-danger logout-button justify-content-center d-flex"
-                  style={{ backgroundColor: 'rgba(255, 0, 0, 0.115)' }}
+                  style={{ backgroundColor: "rgba(255, 0, 0, 0.115)" }}
                 >
-                  <div className="me-auto w-100" style={{ display: 'inline' }}>
-                    <i style={{ fontSize: '13px', color: 'red' }} className="fa-solid fa-right-from-bracket"></i>
+                  <div className="me-auto w-100" style={{ display: "inline" }}>
+                    <i
+                      style={{ fontSize: "13px", color: "red" }}
+                      className="fa-solid fa-right-from-bracket"
+                    ></i>
                   </div>
-                  <span className="w-100" style={{ textAlign: 'right', color: 'red' }}>
+                  <span
+                    className="w-100"
+                    style={{ textAlign: "right", color: "red" }}
+                  >
                     Logout
                   </span>
                 </a>
@@ -169,16 +195,22 @@ const HomeopathicConsultancyManagement = () => {
       </nav>
 
       <br />
-      <br /><br /><br /><br />
+      <br />
+      <br />
+      <br />
+      <br />
 
       <div className="container justify-content-center d-flex">
-        <div className="mx-3 rounded-5" style={{ backgroundColor: '#d1d3ab', width: '60%' }}>
+        <div
+          className="mx-3 rounded-5"
+          style={{ backgroundColor: "#d1d3ab", width: "60%" }}
+        >
           <div className="input-group m-0 rounded-5">
             <div
               className="btn-group p-1 bg-white row rounded-3 ms-0"
               role="group"
               aria-label="Basic checkbox toggle button group"
-              style={{ width: '100%' }}
+              style={{ width: "100%" }}
             >
               <div className="col-md-3 d-flex align-items-center">
                 <input
@@ -189,7 +221,10 @@ const HomeopathicConsultancyManagement = () => {
                   checked={selectedFilters.caseNo}
                   onChange={handleCheckboxChange}
                 />
-                <label className="btn rounded-3 btn-checker w-100" htmlFor="caseNo">
+                <label
+                  className="btn rounded-3 btn-checker w-100"
+                  htmlFor="caseNo"
+                >
                   Case No.
                 </label>
               </div>
@@ -202,7 +237,10 @@ const HomeopathicConsultancyManagement = () => {
                   checked={selectedFilters.fileNo}
                   onChange={handleCheckboxChange}
                 />
-                <label className="btn rounded-3 btn-checker w-100" htmlFor="fileNo">
+                <label
+                  className="btn rounded-3 btn-checker w-100"
+                  htmlFor="fileNo"
+                >
                   File No.
                 </label>
               </div>
@@ -215,7 +253,10 @@ const HomeopathicConsultancyManagement = () => {
                   checked={selectedFilters.mobileNo}
                   onChange={handleCheckboxChange}
                 />
-                <label className="btn rounded-3 btn-checker w-100" htmlFor="mobileNo">
+                <label
+                  className="btn rounded-3 btn-checker w-100"
+                  htmlFor="mobileNo"
+                >
                   Mobile No.
                 </label>
               </div>
@@ -228,7 +269,10 @@ const HomeopathicConsultancyManagement = () => {
                   checked={selectedFilters.name}
                   onChange={handleCheckboxChange}
                 />
-                <label className="btn rounded-3 btn-checker w-100" htmlFor="name">
+                <label
+                  className="btn rounded-3 btn-checker w-100"
+                  htmlFor="name"
+                >
                   Name
                 </label>
               </div>
@@ -243,7 +287,14 @@ const HomeopathicConsultancyManagement = () => {
         ) : error ? (
           <div>Error: {error}</div>
         ) : (
-          <div className="table-responsive" style={{ maxHeight: '65vh', overflowY: 'scroll', overflowX: 'hidden' }}>
+          <div
+            className="table-responsive"
+            style={{
+              maxHeight: "65vh",
+              overflowY: "scroll",
+              overflowX: "hidden",
+            }}
+          >
             <table id="my-table" className="table table-striped p-3">
               <thead>
                 <tr>
@@ -262,27 +313,33 @@ const HomeopathicConsultancyManagement = () => {
                       <td>{entry.caseno}</td>
                       <td>{entry.fileno}</td>
                       <td>{entry.name}</td>
-                      <td>{entry.mobileno}</td>
-                      <td>{entry.lastvisited}</td>
+                      <td>{entry.mobile}</td>
+                      <td>{entry.date}</td>
                       <td>
                         <div className="btn-container">
                           <a
                             id="tooltip"
                             className="btn rounded-4 mb-1 mt-1 w-100 edit-button action-button"
                             href="/edit"
-                            style={{ backgroundColor: '#d1d3ab' }}
+                            style={{ backgroundColor: "#d1d3ab" }}
                           >
                             <span id="tooltiptext">Edit</span>
-                            <i className="fa-solid fa-pen-to-square" style={{ color: 'black' }}></i>
+                            <i
+                              className="fa-solid fa-pen-to-square"
+                              style={{ color: "black" }}
+                            ></i>
                           </a>
                           <a
                             id="tooltip"
                             className="btn rounded-4 mt-1 mb-1 w-100 checkup-button action-button"
                             href="/checkup"
-                            style={{ backgroundColor: '#0b6e4f' }}
+                            style={{ backgroundColor: "#0b6e4f" }}
                           >
                             <span id="tooltiptext">Patient Checkup</span>
-                            <i className="fa-solid fa-notes-medical" style={{ color: 'white' }}></i>
+                            <i
+                              className="fa-solid fa-notes-medical"
+                              style={{ color: "white" }}
+                            ></i>
                           </a>
                         </div>
                       </td>
