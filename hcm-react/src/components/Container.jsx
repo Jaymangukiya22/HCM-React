@@ -1,16 +1,16 @@
-import React, { useState, useEffect } from 'react';
-import { useHistory } from 'react-router-dom';
+import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "@fortawesome/fontawesome-free/css/all.min.css";
 import "./styles/navbar.css";
 import "./styles/details.css";
 import "./styles/styles.css";
 import "./styles/table-styles.css";
-import detailsIcon from "./Images And Icons/add_patient.png";
-import accountIcon from "./Images And Icons/user-doctor-solid.svg";
+import details from "./Images And Icons/add_patient.png";
+import account from "./Images And Icons/user-doctor-solid.svg";
 import "bootstrap/dist/js/bootstrap.bundle.min.js";
 
-const Container = () => {
+const HomeopathicConsultancyManagement = () => {
   const [data, setData] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [loading, setLoading] = useState(true);
@@ -22,7 +22,7 @@ const Container = () => {
     mobileNo: true,
   });
 
-  const history = useHistory();
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchData = async () => {
@@ -77,14 +77,14 @@ const Container = () => {
   });
 
   const handleEditAndCheckup = (caseno) => {
-    history.push(`/edit-and-checkup/${caseno}`);
+    navigate(`/edit-and-checkup/${caseno}`);
   };
 
   return (
     <div style={{ backgroundColor: "#0b6e4f" }}>
       <nav className="navbar shadow navbar-expand-lg fixed-top">
         <div className="container-fluid">
-          <a className="navbar-brand me-auto" href="/">
+          <a className="navbar-brand me-auto" id="spmsbranding" href="/">
             IDEAL
           </a>
           <div className="d-flex align-items-center justify-content-center w-50 position-relative searchbar">
@@ -99,18 +99,19 @@ const Container = () => {
             <button className="btn rounded-5" id="searchbutton">
               <i
                 style={{ color: "white" }}
-                className="fas fa-search"
+                className="fa-solid fa-magnifying-glass"
               ></i>
             </button>
           </div>
           <a
             href="/details"
+            id="tooltip"
             className="btn rounded-5 ms-auto position-relative fs-4"
           >
-            <span className="tooltiptext">Enter Patient Details</span>
+            <span id="tooltiptext">Enter Patient Details</span>
             <img
               className="nav-buttons"
-              src={detailsIcon}
+              src={details}
               style={{
                 height: "28px",
                 opacity: "85%",
@@ -122,14 +123,15 @@ const Container = () => {
           <div className="btn-group border-0 rounded-5">
             <button
               type="button"
+              id="tooltip"
               className="btn rounded-5"
               data-bs-toggle="dropdown"
               aria-expanded="false"
             >
-              <span className="tooltiptext">Account</span>
+              <span id="tooltiptext">Account</span>
               <img
                 className="nav-buttons"
-                src={accountIcon}
+                src={account}
                 style={{
                   height: "25px",
                   opacity: "85%",
@@ -147,8 +149,12 @@ const Container = () => {
                   className="dropdown-item p-2 rounded-3 btn mb-1 profile-setting-button justify-content-center d-flex"
                   href="/profile"
                 >
-                  <i className="fas fa-user-md"></i>
-                  <span style={{ marginLeft: "10px" }}>Profile</span>
+                  <div className="me-auto w-100" style={{ display: "inline" }}>
+                    <i className="fa-solid fa-user-doctor"></i>
+                  </div>
+                  <span className="w-100" style={{ textAlign: "right" }}>
+                    Profile
+                  </span>
                 </a>
               </li>
               <li>
@@ -156,8 +162,15 @@ const Container = () => {
                   className="dropdown-item p-2 rounded-3 btn mt-2 profile-setting-button justify-content-center d-flex"
                   href="/settings"
                 >
-                  <i className="fas fa-cog"></i>
-                  <span style={{ marginLeft: "10px" }}>Settings</span>
+                  <div className="me-auto w-100" style={{ display: "inline" }}>
+                    <i
+                      style={{ fontSize: "13px" }}
+                      className="fa-solid fa-gear"
+                    ></i>
+                  </div>
+                  <span className="w-100" style={{ textAlign: "right" }}>
+                    Settings
+                  </span>
                 </a>
               </li>
               <li>
@@ -169,8 +182,18 @@ const Container = () => {
                   className="dropdown-item p-3 rounded-3 btn btn-danger logout-button justify-content-center d-flex"
                   style={{ backgroundColor: "rgba(255, 0, 0, 0.115)" }}
                 >
-                  <i className="fas fa-sign-out-alt" style={{ color: "red" }}></i>
-                  <span style={{ marginLeft: "10px", color: "red" }}>Logout</span>
+                  <div className="me-auto w-100" style={{ display: "inline" }}>
+                    <i
+                      style={{ fontSize: "13px", color: "red" }}
+                      className="fa-solid fa-right-from-bracket"
+                    ></i>
+                  </div>
+                  <span
+                    className="w-100"
+                    style={{ textAlign: "right", color: "red" }}
+                  >
+                    Logout
+                  </span>
                 </a>
               </li>
             </ul>
@@ -271,16 +294,9 @@ const Container = () => {
         ) : error ? (
           <div>Error: {error}</div>
         ) : (
-          <div
-            className="table-responsive"
-            style={{
-              maxHeight: "65vh",
-              overflowY: "scroll",
-              overflowX: "hidden",
-            }}
-          >
+          <div className="table-responsive" style={{ maxHeight: "65vh", overflowY: "auto" }}>
             <table id="my-table" className="table table-striped p-3">
-              <thead>
+              <thead style={{ position: "sticky", top: 0, backgroundColor: "white", zIndex: 1 }}>
                 <tr>
                   <th scope="col">Case No.</th>
                   <th scope="col">File No.</th>
@@ -300,30 +316,25 @@ const Container = () => {
                       <td>{entry.mobile}</td>
                       <td>{entry.date}</td>
                       <td>
-                        <button
-                          className="btn rounded-4 mt-1 mb-1 w-100 checkup-button action-button"
-                          onClick={() => handleEditAndCheckup(entry.caseno)}
-                          style={{ backgroundColor: "#0b6e4f" }}
-                        >
-                          <span className="tooltiptext">Patient Checkup</span>
-                          <i
-                            className="fas fa-edit"
-                            style={{ color: "white" }}
-                          ></i>
-                          <div
-                            style={{
-                              display: "inline",
-                              margin: "10px",
-                              color: "white",
-                            }}
+                        <div className="btn-container">
+                          <a
+                            id="tooltip"
+                            className="btn rounded-4 mt-1 mb-1 w-100 checkup-button action-button"
+                            onClick={() => handleEditAndCheckup(entry.caseno)}
+                            style={{ backgroundColor: "#0b6e4f", cursor: "pointer" }}
                           >
-                            |
-                          </div>
-                          <i
-                            className="fas fa-notes-medical"
-                            style={{ color: "white" }}
-                          ></i>
-                        </button>
+                            <span id="tooltiptext">Patient Checkup</span>
+                            <i
+                              className="fa-solid fa-pen-to-square"
+                              style={{ color: "white" }}
+                            ></i>
+                            <div style={{ display: "inline", margin: "10px", color: "white" }}>|</div>
+                            <i
+                              className="fa-solid fa-notes-medical"
+                              style={{ color: "white" }}
+                            ></i>
+                          </a>
+                        </div>
                       </td>
                     </tr>
                   ))
@@ -341,4 +352,4 @@ const Container = () => {
   );
 };
 
-export default Container;
+export default HomeopathicConsultancyManagement;
