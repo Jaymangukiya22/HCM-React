@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "@fortawesome/fontawesome-free/css/all.min.css";
 import "./styles/navbar.css";
@@ -20,6 +21,8 @@ const HomeopathicConsultancyManagement = () => {
     name: true,
     mobileNo: true,
   });
+
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchData = async () => {
@@ -64,15 +67,18 @@ const HomeopathicConsultancyManagement = () => {
   const filteredData = data.filter((item) => {
     const { caseNo, fileNo, name, mobileNo } = selectedFilters;
     const search = searchTerm.toLowerCase();
-  
+
     return (
       (caseNo && item.caseno?.toString().toLowerCase().includes(search)) ||
       (fileNo && item.fileno?.toString().toLowerCase().includes(search)) ||
       (name && item.name?.toLowerCase().includes(search)) ||
-      (mobileNo && item.mobile.toString().toLowerCase().includes(search)) // Check if item.mobile is a string before calling toLowerCase()
+      (mobileNo && item.mobile.toString().toLowerCase().includes(search))
     );
   });
-  
+
+  const handleEditAndCheckup = (caseno) => {
+    navigate(`/edit-and-checkup/${caseno}`);
+  };
 
   return (
     <div style={{ backgroundColor: "#0b6e4f" }}>
@@ -288,16 +294,9 @@ const HomeopathicConsultancyManagement = () => {
         ) : error ? (
           <div>Error: {error}</div>
         ) : (
-          <div
-            className="table-responsive"
-            style={{
-              maxHeight: "65vh",
-              overflowY: "scroll",
-              overflowX: "hidden",
-            }}
-          >
+          <div className="table-responsive" style={{ maxHeight: "65vh", overflowY: "auto" }}>
             <table id="my-table" className="table table-striped p-3">
-              <thead>
+              <thead style={{ position: "sticky", top: 0, backgroundColor: "white", zIndex: 1 }}>
                 <tr>
                   <th scope="col">Case No.</th>
                   <th scope="col">File No.</th>
@@ -318,30 +317,18 @@ const HomeopathicConsultancyManagement = () => {
                       <td>{entry.date}</td>
                       <td>
                         <div className="btn-container">
-                          {/* <a
-                            id="tooltip"
-                            className="btn rounded-4 mb-1 mt-1 w-100 edit-button action-button"
-                            href="/edit"
-                            style={{ backgroundColor: "#d1d3ab" }}
-                          >
-                            <span id="tooltiptext">Edit</span>
-                            <i
-                              className="fa-solid fa-pen-to-square"
-                              style={{ color: "black" }}
-                            ></i>
-                          </a> */}
                           <a
                             id="tooltip"
                             className="btn rounded-4 mt-1 mb-1 w-100 checkup-button action-button"
-                            href="/details"
-                            style={{ backgroundColor: "#0b6e4f" }}
+                            onClick={() => handleEditAndCheckup(entry.caseno)}
+                            style={{ backgroundColor: "#0b6e4f", cursor: "pointer" }}
                           >
                             <span id="tooltiptext">Patient Checkup</span>
                             <i
                               className="fa-solid fa-pen-to-square"
                               style={{ color: "white" }}
                             ></i>
-                             <div style={{display:"inline",margin:"10px",color:"white"}}>|</div>
+                            <div style={{ display: "inline", margin: "10px", color: "white" }}>|</div>
                             <i
                               className="fa-solid fa-notes-medical"
                               style={{ color: "white" }}
