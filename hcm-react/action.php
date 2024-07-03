@@ -25,10 +25,10 @@ try {
 
                 case 'update':
                    
-                    print_r($id);
-                    exit();
-                    $response = DB::update(test_details, $input['data'], $id);
-                    if ($response == "Insert Successfully") {
+                    $id = $input['id'];
+                   // exit();
+                    $response = DB::update(test_details, $input['data'], ['caseno'=>$id]);
+                    if ($response == "Update Successfully") {
                         echo json_encode(['status' => true, "message" => "Updated Successfully", 'data' => $response]);
                     } else {
                         echo json_encode(['status' => false, "message" => "Could not update", 'data' => $response]);

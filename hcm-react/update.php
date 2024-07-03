@@ -18,20 +18,23 @@ class Update
             $fields = [];
             $values = [];
 
+            $col_name = array_keys($id)[0]; // Get the first key (column name) from the id array
+            $col_value = array_values($id)[0]; // Get the first value from the id array
+
             foreach ($key as $field) {
-                $fields[] = "$field = ?";
-                $values[] = $data[$field];
+                $fields[] = "$field = :$field";
+                $values[":$field"] = $data[$field];
             }
-            $values[] = $id; // Adding the id to the values array for binding
+            $values[":$col_name"] = $col_value; // Adding the id value to the values array for binding
 
             $fieldList = implode(", ", $fields);
-            $update = "UPDATE " . $this->table . " SET $fieldList WHERE id = ?";
+            $update = "UPDATE " . $this->table . " SET $fieldList WHERE $col_name = :$col_name";
 
             $stmt = $this->conn->prepare($update);
             $result = $stmt->execute($values);
 
             if ($result) {
-                return "updateSuccess";
+                return updateSuccess;
             } else {
                 return "updateFailed";
             }
@@ -40,4 +43,5 @@ class Update
         }
     }
 }
+
 ?>
