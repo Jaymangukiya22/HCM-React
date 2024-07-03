@@ -1,15 +1,16 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect } from 'react';
+import { useHistory } from 'react-router-dom';
 import "bootstrap/dist/css/bootstrap.min.css";
 import "@fortawesome/fontawesome-free/css/all.min.css";
 import "./styles/navbar.css";
 import "./styles/details.css";
 import "./styles/styles.css";
 import "./styles/table-styles.css";
-import details from "./Images And Icons/add_patient.png";
-import account from "./Images And Icons/user-doctor-solid.svg";
+import detailsIcon from "./Images And Icons/add_patient.png";
+import accountIcon from "./Images And Icons/user-doctor-solid.svg";
 import "bootstrap/dist/js/bootstrap.bundle.min.js";
 
-const HomeopathicConsultancyManagement = () => {
+const Container = () => {
   const [data, setData] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [loading, setLoading] = useState(true);
@@ -20,6 +21,8 @@ const HomeopathicConsultancyManagement = () => {
     name: true,
     mobileNo: true,
   });
+
+  const history = useHistory();
 
   useEffect(() => {
     const fetchData = async () => {
@@ -64,21 +67,24 @@ const HomeopathicConsultancyManagement = () => {
   const filteredData = data.filter((item) => {
     const { caseNo, fileNo, name, mobileNo } = selectedFilters;
     const search = searchTerm.toLowerCase();
-  
+
     return (
       (caseNo && item.caseno?.toString().toLowerCase().includes(search)) ||
       (fileNo && item.fileno?.toString().toLowerCase().includes(search)) ||
       (name && item.name?.toLowerCase().includes(search)) ||
-      (mobileNo && item.mobile.toString().toLowerCase().includes(search)) // Check if item.mobile is a string before calling toLowerCase()
+      (mobileNo && item.mobile.toString().toLowerCase().includes(search))
     );
   });
-  
+
+  const handleEditAndCheckup = (caseno) => {
+    history.push(`/edit-and-checkup/${caseno}`);
+  };
 
   return (
     <div style={{ backgroundColor: "#0b6e4f" }}>
       <nav className="navbar shadow navbar-expand-lg fixed-top">
         <div className="container-fluid">
-          <a className="navbar-brand me-auto" id="spmsbranding" href="/">
+          <a className="navbar-brand me-auto" href="/">
             IDEAL
           </a>
           <div className="d-flex align-items-center justify-content-center w-50 position-relative searchbar">
@@ -93,19 +99,18 @@ const HomeopathicConsultancyManagement = () => {
             <button className="btn rounded-5" id="searchbutton">
               <i
                 style={{ color: "white" }}
-                className="fa-solid fa-magnifying-glass"
+                className="fas fa-search"
               ></i>
             </button>
           </div>
           <a
             href="/details"
-            id="tooltip"
             className="btn rounded-5 ms-auto position-relative fs-4"
           >
-            <span id="tooltiptext">Enter Patient Details</span>
+            <span className="tooltiptext">Enter Patient Details</span>
             <img
               className="nav-buttons"
-              src={details}
+              src={detailsIcon}
               style={{
                 height: "28px",
                 opacity: "85%",
@@ -117,15 +122,14 @@ const HomeopathicConsultancyManagement = () => {
           <div className="btn-group border-0 rounded-5">
             <button
               type="button"
-              id="tooltip"
               className="btn rounded-5"
               data-bs-toggle="dropdown"
               aria-expanded="false"
             >
-              <span id="tooltiptext">Account</span>
+              <span className="tooltiptext">Account</span>
               <img
                 className="nav-buttons"
-                src={account}
+                src={accountIcon}
                 style={{
                   height: "25px",
                   opacity: "85%",
@@ -143,12 +147,8 @@ const HomeopathicConsultancyManagement = () => {
                   className="dropdown-item p-2 rounded-3 btn mb-1 profile-setting-button justify-content-center d-flex"
                   href="/profile"
                 >
-                  <div className="me-auto w-100" style={{ display: "inline" }}>
-                    <i className="fa-solid fa-user-doctor"></i>
-                  </div>
-                  <span className="w-100" style={{ textAlign: "right" }}>
-                    Profile
-                  </span>
+                  <i className="fas fa-user-md"></i>
+                  <span style={{ marginLeft: "10px" }}>Profile</span>
                 </a>
               </li>
               <li>
@@ -156,15 +156,8 @@ const HomeopathicConsultancyManagement = () => {
                   className="dropdown-item p-2 rounded-3 btn mt-2 profile-setting-button justify-content-center d-flex"
                   href="/settings"
                 >
-                  <div className="me-auto w-100" style={{ display: "inline" }}>
-                    <i
-                      style={{ fontSize: "13px" }}
-                      className="fa-solid fa-gear"
-                    ></i>
-                  </div>
-                  <span className="w-100" style={{ textAlign: "right" }}>
-                    Settings
-                  </span>
+                  <i className="fas fa-cog"></i>
+                  <span style={{ marginLeft: "10px" }}>Settings</span>
                 </a>
               </li>
               <li>
@@ -176,18 +169,8 @@ const HomeopathicConsultancyManagement = () => {
                   className="dropdown-item p-3 rounded-3 btn btn-danger logout-button justify-content-center d-flex"
                   style={{ backgroundColor: "rgba(255, 0, 0, 0.115)" }}
                 >
-                  <div className="me-auto w-100" style={{ display: "inline" }}>
-                    <i
-                      style={{ fontSize: "13px", color: "red" }}
-                      className="fa-solid fa-right-from-bracket"
-                    ></i>
-                  </div>
-                  <span
-                    className="w-100"
-                    style={{ textAlign: "right", color: "red" }}
-                  >
-                    Logout
-                  </span>
+                  <i className="fas fa-sign-out-alt" style={{ color: "red" }}></i>
+                  <span style={{ marginLeft: "10px", color: "red" }}>Logout</span>
                 </a>
               </li>
             </ul>
@@ -317,37 +300,30 @@ const HomeopathicConsultancyManagement = () => {
                       <td>{entry.mobile}</td>
                       <td>{entry.date}</td>
                       <td>
-                        <div className="btn-container">
-                          {/* <a
-                            id="tooltip"
-                            className="btn rounded-4 mb-1 mt-1 w-100 edit-button action-button"
-                            href="/edit"
-                            style={{ backgroundColor: "#d1d3ab" }}
+                        <button
+                          className="btn rounded-4 mt-1 mb-1 w-100 checkup-button action-button"
+                          onClick={() => handleEditAndCheckup(entry.caseno)}
+                          style={{ backgroundColor: "#0b6e4f" }}
+                        >
+                          <span className="tooltiptext">Patient Checkup</span>
+                          <i
+                            className="fas fa-edit"
+                            style={{ color: "white" }}
+                          ></i>
+                          <div
+                            style={{
+                              display: "inline",
+                              margin: "10px",
+                              color: "white",
+                            }}
                           >
-                            <span id="tooltiptext">Edit</span>
-                            <i
-                              className="fa-solid fa-pen-to-square"
-                              style={{ color: "black" }}
-                            ></i>
-                          </a> */}
-                          <a
-                            id="tooltip"
-                            className="btn rounded-4 mt-1 mb-1 w-100 checkup-button action-button"
-                            href="/details"
-                            style={{ backgroundColor: "#0b6e4f" }}
-                          >
-                            <span id="tooltiptext">Patient Checkup</span>
-                            <i
-                              className="fa-solid fa-pen-to-square"
-                              style={{ color: "white" }}
-                            ></i>
-                             <div style={{display:"inline",margin:"10px",color:"white"}}>|</div>
-                            <i
-                              className="fa-solid fa-notes-medical"
-                              style={{ color: "white" }}
-                            ></i>
-                          </a>
-                        </div>
+                            |
+                          </div>
+                          <i
+                            className="fas fa-notes-medical"
+                            style={{ color: "white" }}
+                          ></i>
+                        </button>
                       </td>
                     </tr>
                   ))
@@ -365,4 +341,4 @@ const HomeopathicConsultancyManagement = () => {
   );
 };
 
-export default HomeopathicConsultancyManagement;
+export default Container;

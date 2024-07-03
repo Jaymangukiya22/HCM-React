@@ -1,12 +1,14 @@
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import Container from "./components/Container";
-import Input from "./components/Input";
-import FetchData from "./FetchData";
-import Settings from "./components/Settings";
-import Account from "./components/Account";
-import Login from "./components/Login";
-import Admin from "./components/Admin";
-import AddLab from "./components/AddLab";
+import React from 'react';
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import Container from './components/Container';
+import Input from './components/Input';
+import FetchData from './FetchData';
+import Settings from './components/Settings';
+import Account from './components/Account';
+import Login from './components/Login';
+import Admin from './components/Admin';
+import AddLab from './components/AddLab';
+import EditAndCheckup from './components/EditAndCheckup'; // Update the path if needed
 
 function App() {
   return (
@@ -21,6 +23,7 @@ function App() {
         <Route exact path="/admin" element={<Admin />} />
         <Route exact path="/lab" element={<AddLab />} />
         <Route exact path="/fetch" element={<FetchData />} />
+        <Route exact path="/edit-and-checkup/:caseno" element={<EditAndCheckup />} />
       </Routes>
     </Router>
   );
