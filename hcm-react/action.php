@@ -22,6 +22,15 @@ try {
                     echo json_encode(['status' => false, "message" => "Could not insert", 'data' => $response]);
                 }
                 break;
+            
+                case 'insert_lab':
+                    $response = DB::insert(lab_test, $input['data']);
+                    if ($response['status']=="Insert Successfully") {
+                        echo json_encode(['status' => true, "message" => "Inserted Successfully", 'data' => $response]);
+                    } else {
+                        echo json_encode(['status' => false, "message" => "Could not insert", 'data' => $response]);
+                    }
+                    break;
 
                 case 'update':
                    

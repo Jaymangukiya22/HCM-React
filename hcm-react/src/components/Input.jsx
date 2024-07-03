@@ -77,6 +77,146 @@ function Input() {
     WebkitOverflowScrolling: "touch" /* iOS Safari */,
   };
 
+  let l_id;
+  async function PushData(val) {
+    //val is the id of the form
+    const form = document.getElementById(val);
+    const formData = new FormData(form);
+
+    // Convert formData to a plain object
+    const formDataObj = {};
+    formData.forEach((value, key) => {
+      formDataObj[key] = value;
+    });
+    console.log(formDataObj);
+    //remove photo from formDataObj
+    delete formDataObj.photo;
+    // const url = "./action.php";
+    const response = await fetch(
+      "http://localhost/HCM-React/hcm-react/action.php",
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ data: formDataObj, action: "insert" }),
+      }
+    );
+
+    const responseText = await response.text(); // Get response as json
+    try {
+      const result = JSON.parse(responseText); // Parse the JSON
+      if (result.status) {
+        console.log(result);
+        l_id = result.data.lastInsertedId;
+        console.log(l_id);
+      } else {
+        console.error("Error: ", result.message);
+      }
+    } catch (error) {
+      console.error("Failed to parse JSON response: ", responseText);
+    }
+  }
+
+  async function PushLabData(val) {
+    // val is the id of the form
+    const form = document.getElementById(val);
+    const formData = new FormData(form);
+
+    // Convert formData to a plain object
+    const formDataObj = {};
+    formData.forEach((value, key) => {
+      formDataObj[key] = value;
+    });
+    console.log(formDataObj);
+
+    // Remove photo from formDataObj
+    delete formDataObj.photo;
+
+    // Make the initial request to insert the lab data
+    const response = await fetch(
+      "http://localhost/HCM-React/hcm-react/action.php",
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ data: formDataObj, action: "insert_lab" }),
+      }
+    );
+
+    const responseText = await response.text(); // Get response as json
+    try {
+      const result = JSON.parse(responseText); // Parse the JSON
+      if (result.status) {
+        console.log(result);
+        const lastInsertedId = result.data.lastInsertedId;
+        console.log(lastInsertedId);
+
+        // Update the formDataObj with the last inserted ID as caseno
+        formDataObj.caseno = lastInsertedId;
+
+        // Make another request to update the caseno column in lab_details table
+        const updateResponse = await fetch(
+          "http://localhost/HCM-React/hcm-react/action.php",
+          {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ data: formDataObj, action: "update_lab" }),
+          }
+        );
+
+        const updateResponseText = await updateResponse.text(); // Get response as json
+        try {
+          const updateResult = JSON.parse(updateResponseText); // Parse the JSON
+          if (updateResult.status) {
+            console.log("caseno updated successfully");
+          } else {
+            console.error("Error: ", updateResult.message);
+          }
+        } catch (error) {
+          console.error("Failed to parse JSON response: ", updateResponseText);
+        }
+      } else {
+        console.error("Error: ", result.message);
+      }
+    } catch (error) {
+      console.error("Failed to parse JSON response: ", responseText);
+    }
+  }
+
+  async function UpdateData(val) {
+    //val is the id of the form
+    const form = document.getElementById(val);
+    const formData = new FormData(form);
+
+    // Convert formData to a plain object
+    const formDataObj = {};
+    formData.forEach((value, key) => {
+      formDataObj[key] = value;
+    });
+    console.log(formDataObj);
+    //remove photo from formDataObj
+    delete formDataObj.photo;
+    // const url = "./action.php";
+    const response = await fetch(
+      "http://localhost/HCM-React/hcm-react/action.php",
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ data: formDataObj, action: "update", id: l_id }),
+      }
+    );
+
+    const responseText = await response.text(); // Get response as json
+    try {
+      const result = JSON.parse(responseText); // Parse the JSON
+      if (result.status) {
+        console.log(result);
+      } else {
+        console.error("Error: ", result.message);
+      }
+    } catch (error) {
+      console.error("Failed to parse JSON response: ", responseText);
+    }
+  }
+
   return (
     <div style={{ backgroundColor: "#0b6e4f" }}>
       <div className="">
@@ -464,13 +604,17 @@ function Input() {
                   </form>
                 </div>
                 <div id="measurements" className="tab-pane fade">
-                  <form action="" id="measurements">
+                  <form action="" id="measurements1">
                     <div className="d-flex justify-content-between align-items-center mb-3">
                       <h3>Measurements</h3>
                       <button
-                        value="measurements"
-                        type="submit"
+                        value="measurements1"
+                        type="button"
                         className="btn btn-success"
+                        onClick={(e) => {
+                          e.preventDefault();
+                          UpdateData(e.target.value);
+                        }}
                       >
                         Save
                       </button>
@@ -484,6 +628,7 @@ function Input() {
                               type="number"
                               className="form-control"
                               id="height"
+                              name="height"
                               placeholder="height"
                             />
                             <label htmlFor="height">Height (in Meters)</label>
@@ -495,6 +640,7 @@ function Input() {
                               type="number"
                               className="form-control"
                               id="weight"
+                              name="weight"
                               placeholder="weight"
                             />
                             <label htmlFor="weight">Weight (in Kgs)</label>
@@ -509,6 +655,7 @@ function Input() {
                               className="form-control"
                               id="temperature"
                               placeholder="temperature"
+                              name="temperature"
                             />
                             <label htmlFor="temperature">
                               Temperature (Fahrenheit)
@@ -522,6 +669,7 @@ function Input() {
                               className="form-control"
                               id="pulse"
                               placeholder="pulse"
+                              name="pulse"
                             />
                             <label htmlFor="pulse">Pulse</label>
                           </div>
@@ -536,6 +684,7 @@ function Input() {
                                 className="form-control"
                                 id="systolic"
                                 placeholder="Systolic"
+                                name="systolic"
                               />
                               <label htmlFor="systolic">Systolic (mm Hg)</label>
                             </div>
@@ -554,6 +703,7 @@ function Input() {
                                 className="form-control"
                                 id="diastolic"
                                 placeholder="Diastolic"
+                                name="diastolic"
                               />
                               <label htmlFor="diastolic">
                                 Diastolic (mm Hg)
@@ -575,7 +725,7 @@ function Input() {
                         className="btn btn-success"
                         onClick={(e) => {
                           e.preventDefault();
-                          updateData(e.target.value);
+                          UpdateData(e.target.value);
                         }}
                       >
                         Save
@@ -612,6 +762,7 @@ function Input() {
                             >
                               <input
                                 type="checkbox"
+                                style={{ border: "1px black" }}
                                 name="mind[]"
                                 value={label}
                                 className="btn-check"
@@ -642,10 +793,18 @@ function Input() {
                 </div>
 
                 <div id="observations" className="tab-pane fade">
-                  <form action="" id="">
+                  <form action="" id="observations1">
                     <div className="d-flex justify-content-between align-items-center mb-3">
                       <h3>General Observations</h3>
-                      <button type="submit" className="btn btn-success ">
+                      <button
+                        value="observations1"
+                        type="button"
+                        className="btn btn-success"
+                        onClick={(e) => {
+                          e.preventDefault();
+                          UpdateData(e.target.value);
+                        }}
+                      >
                         Save
                       </button>
                     </div>
@@ -656,6 +815,7 @@ function Input() {
                           style={{ minHeight: "10vh" }}
                           placeholder="head/neck"
                           id="head"
+                          name="head"
                         ></textarea>
                         <label htmlFor="head">Head/Neck</label>
                       </div>
@@ -666,6 +826,7 @@ function Input() {
                           style={{ minHeight: "10vh" }}
                           placeholder="mouth"
                           id="mouth"
+                          name="mouth"
                         ></textarea>
                         <label htmlFor="mouth">Mouth/Tongue</label>
                       </div>
@@ -676,6 +837,7 @@ function Input() {
                           style={{ minHeight: "10vh" }}
                           placeholder="eye"
                           id="eye"
+                          name="eye"
                         ></textarea>
                         <label htmlFor="eye">Eye/Ear</label>
                       </div>
@@ -686,6 +848,7 @@ function Input() {
                           style={{ minHeight: "10vh" }}
                           placeholder="face"
                           id="face"
+                          name="face"
                         ></textarea>
                         <label htmlFor="face">Face/Color</label>
                       </div>
@@ -696,6 +859,7 @@ function Input() {
                           style={{ minHeight: "10vh" }}
                           placeholder="nose"
                           id="nose"
+                          name="nose"
                         ></textarea>
                         <label htmlFor="nose">Nose</label>
                       </div>
@@ -707,6 +871,7 @@ function Input() {
                             className="form-control"
                             id="respiratory"
                             placeholder="Respiratory"
+                            name="respiratory"
                           ></textarea>
                           <label htmlFor="respiratory">Respiratory</label>
                         </div>
@@ -715,6 +880,7 @@ function Input() {
                             className="form-control"
                             id="cardiac"
                             placeholder="Cardiac"
+                            name="cardiac"
                           ></textarea>
                           <label htmlFor="cardiac">Cardiac</label>
                         </div>
@@ -726,6 +892,7 @@ function Input() {
                           style={{ minHeight: "10vh" }}
                           placeholder="abdomen"
                           id="abdomen"
+                          name="abdomen"
                         ></textarea>
                         <label htmlFor="abdomen">Abdomen/Pelvis</label>
                       </div>
@@ -737,6 +904,7 @@ function Input() {
                             className="form-control"
                             id="menses"
                             placeholder="Menses"
+                            name="menses"
                           ></textarea>
                           <label htmlFor="menses">Menses</label>
                         </div>
@@ -745,6 +913,7 @@ function Input() {
                             className="form-control"
                             id="genitalia"
                             placeholder="Genitalia"
+                            name="genitalia"
                           ></textarea>
                           <label htmlFor="genitalia">Genitalia</label>
                         </div>
@@ -756,6 +925,7 @@ function Input() {
                           style={{ minHeight: "10vh" }}
                           placeholder="limb"
                           id="limb"
+                          name="limb"
                         ></textarea>
                         <label htmlFor="limb">Limb</label>
                       </div>
@@ -766,6 +936,7 @@ function Input() {
                           style={{ minHeight: "10vh" }}
                           placeholder="back"
                           id="back"
+                          name="back"
                         ></textarea>
                         <label htmlFor="back">Back/Lumber</label>
                       </div>
@@ -776,6 +947,7 @@ function Input() {
                           style={{ minHeight: "13vh" }}
                           placeholder="skin"
                           id="skin"
+                          name="skin"
                         ></textarea>
                         <label htmlFor="skin">
                           Skin/Condition/Perspiration
@@ -786,10 +958,18 @@ function Input() {
                   </form>
                 </div>
                 <div id="vitals" className="tab-pane fade">
-                  <form action="" id="">
+                  <form action="" id="vitals1">
                     <div className="d-flex justify-content-between align-items-center mb-3">
                       <h3>Vitals</h3>
-                      <button type="submit" className="btn btn-success ">
+                      <button
+                        value="vitals1"
+                        type="button"
+                        className="btn btn-success"
+                        onClick={(e) => {
+                          e.preventDefault();
+                          UpdateData(e.target.value);
+                        }}
+                      >
                         Save
                       </button>
                     </div>
@@ -801,6 +981,7 @@ function Input() {
                           style={{ minHeight: "10vh" }}
                           placeholder="appetite"
                           id="appetite"
+                          name="appetite"
                         ></textarea>
                         <label htmlFor="appetite">Appetite</label>
                       </div>
@@ -812,6 +993,7 @@ function Input() {
                           style={{ minHeight: "10vh" }}
                           placeholder="thirst"
                           id="thirst"
+                          name="thirst"
                         ></textarea>
                         <label htmlFor="thirst">Thirst</label>
                       </div>
@@ -823,6 +1005,7 @@ function Input() {
                           style={{ minHeight: "10vh" }}
                           placeholder="stool"
                           id="stool"
+                          name="stool"
                         ></textarea>
                         <label htmlFor="stool">Stool</label>
                       </div>
@@ -834,6 +1017,7 @@ function Input() {
                           style={{ minHeight: "10vh" }}
                           placeholder="urine"
                           id="urine"
+                          name="urine"
                         ></textarea>
                         <label htmlFor="urine">Urine</label>
                       </div>
@@ -845,6 +1029,7 @@ function Input() {
                           style={{ minHeight: "10vh" }}
                           placeholder="sleep"
                           id="sleep"
+                          name="sleep"
                         ></textarea>
                         <label htmlFor="sleep">Sleep/Dream</label>
                       </div>
@@ -856,6 +1041,7 @@ function Input() {
                           style={{ minHeight: "10vh" }}
                           placeholder="discharge"
                           id="discharge"
+                          name="discharge"
                         ></textarea>
                         <label htmlFor="discharge">Discharge (if any)</label>
                       </div>
@@ -864,10 +1050,18 @@ function Input() {
                   </form>
                 </div>
                 <div id="symptoms" className="tab-pane fade">
-                  <form action="" id="">
+                  <form action="" id="symptoms1">
                     <div className="d-flex justify-content-between align-items-center mb-3">
                       <h3>Symptoms and Conditions</h3>
-                      <button type="submit" className="btn btn-success ">
+                      <button
+                        value="symptoms1"
+                        type="button"
+                        className="btn btn-success"
+                        onClick={(e) => {
+                          e.preventDefault();
+                          UpdateData(e.target.value);
+                        }}
+                      >
                         Save
                       </button>
                     </div>
@@ -878,6 +1072,7 @@ function Input() {
                           style={{ minHeight: "10vh" }}
                           placeholder="addiction"
                           id="addiction"
+                          name="addiction"
                         ></textarea>
                         <label htmlFor="addiction">Addiction (if any)</label>
                       </div>
@@ -888,6 +1083,7 @@ function Input() {
                           style={{ minHeight: "10vh" }}
                           placeholder="desire"
                           id="desire"
+                          name="desire"
                         ></textarea>
                         <label htmlFor="desire">Desire</label>
                       </div>
@@ -898,6 +1094,7 @@ function Input() {
                           style={{ minHeight: "10vh" }}
                           placeholder="aversion"
                           id="aversion"
+                          name="aversion"
                         ></textarea>
                         <label htmlFor="aversion">Aversion</label>
                       </div>
@@ -908,6 +1105,7 @@ function Input() {
                           style={{ minHeight: "10vh" }}
                           placeholder="aggravation"
                           id="aggravation"
+                          name="aggravation"
                         ></textarea>
                         <label htmlFor="aggravation">Aggravation</label>
                       </div>
@@ -918,6 +1116,7 @@ function Input() {
                           style={{ minHeight: "10vh" }}
                           placeholder="amelioration"
                           id="amelioration"
+                          name="amelioration"
                         ></textarea>
                         <label htmlFor="amelioration">Amelioration</label>
                       </div>
@@ -931,10 +1130,18 @@ function Input() {
                     activeTab === "lab" && "show active"
                   }`}
                 >
-                  <form>
+                  <form id="lab1">
                     <div className="d-flex justify-content-between align-items-center mb-3">
                       <h3>Lab Tests</h3>
-                      <button type="submit" className="btn btn-success">
+                      <button
+                        type="button"
+                        className="btn btn-success"
+                        value="lab1"
+                        onClick={(e) => {
+                          e.preventDefault();
+                          PushLabData(e.target.value);
+                        }}
+                      >
                         Save
                       </button>
                     </div>
