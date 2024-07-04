@@ -10,6 +10,7 @@ import Admin from './components/Admin';
 import AddLab from './components/AddLab';
 import EditAndCheckup from './components/EditAndCheckup'; // Update the path if needed
 
+
 function App() {
   return (
     <Router>
