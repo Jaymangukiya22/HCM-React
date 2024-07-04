@@ -2,11 +2,13 @@ import React, { useState, useEffect } from "react";
 import "./styles/nav-styles.css";
 import "./styles/details.css";
 import CHECKUPandPRESCRIPTIONS from "./CHECKUPandPRESCRIPTIONS";
-function Input() {
+const Input = ({ setLId }) => {
   // State to manage left side tabs
   const [activeTab, setActiveTab] = useState("personal");
   // State to manage right side tabs
   const [activeRightTab, setActiveRightTab] = useState("home2");
+
+  const [lastInsertedId, setLastInsertedId] = useState(null); // State for last inserted ID
 
   // Function to handle left side tab change
   const handleTabChange = (tabName) => {
@@ -77,21 +79,17 @@ function Input() {
     WebkitOverflowScrolling: "touch" /* iOS Safari */,
   };
 
-  let l_id;
-  async function PushData(val) {
-    //val is the id of the form
+  const PushData = async (val) => {
     const form = document.getElementById(val);
     const formData = new FormData(form);
 
-    // Convert formData to a plain object
     const formDataObj = {};
     formData.forEach((value, key) => {
       formDataObj[key] = value;
     });
     console.log(formDataObj);
-    //remove photo from formDataObj
     delete formDataObj.photo;
-    // const url = "./action.php";
+
     const response = await fetch(
       "http://localhost/HCM-React/hcm-react/action.php",
       {
@@ -101,20 +99,21 @@ function Input() {
       }
     );
 
-    const responseText = await response.text(); // Get response as json
+    const responseText = await response.text();
     try {
-      const result = JSON.parse(responseText); // Parse the JSON
+      const result = JSON.parse(responseText);
       if (result.status) {
         console.log(result);
-        l_id = result.data.lastInsertedId;
-        console.log(l_id);
+        lastInsertedId = result.data.lastInsertedId;
+        setLId(lastInsertedId); // Update the state in ParentComponent
+        console.log(lastInsertedId);
       } else {
         console.error("Error: ", result.message);
       }
     } catch (error) {
       console.error("Failed to parse JSON response: ", responseText);
     }
-  }
+  };
 
   async function PushLabData(val) {
     // val is the id of the form
@@ -147,6 +146,7 @@ function Input() {
       if (result.status) {
         console.log(result);
         const lastInsertedId = result.data.lastInsertedId;
+        //  setLastInsertedId(insertedId); // Update the state
         console.log(lastInsertedId);
 
         // Update the formDataObj with the last inserted ID as caseno
@@ -210,7 +210,11 @@ function Input() {
       {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ data: formDataObj, action: "update", id: l_id }),
+        body: JSON.stringify({
+          data: formDataObj,
+          action: "update",
+          id: lastInsertedId,
+        }),
       }
     );
 
@@ -1253,11 +1257,11 @@ function Input() {
               </div>
             </div>
           </div>
-<CHECKUPandPRESCRIPTIONS/>
+          <CHECKUPandPRESCRIPTIONS />
         </div>
       </div>
     </div>
   );
-}
+};
 
 export default Input;

@@ -1,41 +1,39 @@
-function CHECKUPandPRESCRIPTIONS() {
-  async function PushCheckupData(val) {
-    //val is the id of the form
+import React from "react";
+
+const CHECKUPandPRESCRIPTIONS = ({ l_id }) => {
+  const PushCheckupData = async (val) => {
     const form = document.getElementById(val);
     const formData = new FormData(form);
 
-    // Convert formData to a plain object
     const formDataObj = {};
     formData.forEach((value, key) => {
       formDataObj[key] = value;
     });
-    console.log(formDataObj);
-    //remove photo from formDataObj
+
     delete formDataObj.photo;
-    // const url = "./action.php";
+    formDataObj.caseno = l_id; // Use the l_id passed as prop
+    console.log(formDataObj);
     const response = await fetch(
       "http://localhost/HCM-React/hcm-react/action.php",
       {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ data: formDataObj, action: "insert" }),
+        body: JSON.stringify({ data: formDataObj, action: "insert_checkup" }),
       }
     );
 
-    const responseText = await response.text(); // Get response as json
+    const responseText = await response.text();
     try {
-      const result = JSON.parse(responseText); // Parse the JSON
+      const result = JSON.parse(responseText);
       if (result.status) {
         console.log(result);
-        l_id = result.data.lastInsertedId;
-        console.log(l_id);
       } else {
         console.error("Error: ", result.message);
       }
     } catch (error) {
       console.error("Failed to parse JSON response: ", responseText);
     }
-  }
+  };
   return (
     <div className="col-md-5 p-2" style={{ padding: "0px" }}>
       <ul
@@ -97,94 +95,104 @@ function CHECKUPandPRESCRIPTIONS() {
       </ul>
 
       <div className="tab-content">
-        <div id="home2" className="tab-pane fade show active">
-          <div
-            className="rounded-3 p-2"
-            style={{ backgroundColor: "#d1d3ab21" }}
-          >
-            <div className="input-group">
-              <span
-                className="input-group-text fixed-width p-3 border-0"
-                id="inputGroup-sizing-default"
-                style={{
-                  borderTopLeftRadius: "8px",
-                  borderBottomLeftRadius: "8px",
-                  color: "bisque",
-                }}
-              >
-                Date
-              </span>
-              <input
-                type="text"
-                id="date"
-                className="form-control border-0"
-                aria-label="Sizing example input"
-                aria-describedby="inputGroup-sizing-default"
-                placeholder="Enter Date"
-              />
-            </div>
-
-            <div className="input-group mt-2">
-              <span
-                className="input-group-text fixed-width p-3 border-0"
-                id="inputGroup-sizing-default"
-                style={{ color: "bisque", minHeight: "20vh" }}
-              >
-                Remarks
-              </span>
-              <div className="form-floating">
-                <textarea
-                  className="form-control border-0"
-                  style={{ minHeight: "20vh" }}
-                  placeholder="Enter Remarks (if any)"
-                ></textarea>
-              </div>
-            </div>
-            <div className="input-group mt-2">
-              <span
-                className="input-group-text fixed-width p-3 border-0"
-                id="inputGroup-sizing-default"
-                style={{
-                  color: "bisque",
-                  backgroundColor: "black !important",
-                }}
-              >
-                Photos
-              </span>
-              <input
-                className="form-control rounded-3 p-3 bg-light border-0"
-                style={{
-                  borderTopLeftRadius: "0px",
-                  borderBottomLeftRadius: "0px",
-                }}
-                type="file"
-                placeholder=""
-                aria-label=""
-                id="file-upload"
-              />
-            </div>
-            <button
-              className="rounded-3 p-3 mt-2 border-0 w-100"
-              id="save-checkup-button"
-              style={{
-                backgroundColor: "#1da453",
-                color: "white",
-                fontWeight: 500,
-              }}
+        <form action="" id="checkup">
+          <div id="home2" className="tab-pane fade show active">
+            <div
+              className="rounded-3 p-2"
+              style={{ backgroundColor: "#d1d3ab21" }}
             >
-              SAVE{" "}
-              <img
-                src="Images And Icons/arrow-right-solid (1).svg"
-                style={{
-                  height: "10px",
-                  opacity: "100%",
-                  transform: "translateY(-15%)",
+              <div className="input-group">
+                <span
+                  className="input-group-text fixed-width p-3 border-0"
+                  id="inputGroup-sizing-default"
+                  style={{
+                    borderTopLeftRadius: "8px",
+                    borderBottomLeftRadius: "8px",
+                    color: "bisque",
+                  }}
+                >
+                  Date
+                </span>
+                <input
+                  type="text"
+                  id="date"
+                  name="date"
+                  className="form-control border-0"
+                  aria-label="Sizing example input"
+                  aria-describedby="inputGroup-sizing-default"
+                  placeholder="Enter Date"
+                />
+              </div>
+
+              <div className="input-group mt-2">
+                <span
+                  className="input-group-text fixed-width p-3 border-0"
+                  id="inputGroup-sizing-default"
+                  style={{ color: "bisque", minHeight: "20vh" }}
+                >
+                  Remarks
+                </span>
+                <div className="form-floating">
+                  <textarea
+                    className="form-control border-0"
+                    style={{ minHeight: "20vh" }}
+                    placeholder="Enter Remarks (if any)"
+                    name="remarks"
+                  ></textarea>
+                </div>
+              </div>
+              <div className="input-group mt-2">
+                <span
+                  className="input-group-text fixed-width p-3 border-0"
+                  id="inputGroup-sizing-default"
+                  style={{
+                    color: "bisque",
+                    backgroundColor: "black !important",
+                  }}
+                >
+                  Photos
+                </span>
+                <input
+                  className="form-control rounded-3 p-3 bg-light border-0"
+                  style={{
+                    borderTopLeftRadius: "0px",
+                    borderBottomLeftRadius: "0px",
+                  }}
+                  type="file"
+                  placeholder=""
+                  aria-label=""
+                  id="file-upload"
+                />
+              </div>
+              <button
+                className="rounded-3 p-3 mt-2 border-0 w-100"
+                type="button"
+                value="checkup"
+                onClick={(e) => {
+                  e.preventDefault();
+                  PushCheckupData(e.target.value);
                 }}
-                alt=""
-              />
-            </button>
+                id="save-checkup-button"
+                style={{
+                  backgroundColor: "#1da453",
+                  color: "white",
+                  fontWeight: 500,
+                }}
+              >
+                SAVE{" "}
+                <img
+                  src="Images And Icons/arrow-right-solid (1).svg"
+                  style={{
+                    height: "10px",
+                    opacity: "100%",
+                    transform: "translateY(-15%)",
+                  }}
+                  alt=""
+                />
+              </button>
+            </div>
           </div>
-        </div>
+        </form>
         <div id="menu12" className="tab-pane fade">
           <div
             className="rounded-3 p-2"
@@ -427,6 +435,6 @@ function CHECKUPandPRESCRIPTIONS() {
       </div>
     </div>
   );
-}
+};
 
 export default CHECKUPandPRESCRIPTIONS;
