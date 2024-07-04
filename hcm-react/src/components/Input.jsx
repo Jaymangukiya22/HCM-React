@@ -3,6 +3,13 @@ import "./styles/nav-styles.css";
 import "./styles/details.css";
 import CHECKUPandPRESCRIPTIONS from "./CHECKUPandPRESCRIPTIONS";
 function Input() {
+
+  
+
+
+
+
+
   // State to manage left side tabs
   const [activeTab, setActiveTab] = useState("personal");
   // State to manage right side tabs
@@ -322,7 +329,8 @@ function Input() {
                       <h3>Personal Details</h3>
                       <button
                         type="button"
-                        className="btn btn-success"
+                        className="btn btn-success save-button"
+                        data-tab-id="personal"
                         value="personal1"
                         onClick={(e) => {
                           e.preventDefault();
@@ -543,7 +551,7 @@ function Input() {
                       <button
                         value="history1"
                         type="button"
-                        className="btn btn-success"
+                        className="btn btn-success save-button"
                         onClick={(e) => {
                           e.preventDefault();
                           UpdateData(e.target.value);
@@ -620,7 +628,7 @@ function Input() {
                       <button
                         value="measurements1"
                         type="button"
-                        className="btn btn-success"
+                        className="btn btn-success save-button"
                         onClick={(e) => {
                           e.preventDefault();
                           UpdateData(e.target.value);
@@ -732,7 +740,7 @@ function Input() {
                       <button
                         value="mind1"
                         type="button"
-                        className="btn btn-success"
+                        className="btn btn-success save-button"
                         onClick={(e) => {
                           e.preventDefault();
                           UpdateData(e.target.value);
@@ -808,7 +816,7 @@ function Input() {
                       <button
                         value="observations1"
                         type="button"
-                        className="btn btn-success"
+                        className="btn btn-success save-button"
                         onClick={(e) => {
                           e.preventDefault();
                           UpdateData(e.target.value);
@@ -973,7 +981,7 @@ function Input() {
                       <button
                         value="vitals1"
                         type="button"
-                        className="btn btn-success"
+                        className="btn btn-success save-button"
                         onClick={(e) => {
                           e.preventDefault();
                           UpdateData(e.target.value);
@@ -1065,7 +1073,7 @@ function Input() {
                       <button
                         value="symptoms1"
                         type="button"
-                        className="btn btn-success"
+                        className="btn btn-success save-button"
                         onClick={(e) => {
                           e.preventDefault();
                           UpdateData(e.target.value);
@@ -1144,7 +1152,7 @@ function Input() {
                       <h3>Lab Tests</h3>
                       <button
                         type="button"
-                        className="btn btn-success"
+                        className="btn btn-success save-button"
                         value="lab1"
                         onClick={(e) => {
                           e.preventDefault();
@@ -1225,7 +1233,7 @@ function Input() {
                             disabled={!isEditable}
                           />
                           <button
-                            className="btn btn-success"
+                            className="btn btn-success save-button"
                             type="button"
                             onClick={savelab}
                           >
