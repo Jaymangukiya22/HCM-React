@@ -346,13 +346,13 @@ function Input() {
                       </div>
                       <div className="form-group">
                         <div className="row">
-                          <div className="col-md-4">
+                          <div className="col-md-5">
                             <div className="form-group">
                               <label htmlFor="gender">Gender</label>
                               <br />
-                              <div className="m-2">
+                              <div className="">
                                 <div
-                                  className="inline p-3"
+                                  className="inline  p-2"
                                   style={{ display: "inline" }}
                                 >
                                   <input
@@ -363,14 +363,14 @@ function Input() {
                                     value="male"
                                   />
                                   <label
-                                    className="custom-control-label"
+                                    className="custom-control-label p-1"
                                     htmlFor="male"
                                   >
                                     Male
                                   </label>
                                 </div>
                                 <div
-                                  className="inline p-3"
+                                  className="inline  p-2"
                                   style={{ display: "inline" }}
                                 >
                                   <input
@@ -381,14 +381,14 @@ function Input() {
                                     value="female"
                                   />
                                   <label
-                                    className="custom-control-label"
+                                    className="custom-control-label p-1"
                                     htmlFor="female"
                                   >
                                     Female
                                   </label>
                                 </div>
                                 <div
-                                  className="inline p-3"
+                                  className="inline p-2 "
                                   style={{ display: "inline" }}
                                 >
                                   <input
@@ -399,7 +399,7 @@ function Input() {
                                     value="other"
                                   />
                                   <label
-                                    className="custom-control-label"
+                                    className="custom-control-label p-1"
                                     htmlFor="other"
                                   >
                                     Other
@@ -408,7 +408,7 @@ function Input() {
                               </div>
                             </div>
                           </div>
-                          <div className="col-md-4">
+                          <div className="col-md-3">
                             <div className="form-floating mb-3">
                               <input
                                 type="number"
