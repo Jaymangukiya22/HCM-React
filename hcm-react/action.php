@@ -32,17 +32,62 @@ try {
                     }
                     break;
 
-                case 'update':
-                   
-                    $id = $input['id'];
-                   // exit();
-                    $response = DB::update(test_details, $input['data'], ['caseno'=>$id]);
-                    if ($response == "Update Successfully") {
-                        echo json_encode(['status' => true, "message" => "Updated Successfully", 'data' => $response]);
-                    } else {
-                        echo json_encode(['status' => false, "message" => "Could not update", 'data' => $response]);
-                    }
-                    break;
+                    case 'update':
+                        // Ensure 'id' is set
+                        if (!isset($input['id'])) {
+                            echo json_encode(['status' => false, "message" => "ID not provided"]);
+                            exit;
+                        }
+                    
+                        $id = $input['id'];
+                        $data = $input['data'];
+                    
+                        // Handle the mind array if it exists
+                        if (isset($data['mind[]'])) {
+                            $data['mind'] = $data['mind[]'];
+                            unset($data['mind[]']);
+                        }
+                    
+                        $response = DB::update('test_details', $data, ['caseno' => $id]);
+                        
+                        if ($response == "Update Successfully") {
+                            echo json_encode(['status' => true, "message" => "Updated Successfully", 'data' => $response]);
+                        } else {
+                            // Log the exact response for debugging purposes
+                            error_log("Update failed: " . print_r($response, true));
+                            echo json_encode(['status' => false, "message" => "Could not update", 'data' => $response]);
+                        }
+                        break;
+                        case 'update':
+                            // Ensure 'id' is set
+                            if (!isset($input['id'])) {
+                                echo json_encode(['status' => false, "message" => "ID not provided"]);
+                                exit;
+                            }
+                        
+                            $id = $input['id'];
+                            $data = $input['data'];
+                        
+                            // Handle the mind array if it exists
+                            if (isset($data['mind'])) {
+                                $data['mind'] = implode(",", $data['mind']); // Convert array to comma-separated string
+                            }
+                        
+                            $response = DB::update('test_details', $data, ['caseno' => $id]);
+                        
+                            if ($response == "Update Successfully") {
+                                echo json_encode(['status' => true, "message" => "Updated Successfully", 'data' => $response]);
+                            } else {
+                                // Log the exact response for debugging purposes
+                                error_log("Update failed: " . print_r($response, true));
+                                echo json_encode(['status' => false, "message" => "Could not update", 'data' => $response]);
+                            }
+                            break;
+                        
+                        
+                        
+                        
+                                            
 
             default:
                 echo json_encode(['status' => false, "message" => "Invalid action"]);

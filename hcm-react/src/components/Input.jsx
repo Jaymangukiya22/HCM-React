@@ -182,19 +182,29 @@ function Input() {
   }
 
   async function UpdateData(val) {
-    //val is the id of the form
     const form = document.getElementById(val);
     const formData = new FormData(form);
 
-    // Convert formData to a plain object
     const formDataObj = {};
     formData.forEach((value, key) => {
-      formDataObj[key] = value;
+      if (key === "mind[]") {
+        if (!formDataObj[key]) {
+          formDataObj[key] = [];
+        }
+        formDataObj[key].push(value);
+      } else {
+        formDataObj[key] = value;
+      }
     });
+
+    // Rename mind[] to mind
+    if (formDataObj["mind[]"]) {
+      formDataObj["mind"] = formDataObj["mind[]"];
+      delete formDataObj["mind[]"];
+    }
+
     console.log(formDataObj);
-    //remove photo from formDataObj
-    delete formDataObj.photo;
-    // const url = "./action.php";
+
     const response = await fetch(
       "http://localhost/HCM-React/hcm-react/action.php",
       {
@@ -204,9 +214,9 @@ function Input() {
       }
     );
 
-    const responseText = await response.text(); // Get response as json
+    const responseText = await response.text();
     try {
-      const result = JSON.parse(responseText); // Parse the JSON
+      const result = JSON.parse(responseText);
       if (result.status) {
         console.log(result);
       } else {
@@ -731,7 +741,6 @@ function Input() {
                         Save
                       </button>
                     </div>
-                    {/* Rest of history form */}
                     <div id="content">
                       <div className="input-group mt-3">
                         <div
@@ -913,7 +922,7 @@ function Input() {
                             className="form-control"
                             id="genitalia"
                             placeholder="Genitalia"
-                            name="genitalia"
+                            name="other"
                           ></textarea>
                           <label htmlFor="genitalia">Genitalia</label>
                         </div>
