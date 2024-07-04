@@ -7,15 +7,23 @@
       href="https://stackpath.bootstrapcdn.com/bootstrap/5.3.0/css/bootstrap.min.css"
       rel="stylesheet"
     />
+
     <link href="details.css" rel="stylesheet" />
     <!-- <link rel="stylesheet" href="navbar.css"> -->
     <link rel="stylesheet" href="styles.css" />
     <link rel="stylesheet" href="details.css" />
     <link rel="stylesheet" href="table-styles.css" />
     <link href="https://cdn.lineicons.com/4.0/lineicons.css" rel="stylesheet" />
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet"
-        integrity="sha384-KK94CHFLLe+nY2dmCWGMq91rCGa5gtU4mk92HdvYe+M/SXH301p5ILy+dN9+nJOZ" crossorigin="anonymous">
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
+    />
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-KK94CHFLLe+nY2dmCWGMq91rCGa5gtU4mk92HdvYe+M/SXH301p5ILy+dN9+nJOZ"
+      crossorigin="anonymous"
+    />
 
     <script src="https://kit.fontawesome.com/a076d05399.js"></script>
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
@@ -51,48 +59,136 @@
         button.parentElement.remove();
       }
     </script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"
-        integrity="sha384-ENjdO4Dr2bkBIFxQpeoTz1HIcje39Wm4jDKdf19U8gI4ddQ3GYNS7NTKfAdVQSZe"
-        crossorigin="anonymous"></script>
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-ENjdO4Dr2bkBIFxQpeoTz1HIcje39Wm4jDKdf19U8gI4ddQ3GYNS7NTKfAdVQSZe"
+      crossorigin="anonymous"
+    ></script>
     <script>
+      const button = document.querySelector(".toggle-btn");
 
-        const button = document.querySelector(".toggle-btn");
+      button.addEventListener("click", function () {
+        document.querySelector("#sidebar").classList.toggle("expand");
+      });
 
-button.addEventListener("click", function () {
-  document.querySelector("#sidebar").classList.toggle("expand");
-});
+      function test() {
+        event.preventDefault();
 
-function test() {
-  event.preventDefault();
+        var container = document.createElement("div");
+        container.setAttribute("class", "input-group mb-3");
 
-  var container = document.createElement('div');
-  container.setAttribute('class', 'input-group mb-3');
+        var input1 = document.createElement("input");
+        input1.setAttribute("type", "text");
+        input1.setAttribute("name", "labtest");
+        input1.setAttribute(
+          "class",
+          "form-control p-3 border-0 rounded-3 me-auto "
+        );
+        input1.setAttribute("placeholder", "Enter New Lab Test");
 
-  var input1 = document.createElement('input');
-  input1.setAttribute('type', 'text');
-  input1.setAttribute('name', 'labtest');
-  input1.setAttribute('class', 'form-control p-3 border-0 rounded-3 me-auto ');
-  input1.setAttribute('placeholder', 'Enter New Lab Test');
+        var removeButton = document.createElement("button");
+        removeButton.setAttribute("class", "btn btn-danger");
+        removeButton.setAttribute("type", "button");
+        removeButton.innerHTML = "Remove";
+        removeButton.onclick = function () {
+          container.remove();
+        };
 
-  var removeButton = document.createElement('button');
-  removeButton.setAttribute('class', 'btn btn-danger');
-  removeButton.setAttribute('type', 'button');
-  removeButton.innerHTML = 'Remove';
-  removeButton.onclick = function() {
-      container.remove();
-  };
+        container.appendChild(input1);
+        container.appendChild(removeButton);
 
-  container.appendChild(input1);
-  container.appendChild(removeButton);
-
-  document.querySelector('#labtest .modal-body .mb-3').appendChild(container);
-}
-
-   
+        document
+          .querySelector("#labtest .modal-body .mb-3")
+          .appendChild(container);
+      }
     </script>
+<<<<<<< Updated upstream
     
       
     
+=======
+    <script>
+      let l_id;
+      async function PushData(val) {
+        //val is the id of the form
+        const form = document.getElementById(val);
+        const formData = new FormData(form);
+
+        // Convert formData to a plain object
+        const formDataObj = {};
+        formData.forEach((value, key) => {
+          formDataObj[key] = value;
+        });
+        console.log(formDataObj);
+        //remove photo from formDataObj
+        delete formDataObj.photo;
+        // const url = "./action.php";
+        const response = await fetch(
+          "http://localhost/HCM-React/hcm-react/action.php",
+          {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ data: formDataObj, action: "insert" }),
+          }
+        );
+
+        const responseText = await response.text(); // Get response as json
+        try {
+          const result = JSON.parse(responseText); // Parse the JSON
+          if (result.status) {
+            console.log(result);
+            l_id = result.data.lastInsertedId;
+            console.log(l_id);
+          } else {
+            console.error("Error: ", result.message);
+          }
+        } catch (error) {
+          console.error("Failed to parse JSON response: ", responseText);
+        }
+      }
+    </script>
+    <script>
+      async function UpdateData(val) {
+        //val is the id of the form
+        const form = document.getElementById(val);
+        const formData = new FormData(form);
+
+        // Convert formData to a plain object
+        const formDataObj = {};
+        formData.forEach((value, key) => {
+          formDataObj[key] = value;
+        });
+        console.log(formDataObj);
+        //remove photo from formDataObj
+        delete formDataObj.photo;
+        // const url = "./action.php";
+        const response = await fetch(
+          "http://localhost/HCM-React/hcm-react/action.php",
+          {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              data: formDataObj,
+              action: "update",
+              id: l_id,
+            }),
+          }
+        );
+
+        const responseText = await response.text(); // Get response as json
+        try {
+          const result = JSON.parse(responseText); // Parse the JSON
+          if (result.status) {
+            console.log(result);
+          } else {
+            console.error("Error: ", result.message);
+          }
+        } catch (error) {
+          console.error("Failed to parse JSON response: ", responseText);
+        }
+      }
+    </script>
+>>>>>>> Stashed changes
 
     <!-- <script>
       $(document).ready(function () {
@@ -142,4 +238,5 @@ function test() {
       });
     </script> -->
   </body>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/5.1.0/js/bootstrap.bundle.min.js"></script>
 </html>

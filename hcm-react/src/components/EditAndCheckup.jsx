@@ -12,4 +12,4 @@ const EditAndCheckup = () => {
   );
 };
 
-export default EditAndCheckup;
+export default EditAndCheckup
