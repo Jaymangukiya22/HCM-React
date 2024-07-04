@@ -252,7 +252,7 @@ function Input() {
                     data-toggle="tab"
                     href="#history"
                   >
-                    History
+                    Patient History
                   </a>
                 </li>
                 <li className="nav-item">
