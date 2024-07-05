@@ -158,5 +158,56 @@
       });
     </script> -->
   </body>
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      function handleSaveAndMoveNext(tabId) {
+        const tabLinks = [
+          "personal",
+          "history",
+          "measurements",
+          "mind",
+          "observations",
+          "vitals",
+          "symptoms",
+          "lab",
+        ];
+        const currentIndex = tabLinks.indexOf(tabId);
+        if (currentIndex !== -1 && currentIndex < tabLinks.length - 1) {
+          const nextTab = tabLinks[currentIndex + 1];
+          setActiveTab(nextTab);
+        }
+      }
+
+      function setActiveTab(tabId) {
+        // Add your logic to switch to the tab with tabId
+        const tabs = document.querySelectorAll(".tab");
+        tabs.forEach((tab) => {
+          tab.classList.remove("active");
+          if (tab.id === tabId) {
+            tab.classList.add("active");
+          }
+        });
+
+        const tabContents = document.querySelectorAll(".tab-content");
+        tabContents.forEach((content) => {
+          content.classList.remove("active");
+          if (content.id === `${tabId}-content`) {
+            content.classList.add("active");
+          }
+        });
+      }
+
+      // Attach the event listener to the save buttons
+      const saveButtons = document.querySelectorAll(".save-button");
+      saveButtons.forEach((button) => {
+        button.addEventListener("click", function (e) {
+          e.preventDefault();
+          const tabId = e.target.getAttribute("data-tab-id");
+          handleSaveAndMoveNext(tabId);
+        });
+      });
+    });
+  </script>
+
   <script src="https://stackpath.bootstrapcdn.com/bootstrap/5.1.0/js/bootstrap.bundle.min.js"></script>
 </html>
