@@ -1359,8 +1359,8 @@ function Input() {
             </ul>
 
             <div className="tab-content">
-              <form action="" id="checkup">
-                <div id="home2" className="tab-pane fade show active">
+              <div id="home2" className="tab-pane fade show active">
+                <form action="" id="checkup">
                   <div
                     className="rounded-3 p-2"
                     style={{ backgroundColor: "#d1d3ab21" }}
@@ -1454,8 +1454,8 @@ function Input() {
                       />
                     </button>
                   </div>
-                </div>
-              </form>
+                </form>
+              </div>
               <div id="menu12" className="tab-pane fade">
                 <div
                   className="rounded-3 p-2"
