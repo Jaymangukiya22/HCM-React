@@ -292,6 +292,7 @@ function Input() {
                     className="nav-link left-nav-item"
                     data-toggle="tab"
                     href="#history"
+                    id="history-anchor"
                   >
                     Patient History
                   </a>
@@ -301,6 +302,7 @@ function Input() {
                     className="nav-link left-nav-item"
                     data-toggle="tab"
                     href="#measurements"
+                    id="measurements-anchor"
                   >
                     Measurements
                   </a>
@@ -310,6 +312,7 @@ function Input() {
                     className="nav-link left-nav-item"
                     data-toggle="tab"
                     href="#mind"
+                    id="mind-anchor"
                   >
                     Mind
                   </a>
@@ -319,6 +322,7 @@ function Input() {
                     className="nav-link left-nav-item"
                     data-toggle="tab"
                     href="#observations"
+                    id="observations-anchor"
                   >
                     General Observations
                   </a>
@@ -328,6 +332,7 @@ function Input() {
                     className="nav-link left-nav-item"
                     data-toggle="tab"
                     href="#vitals"
+                    id="vitals-anchor"
                   >
                     Vitals
                   </a>
@@ -337,6 +342,7 @@ function Input() {
                     className="nav-link left-nav-item"
                     data-toggle="tab"
                     href="#symptoms"
+                    id="symptoms-anchor"
                   >
                     Symptoms and Conditions
                   </a>
@@ -346,6 +352,7 @@ function Input() {
                     className="nav-link left-nav-item"
                     data-toggle="tab"
                     href="#lab"
+                    id="lab-anchor"
                   >
                     Lab Tests
                   </a>
@@ -367,12 +374,14 @@ function Input() {
                       <h3>Personal Details</h3>
                       <button
                         type="button"
+                        id="save-button-to-personalhistory"
                         className="btn btn-success save-button"
                         data-tab-id="personal"
                         value="personal1"
                         onClick={(e) => {
                           e.preventDefault();
                           PushData(e.target.value);
+                          document.getElementById("history-anchor").click();
                         }}
                       >
                         Save
@@ -593,6 +602,9 @@ function Input() {
                         onClick={(e) => {
                           e.preventDefault();
                           UpdateData(e.target.value);
+                          document
+                            .getElementById("measurements-anchor")
+                            .click();
                         }}
                       >
                         Save
@@ -670,6 +682,7 @@ function Input() {
                         onClick={(e) => {
                           e.preventDefault();
                           UpdateData(e.target.value);
+                          document.getElementById("mind-anchor").click();
                         }}
                       >
                         Save
@@ -778,10 +791,18 @@ function Input() {
                       <button
                         value="mind1"
                         type="button"
+                        id="mind-save"
                         className="btn btn-success save-button"
                         onClick={(e) => {
                           e.preventDefault();
                           UpdateData(e.target.value);
+                          document
+                            .getElementById("mind-save")
+                            .addEventListener("click", function () {
+                              document
+                                .getElementById("observations-anchor")
+                                .click();
+                            });
                         }}
                       >
                         Save
@@ -858,6 +879,7 @@ function Input() {
                         onClick={(e) => {
                           e.preventDefault();
                           UpdateData(e.target.value);
+                          document.getElementById("vitals-anchor").click();
                         }}
                       >
                         Save
@@ -1019,10 +1041,18 @@ function Input() {
                       <button
                         value="vitals1"
                         type="button"
+                        id="vitals-save"
                         className="btn btn-success save-button"
                         onClick={(e) => {
                           e.preventDefault();
                           UpdateData(e.target.value);
+                          document
+                            .getElementById("vitals-save")
+                            .addEventListener("click", function () {
+                              document
+                                .getElementById("symptoms-anchor")
+                                .click();
+                            });
                         }}
                       >
                         Save
@@ -1111,10 +1141,16 @@ function Input() {
                       <button
                         value="symptoms1"
                         type="button"
+                        id="symptoms-save"
                         className="btn btn-success save-button"
                         onClick={(e) => {
                           e.preventDefault();
                           UpdateData(e.target.value);
+                          document
+                            .getElementById("symptoms-save")
+                            .addEventListener("click", function () {
+                              document.getElementById("lab-anchor").click();
+                            });
                         }}
                       >
                         Save
