@@ -797,13 +797,16 @@ function Input() {
                         onClick={(e) => {
                           e.preventDefault();
                           UpdateData(e.target.value);
+                          // document
+                          //   .getElementById("mind-save")
+                          //   .addEventListener("click", function () {
+                          //     document
+                          //       .getElementById("observations-anchor")
+                          //       .click();
+                          //   });
                           document
-                            .getElementById("mind-save")
-                            .addEventListener("click", function () {
-                              document
-                                .getElementById("observations-anchor")
-                                .click();
-                            });
+                            .getElementById("observations-anchor")
+                            .click();
                         }}
                       >
                         Save
@@ -1047,13 +1050,14 @@ function Input() {
                         onClick={(e) => {
                           e.preventDefault();
                           UpdateData(e.target.value);
-                          document
-                            .getElementById("vitals-save")
-                            .addEventListener("click", function () {
-                              document
-                                .getElementById("symptoms-anchor")
-                                .click();
-                            });
+                          // document
+                          //   .getElementById("vitals-save")
+                          //   .addEventListener("click", function () {
+                          //     document
+                          //       .getElementById("symptoms-anchor")
+                          //       .click();
+                          //   });
+                          document.getElementById("symptoms-anchor").click();
                         }}
                       >
                         Save
@@ -1147,11 +1151,12 @@ function Input() {
                         onClick={(e) => {
                           e.preventDefault();
                           UpdateData(e.target.value);
-                          document
-                            .getElementById("symptoms-save")
-                            .addEventListener("click", function () {
-                              document.getElementById("lab-anchor").click();
-                            });
+                          // document
+                          //   .getElementById("symptoms-save")
+                          //   .addEventListener("click", function () {
+                          //     document.getElementById("lab-anchor").click();
+                          //   });
+                          document.getElementById("lab-anchor").click();
                         }}
                       >
                         Save
