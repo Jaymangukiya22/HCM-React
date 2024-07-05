@@ -504,6 +504,7 @@ function Input() {
                               type="text"
                               className="form-control"
                               id="complexion"
+                              name="complexion"
                               placeholder="Complexion"
                             />
                             <label htmlFor="complexion">Complexion</label>
