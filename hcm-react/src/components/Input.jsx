@@ -5,6 +5,33 @@ import "./styles/details.css";
 function Input() {
   const [caseno, setCaseno] = useState(null);
   const [l_id, setL_id] = useState(null);
+
+  useEffect(() => {
+    function updateLeftToBePaid() {
+      var prev_amt =
+        parseFloat(
+          $("#prev_amt")
+            .text()
+            .replace(/[^\d.-]/g, "")
+        ) || 0;
+      var present_amt = parseFloat($("#present_amt").val()) || 0;
+      var paid_amt = parseFloat($("#paid_amt").val()) || 0;
+      var left_amt = prev_amt + present_amt - paid_amt;
+      // left_amt = left_amt.append("₹");
+      $("#left_amt").text(`₹${left_amt.toFixed(2)}`);
+    }
+
+    // Trigger calculation on input change
+    $("#present_amt, #paid_amt").on("input", updateLeftToBePaid);
+
+    // Clean up event listeners on component unmount
+    return () => {
+      $("#present_amt, #paid_amt").off("input", updateLeftToBePaid);
+    };
+  }, []); 
+
+
+
   // function getLastinsertID() {
   //   if (caseno === undefined || caseno === null || caseno === "")
   //     return "not set";
@@ -1672,96 +1699,97 @@ function Input() {
                 </form>
               </div>
               <div id="menu22" className="tab-pane fade w-100">
-                <div
-                  className="rounded-3 text-align-center p-2 fs-6"
-                  style={{ minWidth: "100%", backgroundColor: "#0e825dc6" }}
-                >
-                  <input
-                    type="hidden"
-                    id="date"
-                    className="form-control border-0 right-align"
-                    aria-label="Sizing example input"
-                    aria-describedby="inputGroup-sizing-default"
-                    placeholder="Enter Date"
-                    style={{ backgroundColor: "#d1d3ab3c" }}
-                  />
-                  <div
-                    className="justify-content-center align-items-center form-control p-3 rounded-3 input-group-text-right"
-                    style={{ backgroundColor: "#ffffff", color: "black" }}
-                  >
-                    <span>Amount Previously Left to be paid:</span>{" "}
-                    <b id="prev_amt">₹400.00</b>
-                  </div>
-                  <div className="input-group mt-2">
-                    <span
-                      className="input-group-text p-3 border-0"
-                      id="inputGroup-sizing-default"
-                      style={{
-                        backgroundColor: "rgb(255, 255, 255)",
-                        color: "black",
-                        fontWeight: 500,
-                        minWidth: "26%",
-                      }}
-                    >
-                      To be paid
-                    </span>
-                    <input
-                      id="present_amt"
-                      type="number"
-                      className="form-control border-0 right-align"
-                      aria-label="Sizing example input"
-                      aria-describedby="inputGroup-sizing-default"
-                      style={{
-                        backgroundColor: "rgba(255, 255, 255, 0.801)",
-                      }}
-                      placeholder="Enter Here"
-                    />
-                  </div>
-                  <div className="input-group mt-2">
-                    <span
-                      className="input-group-text p-3 border-0"
-                      id="inputGroup-sizing-default"
-                      style={{
-                        backgroundColor: "rgb(255, 255, 255)",
-                        color: "black",
-                        fontWeight: 500,
-                        minWidth: "26%",
-                      }}
-                    >
-                      Amount paid
-                    </span>
-                    <input
-                      id="paid_amt"
-                      type="number"
-                      className="form-control border-0 right-align"
-                      aria-label="Sizing example input"
-                      aria-describedby="inputGroup-sizing-default"
-                      style={{
-                        backgroundColor: "rgba(255, 255, 255, 0.801)",
-                      }}
-                      placeholder="Enter Here"
-                    />
-                  </div>
-                  <div
-                    className="justify-content-center form-control align-items-center p-3 rounded-3 mt-2 input-group-text-right"
-                    style={{ backgroundColor: "#ffffff", color: "black" }}
-                  >
-                    <span>Amount that will be left to be paid:</span>{" "}
-                    <b id="left_amt">₹400.00</b>
-                  </div>
-                  <button
-                    className="rounded-3 p-3 mt-2 border-0 w-100"
-                    id="save-payment-button"
-                    style={{
-                      backgroundColor: "#1da453",
-                      color: "white",
-                      fontWeight: 500,
-                    }}
-                  >
-                    SAVE <i className="fa-solid fa-check"></i>
-                  </button>
-                </div>
-              </div>
+      <div
+        className="rounded-3 text-align-center p-2 fs-6"
+        style={{ minWidth: "100%", backgroundColor: "#0e825dc6" }}
+      >
+        <input
+          type="hidden"
+          id="date"
+          className="form-control border-0 right-align"
+          aria-label="Sizing example input"
+          aria-describedby="inputGroup-sizing-default"
+          placeholder="Enter Date"
+          style={{ backgroundColor: "#d1d3ab3c" }}
+        />
+        <div
+          className="justify-content-center align-items-center form-control p-3 rounded-3 input-group-text-right"
+          style={{ backgroundColor: "#ffffff", color: "black" }}
+        >
+          <span>Amount Previously Left to be paid:</span>{" "}
+          <b id="prev_amt">₹400.00</b>
+        </div>
+        <div className="input-group mt-2">
+          <span
+            className="input-group-text p-3 border-0"
+            id="inputGroup-sizing-default"
+            style={{
+              backgroundColor: "rgb(255, 255, 255)",
+              color: "black",
+              fontWeight: 500,
+              minWidth: "26%",
+            }}
+          >
+            To be paid
+          </span>
+          <input
+            id="present_amt"
+            type="number"
+            className="form-control border-0 right-align"
+            aria-label="Sizing example input"
+            aria-describedby="inputGroup-sizing-default"
+            style={{
+              backgroundColor: "rgba(255, 255, 255, 0.801)",
+            }}
+            placeholder="Enter Here"
+          />
+        </div>
+        <div className="input-group mt-2">
+          <span
+            className="input-group-text p-3 border-0"
+            id="inputGroup-sizing-default"
+            style={{
+              backgroundColor: "rgb(255, 255, 255)",
+              color: "black",
+              fontWeight: 500,
+              minWidth: "26%",
+            }}
+          >
+            Amount paid
+          </span>
+          <input
+            id="paid_amt"
+            type="number"
+            className="form-control border-0 right-align"
+            aria-label="Sizing example input"
+            aria-describedby="inputGroup-sizing-default"
+            style={{
+              backgroundColor: "rgba(255, 255, 255, 0.801)",
+            }}
+            placeholder="Enter Here"
+          />
+        </div>
+        <div
+          className="justify-content-center form-control align-items-center p-3 rounded-3 mt-2 input-group-text-right"
+          style={{ backgroundColor: "#ffffff", color: "black" }}
+        >
+          <span>Amount that will be left to be paid:</span>{" "}
+          <b id="left_amt">₹400.00</b>
+        </div>
+        <button
+          className="rounded-3 p-3 mt-2 border-0 w-100"
+          id="save-payment-button"
+          style={{
+            backgroundColor: "#1da453",
+            color: "white",
+            fontWeight: 500,
+          }}
+        >
+          SAVE <i className="fa-solid fa-check"></i>
+        </button>
+      </div>
+    </div>
+
               <div id="menu32" className="tab-pane fade w-100">
                 <div className="w-100">
                   <div
