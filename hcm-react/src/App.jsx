@@ -8,7 +8,9 @@ import Account from './components/Account';
 import Login from './components/Login';
 import Admin from './components/Admin';
 import AddLab from './components/AddLab';
+// import Checkup from './Checkup';
 import EditAndCheckup from './components/EditAndCheckup'; // Update the path if needed
+// import Checkup from './Checkup';
 
 
 function App() {
@@ -17,7 +19,6 @@ function App() {
       <Routes>
         <Route exact path="/" element={<Container />} />
         <Route exact path="/details" element={<Input />} />
-        <Route exact path="/checkup" element={<Input />} />
         <Route exact path="/settings" element={<Settings />} />
         <Route exact path="/profile" element={<Account />} />
         <Route exact path="/login" element={<Login />} />

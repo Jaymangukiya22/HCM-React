@@ -217,5 +217,22 @@
         .click();
     });
   </script> -->
+  <script>
+    function updateLeftToBePaid() {
+      var prev_amt =
+        parseFloat(
+          $("#prev_amt")
+            .text()
+            .replace(/[^\d.-]/g, "")
+        ) || 0;
+      var present_amt = parseFloat($("#present_amt").val()) || 0;
+      var paid_amt = parseFloat($("#paid_amt").val()) || 0;
+      var left_amt = prev_amt + present_amt - paid_amt;
+      $("#left_amt").text(left_amt.toFixed(2));
+    }
+
+    // Trigger calculation on input change
+    $("#present_amt, #paid_amt").on("input", updateLeftToBePaid);
+  </script>
   <script src="https://stackpath.bootstrapcdn.com/bootstrap/5.1.0/js/bootstrap.bundle.min.js"></script>
 </html>
