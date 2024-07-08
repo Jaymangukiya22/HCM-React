@@ -12,11 +12,13 @@ try {
     if ($_SERVER['REQUEST_METHOD'] == "POST") {
         $input = json_decode(file_get_contents('php://input'),true);
         $action = $input['action'];
+        $caseno;
 
         switch ($action) {
             case 'insert':
                 $response = DB::insert(test_details, $input['data']);
                 if ($response['status']=="Insert Successfully") {
+                    // $caseno = $response['lastInsertedId'];
                     echo json_encode(['status' => true, "message" => "Inserted Successfully", 'data' => $response]);
                 } else {
                     echo json_encode(['status' => false, "message" => "Could not insert", 'data' => $response]);
@@ -32,14 +34,40 @@ try {
                     }
                     break;
             
-                case 'insert_lab':
-                    $response = DB::insert(lab_test, $input['data']);
-                    if ($response['status']=="Insert Successfully") {
-                        echo json_encode(['status' => true, "message" => "Inserted Successfully", 'data' => $response]);
-                    } else {
-                        echo json_encode(['status' => false, "message" => "Could not insert", 'data' => $response]);
-                    }
-                    break;
+                    case 'insert_lab':
+                        // Assuming $input['lab'], $input['dt'], $input['remarks'], and $input['file'] are arrays
+                        $labs = $input['data']['lab'];
+                        $dates = $input['data']['dt'];
+                        $remarks = $input['data']['remarks'];
+                        //$files = $input['data']['file'];
+                        $caseno=$input['data']['caseno'];
+                        $errors = [];
+                        foreach ($labs as $index => $lab) {
+                          $date = $dates[$index];
+                          $remark = $remarks[$index];
+                          //$file = $files[$index]; // Handle file upload as needed
+                
+                          // Prepare and execute your SQL statement here
+                          $response = DB::insert('lab_test', [
+                            'lab' => $lab,
+                            'date' => $date,
+                            'remarks' => $remark,
+                            'caseno' => $caseno
+                           // 'file' => $file // Assuming file handling is done correctly
+                          ]);
+                
+                          if ($response['status'] !== "Insert Successfully") {
+                            $errors[] = "Error inserting lab entry $index: " . $response['message'];
+                          }
+                        }
+                
+                        if (empty($errors)) {
+                          echo json_encode(['status' => true, 'message' => 'Inserted Successfully']);
+                        } else {
+                          echo json_encode(['status' => false, 'message' => 'Could not insert', 'errors' => $errors]);
+                        }
+                        break;
+                
 
                     
                         case 'update':
