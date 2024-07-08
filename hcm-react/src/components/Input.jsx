@@ -3,8 +3,6 @@ import "./styles/nav-styles.css";
 import "./styles/details.css";
 
 function Input() {
-<<<<<<< Updated upstream
-=======
   const [caseno, setCaseno] = useState(null);
   const [l_id, setL_id] = useState(null);
   // function getLastinsertID() {
@@ -17,14 +15,9 @@ function Input() {
   // }
 
   // State to manage left side tabs
->>>>>>> Stashed changes
   const [activeTab, setActiveTab] = useState("personal");
+  // State to manage right side tabs
   const [activeRightTab, setActiveRightTab] = useState("home2");
-  const [labFields, setLabFields] = useState([{ test: "", date: "", remarks: "", file: null }]);
-  const [isEditable, setIsEditable] = useState(true);
-  const [medicineFields, setMedicineFields] = useState([{ medicine: "", dose: "" }]);
-  const [Editable, setEditable] = useState(true);
-  const [caseno, setCaseno] = useState(null);
 
   // Function to handle left side tab change
   const handleTabChange = (tabName) => {
@@ -36,12 +29,19 @@ function Input() {
     setActiveRightTab(tabName);
   };
 
+  const [labFields, setLabFields] = useState([
+    { test: "", date: "", remarks: "", file: null },
+  ]);
+  const [isEditable, setIsEditable] = useState(true);
+
   const savelab = () => {
     setIsEditable(!isEditable);
   };
-  
   const addlab = () => {
-    setLabFields([...labFields, { test: "", date: "", remarks: "", file: null }]);
+    setLabFields([
+      ...labFields,
+      { test: "", date: "", remarks: "", file: null },
+    ]);
   };
 
   const deletelab = (index) => {
@@ -56,11 +56,15 @@ function Input() {
     newLabFields[index][field] = value;
     setLabFields(newLabFields);
   };
+  // Additional states and functions for form handling can go here
+  const [medicineFields, setMedicineFields] = useState([
+    { medicine: "", dose: "" },
+  ]);
+  const [Editable, setEditable] = useState(true);
 
   const addMedicine = () => {
     setMedicineFields([...medicineFields, { medicine: "", dose: "" }]);
   };
-
   const deleteMedicine = (index) => {
     if (medicineFields.length > 1) {
       const newMedicineFields = medicineFields.filter((_, i) => i !== index);
@@ -73,7 +77,6 @@ function Input() {
     newMedicineFields[index][field] = value;
     setMedicineFields(newMedicineFields);
   };
-
   const contentStyle = {
     maxHeight: "70vh",
     overflowY: "scroll",
@@ -82,34 +85,33 @@ function Input() {
     scrollbarWidth: "none" /* Firefox */,
     WebkitOverflowScrolling: "touch" /* iOS Safari */,
   };
-<<<<<<< Updated upstream
-
-=======
->>>>>>> Stashed changes
   async function PushData(val) {
+    //val is the id of the form
     const form = document.getElementById(val);
     const formData = new FormData(form);
 
+    // Convert formData to a plain object
     const formDataObj = {};
     formData.forEach((value, key) => {
       formDataObj[key] = value;
     });
+    console.log(formDataObj);
+    //remove photo from formDataObj
     delete formDataObj.photo;
+    // const url = "./action.php";
+    const response = await fetch(
+      "http://localhost/HCM-React/hcm-react/action.php",
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ data: formDataObj, action: "insert" }),
+      }
+    );
 
-    const response = await fetch("http://localhost/HCM-React/hcm-react/action.php", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ data: formDataObj, action: "insert" }),
-    });
-
-    const responseText = await response.text();
+    const responseText = await response.text(); // Get response as json
     try {
-      const result = JSON.parse(responseText);
+      const result = JSON.parse(responseText); // Parse the JSON
       if (result.status) {
-<<<<<<< Updated upstream
-        const l_id = result.data.lastInsertedId;
-        setCaseno(l_id);
-=======
         console.log(result);
         // SetLastInserted(result.data.lastInsertedId);
         setL_id(result.data.lastInsertedId);
@@ -117,7 +119,6 @@ function Input() {
         document.getElementById("case_no").value = result.data.lastInsertedId;
         console.log(result.data.lastInsertedId);
         console.log("doc tag", document.getElementById("case_no").value);
->>>>>>> Stashed changes
       } else {
         console.error("Error: ", result.message);
       }
@@ -125,42 +126,17 @@ function Input() {
       console.error("Failed to parse JSON response: ", responseText);
     }
   }
-
   async function PushLabData(val) {
-<<<<<<< Updated upstream
-=======
     if (!l_id || !caseno) {
       console.error("Error: caseno or l_id is not set.");
       return;
     }
 
->>>>>>> Stashed changes
     const form = document.getElementById(val);
     const formData = new FormData(form);
     const lastInsertedId = caseno || l_id; // Get the last inserted ID
     console.log(lastInsertedId);
 
-<<<<<<< Updated upstream
-    const formDataObj = {};
-    formData.forEach((value, key) => {
-      if (!formDataObj[key]) {
-        formDataObj[key] = value;
-      } else {
-        if (Array.isArray(formDataObj[key])) {
-          formDataObj[key].push(value);
-        } else {
-          formDataObj[key] = [formDataObj[key], value];
-        }
-      }
-    });
-    delete formDataObj.photo;
-
-    const response = await fetch("http://localhost/HCM-React/hcm-react/action.php", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ data: formDataObj, action: "insert_lab" }),
-    });
-=======
     // Initialize formDataObj with arrays for each field
     const formDataObj = {
       lab: [],
@@ -195,35 +171,12 @@ function Input() {
         body: JSON.stringify({ data: formDataObj, action: "insert_lab" }),
       }
     );
->>>>>>> Stashed changes
 
     const responseText = await response.text();
     try {
       const result = JSON.parse(responseText);
       if (result.status) {
-<<<<<<< Updated upstream
-        const lastInsertedId = caseno;
-        formDataObj.caseno = lastInsertedId;
-
-        const updateResponse = await fetch("http://localhost/HCM-React/hcm-react/action.php", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ data: formDataObj, action: "update_lab" }),
-        });
-        const updateResponseText = await updateResponse.text();
-        try {
-          const updateResult = JSON.parse(updateResponseText);
-          if (updateResult.status) {
-            console.log("caseno updated successfully");
-          } else {
-            console.error("Error: ", updateResult.message);
-          }
-        } catch (error) {
-          console.error("Failed to parse JSON response: ", updateResponseText);
-        }
-=======
         console.log("Lab data inserted successfully.");
->>>>>>> Stashed changes
       } else {
         console.error("Error: ", result.message);
       }
@@ -236,22 +189,37 @@ function Input() {
     const form = document.getElementById(val);
     const formData = new FormData(form);
 
+    // Convert formData to a plain object
     const formDataObj = {};
     formData.forEach((value, key) => {
       formDataObj[key] = value;
     });
     const lastInsertedId = caseno;
+    console.log(lastInsertedId);
+    console.log(lastInsertedId);
+
+    // Update the formDataObj with the last inserted ID as caseno
     formDataObj.caseno = lastInsertedId;
+    console.log(formDataObj);
+
+    // Remove photo from formDataObj
     delete formDataObj.photo;
 
-    const updateResponse = await fetch("http://localhost/HCM-React/hcm-react/action.php", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ data: formDataObj, action: "insert_checkup" }),
-    });
-    const updateResponseText = await updateResponse.text();
+    // Make another request to update the caseno column in lab_details table
+    const updateResponse = await fetch(
+      "http://localhost/HCM-React/hcm-react/action.php",
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          data: formDataObj,
+          action: "insert_checkup",
+        }),
+      }
+    );
+    const updateResponseText = await updateResponse.text(); // Get response as json
     try {
-      const updateResult = JSON.parse(updateResponseText);
+      const updateResult = JSON.parse(updateResponseText); // Parse the JSON
       if (updateResult.status) {
         console.log("caseno updated successfully");
       } else {
@@ -341,14 +309,6 @@ function Input() {
       formDataObj["mind"] = formDataObj["mind[]"];
       delete formDataObj["mind[]"];
     }
-<<<<<<< Updated upstream
-
-    const response = await fetch("http://localhost/HCM-React/hcm-react/action.php", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ data: formDataObj, action: "update", id: caseno }),
-    });
-=======
     console.log(l_id);
     console.log(formDataObj);
 
@@ -360,7 +320,6 @@ function Input() {
         body: JSON.stringify({ data: formDataObj, action: "update", id: l_id }),
       }
     );
->>>>>>> Stashed changes
 
     const responseText = await response.text();
     try {
@@ -374,6 +333,7 @@ function Input() {
       console.error("Failed to parse JSON response: ", responseText);
     }
   }
+
   return (
     <div style={{ backgroundColor: "#0b6e4f" }}>
       <form>
