@@ -1,6 +1,57 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect,useRef } from "react";
 import "./styles/nav-styles.css";
 import "./styles/details.css";
+// import   {  useRef } from 'react';
+
+const MyComponent = () => {
+  const hiddenInputRef = useRef(null);
+
+  useEffect(() => {
+    const dateCheckupElement = document.getElementById('date-checkup');
+
+    if (dateCheckupElement) {
+      const updateValue = () => {
+        if (hiddenInputRef.current) {
+          hiddenInputRef.current.value = dateCheckupElement.value;
+        }
+      };
+
+      // Initial value set
+      updateValue();
+
+      // Event listener for input changes
+      dateCheckupElement.addEventListener('input', updateValue);
+
+      // Cleanup event listener on unmount
+      return () => {
+        dateCheckupElement.removeEventListener('input', updateValue);
+      };
+    }
+  }, []);
+
+  return (
+    <div>
+      <input
+        type="hidden"
+        id="date"
+        ref={hiddenInputRef}
+        className="form-control border-0"
+        aria-label="Sizing example input"
+        aria-describedby="inputGroup-sizing-default"
+        placeholder="Enter Date"
+        readOnly
+      />
+      <input
+        type="text"
+        id="date-checkup"
+        placeholder="Enter Date Checkup"
+      />
+    </div>
+  );
+};
+
+// export default MyComponent;
+
 
 function Input() {
   const [caseno, setCaseno] = useState(null);
@@ -136,6 +187,35 @@ function Input() {
     }
   }
 
+
+  const [dateValue, setDateValue] = useState('');
+  const dateCheckupRef = useRef(null);
+
+  useEffect(() => {
+    // Function to update dateValue from the date-checkup element
+    const updateDateValue = () => {
+      const dateCheckupElement = document.getElementById('date-checkup');
+      if (dateCheckupElement) {
+        setDateValue(dateCheckupElement.value);
+      }
+    };
+
+    // Initial update when component mounts
+    updateDateValue();
+
+    // Add event listener to update dateValue when date-checkup changes
+    if (dateCheckupRef.current) {
+      dateCheckupRef.current.addEventListener('input', updateDateValue);
+    }
+
+    // Clean up event listener on unmount
+    return () => {
+      if (dateCheckupRef.current) {
+        dateCheckupRef.current.removeEventListener('input', updateDateValue);
+      }
+    };
+  }, []);
+
   async function PushLabData(val) {
     if (!l_id || !caseno) {
       console.error("Error: caseno or l_id is not set.");
@@ -189,22 +269,24 @@ function Input() {
   }
 
   async function PushCheckupData(val) {
+    if (!l_id || !caseno) {
+      console.error("Error: caseno or l_id is not set.");
+      return;
+    }
+  
     const form = document.getElementById(val);
     const formData = new FormData(form);
-
+    const lastInsertedId = caseno || l_id;
+    console.log(lastInsertedId);
+  
     const formDataObj = {};
     formData.forEach((value, key) => {
       formDataObj[key] = value;
     });
-    const lastInsertedId = caseno;
-    console.log(lastInsertedId);
-
+  
     formDataObj.caseno = lastInsertedId;
-    console.log(formDataObj);
-
-    delete formDataObj.photo;
-
-    const updateResponse = await fetch(
+  
+    const response = await fetch(
       "http://localhost/HCM-React/hcm-react/action.php",
       {
         method: "POST",
@@ -215,74 +297,51 @@ function Input() {
         }),
       }
     );
-    const updateResponseText = await updateResponse.text();
+  
+    const responseText = await response.text();
     try {
-      const updateResult = JSON.parse(updateResponseText);
-      if (updateResult.status) {
-        console.log("caseno updated successfully");
+      const result = JSON.parse(responseText);
+      if (result.status) {
+        console.log("Checkup data inserted successfully.");
       } else {
-        console.error("Error: ", updateResult.message);
+        console.error("Error: ", result.message);
       }
     } catch (error) {
-      console.error("Failed to parse JSON response: ", updateResponseText);
+      console.error("Failed to parse JSON response: ", responseText);
     }
   }
+  
 
   async function PushPrescription(val) {
     if (!l_id || !caseno) {
       console.error("Error: caseno or l_id is not set.");
       return;
     }
-
-    // Fetch the date from the checkup_remarks table
-    // let checkupDate;
-    // try {
-    //   const dateResponse = await fetch(
-    //     `http://localhost/HCM-React/hcm-react/get_date.php?caseno=${caseno}`
-    //   );
-
-    //   if (!dateResponse.ok) {
-    //     throw new Error(`HTTP error! status: ${dateResponse.status}`);
-    //   }
-
-    //   const dateData = await dateResponse.json();
-
-    //   if (!dateData.status) {
-    //     throw new Error(`Error fetching date: ${dateData.message}`);
-    //   }
-
-    //   checkupDate = dateData.date;
-    // } catch (error) {
-    //   console.error("Error fetching date: ", error);
-    //   return;
-    // }
-
+  
     const form = document.getElementById(val);
     const formData = new FormData(form);
-    const lastInsertedId = caseno || l_id; // Get the last inserted ID
+    const lastInsertedId = caseno || l_id;
     console.log(lastInsertedId);
-
-    // Initialize formDataObj with arrays for each field
+  
     const formDataObj = {
       medicine: [],
       dose: [],
+      date: []
     };
-
-    // Populate formDataObj with values from formData
+  
     formData.forEach((value, key) => {
       if (key.startsWith("medicine[")) {
         formDataObj.medicine.push(value);
       } else if (key.startsWith("dose[")) {
         formDataObj.dose.push(value);
+      } else if (key === "date") {
+        formDataObj.date.push(value);  // Add date values
       }
     });
-
-    // Include the fetched date in the formDataObj
-    // formDataObj.date = Array(formDataObj.medicine.length).fill(checkupDate);
-
-    formDataObj.caseno = caseno || l_id; // Ensure caseno is included
+  
+    formDataObj.caseno = caseno || l_id;
     console.log(formDataObj);
-
+  
     const response = await fetch(
       "http://localhost/HCM-React/hcm-react/action.php",
       {
@@ -290,11 +349,11 @@ function Input() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           data: formDataObj,
-          action: "insert_prescription",
+          action: "insert_prescription"
         }),
       }
     );
-
+  
     const responseText = await response.text();
     try {
       const result = JSON.parse(responseText);
@@ -307,6 +366,10 @@ function Input() {
       console.error("Failed to parse JSON response: ", responseText);
     }
   }
+  
+  
+
+  
 
   async function UpdateData(val) {
     const form = document.getElementById(val);
@@ -1507,8 +1570,10 @@ function Input() {
                         Date
                       </span>
                       <input
-                        type="text"
-                        id="date"
+                        type="date"
+                        id="date-checkup"
+                        ref={dateCheckupRef}
+
                         name="date"
                         className="form-control border-0"
                         aria-label="Sizing example input"
@@ -1586,109 +1651,82 @@ function Input() {
                 </form>
               </div>
               <div id="menu12" className="tab-pane fade">
-                <form action="" id="prescription">
-                  <div
-                    className="rounded-3 p-2"
-                    style={{ backgroundColor: "#0e825dc6" }}
+      <form action="" id="prescription">
+        <div className="rounded-3 p-2" style={{ backgroundColor: "#0e825dc6" }}>
+          <input
+            type="hidden"
+            id="date-prescription"
+            name="date"
+            className="form-control border-0"
+            aria-label="Sizing example input"
+            aria-describedby="inputGroup-sizing-default"
+            placeholder="Enter Date"
+            value={dateValue}
+            readOnly
+          />
+          <div className="rounded-3" style={{ maxHeight: "75vh", overflowY: "auto" }}>
+            <div id="input-fields">
+              <div className="input-group" style={{ maxHeight: "70vh" }}>
+                <div className="input-group input-group-custom">
+                  <input
+                    type="text"
+                    className="form-control p-3 border-0 rounded-3 me-1"
+                    id="medicine-input"
+                    name="medicine[]"
+                    placeholder="Enter Medicine"
+                    style={{ backgroundColor: "#ffffff", color: "black", minWidth: "37%" }}
+                  />
+                  <input
+                    type="text"
+                    className="form-control p-3 border-0 rounded-3 ms-1 me-1"
+                    id="dose-input"
+                    name="dose[]"
+                    placeholder="Enter Dose"
+                    style={{ backgroundColor: "#ffffff", color: "black", minWidth: "37%" }}
+                  />
+                  <button
+                    type="button"
+                    className="form-control p-2 border-0 rounded-3 me-1 ms-1"
+                    id="remove"
+                    onClick={() => removeInputFields(this)}
+                    style={{ backgroundColor: "rgba(255, 0, 0, 0.654)", color: "bisque", minWidth: "5%", textAlign: "center" }}
                   >
-                    <input
-                      type="hidden"
-                      id="date"
-                      className="form-control border-0"
-                      aria-label="Sizing example input"
-                      aria-describedby="inputGroup-sizing-default"
-                      placeholder="Enter Date"
-                    />
-                    <div
-                      className="rounded-3"
-                      style={{ maxHeight: "75vh", overflowY: "auto" }}
-                    >
-                      <div id="input-fields">
-                        <div
-                          className="input-group"
-                          style={{ maxHeight: "70vh" }}
-                        >
-                          <div className="input-group input-group-custom">
-                            <input
-                              type="text"
-                              className="form-control p-3 border-0 rounded-3 me-1"
-                              id="medicine-input"
-                              name="medicine[]"
-                              placeholder="Enter Medicine"
-                              style={{
-                                backgroundColor: "#ffffff",
-                                color: "black",
-                                minWidth: "37%",
-                              }}
-                            />
-                            <input
-                              type="text"
-                              className="form-control p-3 border-0 rounded-3 ms-1 me-1"
-                              id="dose-input"
-                              name="dose[]"
-                              placeholder="Enter Dose"
-                              style={{
-                                backgroundColor: "#ffffff",
-                                color: "black",
-                                minWidth: "37%",
-                              }}
-                            />
-                            <button
-                              type="button"
-                              className="form-control p-2 border-0 rounded-3 me-1 ms-1"
-                              id="remove"
-                              onClick={() => removeInputFields(this)}
-                              style={{
-                                backgroundColor: "rgba(255, 0, 0, 0.654)",
-                                color: "bisque",
-                                minWidth: "5%",
-                                textAlign: "center",
-                              }}
-                            >
-                              -
-                            </button>
-                            <button
-                              type="button"
-                              className="form-control p-2 border-0 rounded-3 ms-1"
-                              onClick={() => addInputFields()}
-                              id="add"
-                              style={{
-                                backgroundColor: "#1da453",
-                                color: "bisque",
-                                minWidth: "5%",
-                                textAlign: "center",
-                              }}
-                            >
-                              +
-                            </button>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                    <button
-                      id="payment-button"
-                      value="prescription"
-                      className="rounded-3 p-3 mt-2 border-0 w-100"
-                      style={{ backgroundColor: "#019fdece", color: "bisque" }}
-                      onClick={(e) => {
-                        e.preventDefault();
-                        PushPrescription(e.target.value);
-                      }}
-                    >
-                      PAYMENT{" "}
-                      <img
-                        src="Images And Icons/arrow-right-solid (1).svg"
-                        style={{
-                          height: "10px",
-                          opacity: "100%",
-                          transform: "translateY(-15%)",
-                        }}
-                        alt=""
-                      />
-                    </button>
-                  </div>
-                </form>
+                    -
+                  </button>
+                  <button
+                    type="button"
+                    className="form-control p-2 border-0 rounded-3 ms-1"
+                    onClick={() => addInputFields()}
+                    id="add"
+                    style={{ backgroundColor: "#1da453", color: "bisque", minWidth: "5%", textAlign: "center" }}
+                  >
+                    +
+                  </button>
+                </div>
               </div>
+            </div>
+          </div>
+          <button
+            id="payment-button"
+            value="prescription"
+            className="rounded-3 p-3 mt-2 border-0 w-100"
+            style={{ backgroundColor: "#019fdece", color: "bisque" }}
+            onClick={(e) => {
+              e.preventDefault();
+              PushPrescription(e.target.value);
+            }}
+          >
+            PAYMENT{" "}
+            <img
+              src="Images And Icons/arrow-right-solid (1).svg"
+              style={{ height: "10px", opacity: "100%", transform: "translateY(-15%)" }}
+              alt=""
+            />
+          </button>
+        </div>
+      </form>
+    </div>
+
               <div id="menu22" className="tab-pane fade w-100">
                 <div
                   className="rounded-3 text-align-center p-2 fs-6"
