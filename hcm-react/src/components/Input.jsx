@@ -1886,7 +1886,7 @@ function Input() {
                     >
                       <div className="input-group">
                         <span
-                          className="p-3 border-0 rounded-3 w-100 mb-1"
+                          className="p-3 border-0 rounded-3 w-100 "
                           id="inputGroup-sizing-default"
                           style={{
                             backgroundColor: "#0b6e4fef",
@@ -1896,9 +1896,9 @@ function Input() {
                             fontSize: "20px",
                           }}
                         >
-                          30/10/2004
+                          No history for the patient yet.
                         </span>
-                        <span
+                        {/* <span
                           className="p-3 border-0 rounded-3 me-auto"
                           id="inputGroup-sizing-default"
                           style={{
@@ -1926,7 +1926,7 @@ function Input() {
                           <p>Medicine No. 1 x 3 Doze</p>
                           <p>Medicine No. 1 x 3 Doze</p>
                           <p>Medicine No. 1 x 3 Doze</p>
-                        </span>
+                        </span> */}
                       </div>
                     </div>
                   </div>

@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
+import History from "./History";
 
 import { useParams } from "react-router-dom";
 const MyComponent = () => {
@@ -309,7 +310,7 @@ const Input = () => {
         <div
           className="row p-3"
           style={{ padding: "0px", margin: "auto" }}
-        ></div>
+        >
         <div className="col-md-7 p-2" style={{ padding: "0px" }}>
           <div className="p-2 rounded-3" style={{ backgroundColor: "#ffffff" }}>
             <ul className="nav rounded-3">
@@ -1833,59 +1834,12 @@ const Input = () => {
                   className="history-div rounded-3"
                   style={{ maxHeight: "100vh", overflowY: "scroll" }}
                 >
-                  <div
-                    className="justify-content-center align-items-center mb-1 mt-1 p-1 rounded-3"
-                    style={{ backgroundColor: "#d1d3ab" }}
-                  >
-                    <div className="input-group">
-                      <span
-                        className="p-3 border-0 rounded-3 w-100 mb-1"
-                        id="inputGroup-sizing-default"
-                        style={{
-                          backgroundColor: "#0b6e4fef",
-                          color: "bisque",
-                          textAlign: "center",
-                          fontWeight: 600,
-                          fontSize: "20px",
-                        }}
-                      >
-                        30/10/2004
-                      </span>
-                      <span
-                        className="p-3 border-0 rounded-3 me-auto"
-                        id="inputGroup-sizing-default"
-                        style={{
-                          backgroundColor: "#0b6e4fef",
-                          color: "bisque",
-                          width: "50%",
-                        }}
-                      >
-                        <p>
-                          Lorem ipsum dolor sit, amet consectetur adipisicing
-                          elit. Voluptas asperiores dolores maiores fugit
-                          facilis ipsam ab, nemo provident quae ad{" "}
-                        </p>
-                      </span>
-                      <span
-                        className="p-3 border-0 rounded-3 ms-auto"
-                        id="inputGroup-sizing-default"
-                        style={{
-                          backgroundColor: "#0b6e4fef",
-                          color: "bisque",
-                          width: "49%",
-                        }}
-                      >
-                        <p>Medicine No. 1 x 3 Doze</p>
-                        <p>Medicine No. 1 x 3 Doze</p>
-                        <p>Medicine No. 1 x 3 Doze</p>
-                        <p>Medicine No. 1 x 3 Doze</p>
-                      </span>
-                    </div>
-                  </div>
+                <History caseno={caseno} />
                 </div>
               </div>
             </div>
           </div>
+        </div>
         </div>
       </div>
     </div>
