@@ -56,18 +56,24 @@ function Input() {
   const [caseno, setCaseno] = useState(null);
   const [l_id, setL_id] = useState(null);
 
+  const [dateValue, setDateValue] = useState("");
+  const dateCheckupRef = useRef(null);
+
   useEffect(() => {
     function updateLeftToBePaid() {
-      var prev_amt =
+      const prev_amt =
         parseFloat(
-          $("#prev_amt")
+          $("#prev_amt_display")
             .text()
             .replace(/[^\d.-]/g, "")
         ) || 0;
-      var present_amt = parseFloat($("#present_amt").val()) || 0;
-      var paid_amt = parseFloat($("#paid_amt").val()) || 0;
-      var left_amt = prev_amt + present_amt - paid_amt;
-      $("#left_amt").text(`₹${left_amt.toFixed(2)}`);
+      const present_amt = parseFloat($("#present_amt").val()) || 0;
+      const paid_amt = parseFloat($("#paid_amt").val()) || 0;
+      const left_amt = prev_amt + present_amt - paid_amt;
+
+      $("#left_amt_display").text(`₹${left_amt.toFixed(2)}`);
+      $("#left_amt").val(left_amt.toFixed(2));
+      $("#prev_amt").val(prev_amt.toFixed(2));
     }
 
     // Trigger calculation on input change
@@ -185,35 +191,6 @@ function Input() {
       console.error("Failed to parse JSON response: ", responseText);
     }
   }
-
-  const [dateValue, setDateValue] = useState("");
-  const dateCheckupRef = useRef(null);
-
-  useEffect(() => {
-    function updateLeftToBePaid() {
-      const prev_amt =
-        parseFloat(
-          $("#prev_amt_display")
-            .text()
-            .replace(/[^\d.-]/g, "")
-        ) || 0;
-      const present_amt = parseFloat($("#present_amt").val()) || 0;
-      const paid_amt = parseFloat($("#paid_amt").val()) || 0;
-      const left_amt = prev_amt + present_amt - paid_amt;
-
-      $("#left_amt_display").text(`₹${left_amt.toFixed(2)}`);
-      $("#left_amt").val(left_amt.toFixed(2));
-      $("#prev_amt").val(prev_amt.toFixed(2));
-    }
-
-    // Trigger calculation on input change
-    $("#present_amt, #paid_amt").on("input", updateLeftToBePaid);
-
-    // Clean up event listeners on component unmount
-    return () => {
-      $("#present_amt, #paid_amt").off("input", updateLeftToBePaid);
-    };
-  }, []);
 
   async function PushLabData(val) {
     if (!l_id || !caseno) {
