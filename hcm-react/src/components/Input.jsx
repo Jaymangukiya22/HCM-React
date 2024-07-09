@@ -1,18 +1,15 @@
-import React, { useState, useEffect,useRef } from "react";
-import axios from 'axios';
+import React, { useState, useEffect, useRef } from "react";
+import axios from "axios";
 
 import "./styles/nav-styles.css";
 import "./styles/details.css";
 // import   {  useRef } from 'react';
 
-
-
-
 const MyComponent = () => {
   const hiddenInputRef = useRef(null);
 
   useEffect(() => {
-    const dateCheckupElement = document.getElementById('date-checkup');
+    const dateCheckupElement = document.getElementById("date-checkup");
 
     if (dateCheckupElement) {
       const updateValue = () => {
@@ -25,11 +22,11 @@ const MyComponent = () => {
       updateValue();
 
       // Event listener for input changes
-      dateCheckupElement.addEventListener('input', updateValue);
+      dateCheckupElement.addEventListener("input", updateValue);
 
       // Cleanup event listener on unmount
       return () => {
-        dateCheckupElement.removeEventListener('input', updateValue);
+        dateCheckupElement.removeEventListener("input", updateValue);
       };
     }
   }, []);
@@ -46,69 +43,16 @@ const MyComponent = () => {
         placeholder="Enter Date"
         readOnly
       />
-      <input
-        type="text"
-        id="date-checkup"
-        placeholder="Enter Date Checkup"
-      />
+      <input type="text" id="date-checkup" placeholder="Enter Date Checkup" />
     </div>
   );
 };
 
 // export default MyComponent;
 
-
 function Input() {
-
   // import axios from 'axios';
-  const [prevAmt, setPrevAmt] = useState(0);
-  const [presentAmt, setPresentAmt] = useState('');
-  const [paidAmt, setPaidAmt] = useState('');
-  const [leftAmt, setLeftAmt] = useState('');
 
-  useEffect(() => {
-    fetchPaymentDetails(caseno); // Replace '106' with your dynamic caseno if needed
-  }, []);
-
-  const fetchPaymentDetails = (caseno) => {
-
-    axios.get(` http://localhost/HCM-React/hcm-react/payment.php?caseno=${caseno}`)
-      .then(response => {
-        const { prev_amt } = response.data; // Assuming response structure includes prev_amt
-        setPrevAmt(prev_amt || 0); // Ensure prev_amt is set to a default value if undefined
-        setLeftAmt(prev_amt || 0); // Initialize leftAmt with prev_amt
-      })
-      .catch(error => {
-        console.error('Error fetching payment details:', error);
-      });
-  };
-
-  const handleFormSubmit = (e) => {
-    e.preventDefault();
-    const data = {
-      caseno: caseno,
-      prev_amt: prevAmt,
-      present_amt: parseFloat(presentAmt),
-      paid_amt: parseFloat(paidAmt)
-    };
-  
-    fetch('http://localhost/HCM-React/hcm-react/payment.php', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(data),
-    })
-    .then(response => response.json())
-    .then(data => {
-      console.log('Payment details updated successfully:', data);
-      // Handle success response here
-    })
-    .catch(error => {
-      console.error('Error updating payment details:', error);
-    });
-  };
-  
   const [caseno, setCaseno] = useState(null);
   const [l_id, setL_id] = useState(null);
 
@@ -242,32 +186,32 @@ function Input() {
     }
   }
 
-
-  const [dateValue, setDateValue] = useState('');
+  const [dateValue, setDateValue] = useState("");
   const dateCheckupRef = useRef(null);
 
   useEffect(() => {
-    // Function to update dateValue from the date-checkup element
-    const updateDateValue = () => {
-      const dateCheckupElement = document.getElementById('date-checkup');
-      if (dateCheckupElement) {
-        setDateValue(dateCheckupElement.value);
-      }
-    };
+    function updateLeftToBePaid() {
+      const prev_amt =
+        parseFloat(
+          $("#prev_amt_display")
+            .text()
+            .replace(/[^\d.-]/g, "")
+        ) || 0;
+      const present_amt = parseFloat($("#present_amt").val()) || 0;
+      const paid_amt = parseFloat($("#paid_amt").val()) || 0;
+      const left_amt = prev_amt + present_amt - paid_amt;
 
-    // Initial update when component mounts
-    updateDateValue();
-
-    // Add event listener to update dateValue when date-checkup changes
-    if (dateCheckupRef.current) {
-      dateCheckupRef.current.addEventListener('input', updateDateValue);
+      $("#left_amt_display").text(`₹${left_amt.toFixed(2)}`);
+      $("#left_amt").val(left_amt.toFixed(2));
+      $("#prev_amt").val(prev_amt.toFixed(2));
     }
 
-    // Clean up event listener on unmount
+    // Trigger calculation on input change
+    $("#present_amt, #paid_amt").on("input", updateLeftToBePaid);
+
+    // Clean up event listeners on component unmount
     return () => {
-      if (dateCheckupRef.current) {
-        dateCheckupRef.current.removeEventListener('input', updateDateValue);
-      }
+      $("#present_amt, #paid_amt").off("input", updateLeftToBePaid);
     };
   }, []);
 
@@ -328,19 +272,19 @@ function Input() {
       console.error("Error: caseno or l_id is not set.");
       return;
     }
-  
+
     const form = document.getElementById(val);
     const formData = new FormData(form);
     const lastInsertedId = caseno || l_id;
     console.log(lastInsertedId);
-  
+
     const formDataObj = {};
     formData.forEach((value, key) => {
       formDataObj[key] = value;
     });
-  
+
     formDataObj.caseno = lastInsertedId;
-  
+
     const response = await fetch(
       "http://localhost/HCM-React/hcm-react/action.php",
       {
@@ -352,7 +296,7 @@ function Input() {
         }),
       }
     );
-  
+
     const responseText = await response.text();
     try {
       const result = JSON.parse(responseText);
@@ -365,38 +309,37 @@ function Input() {
       console.error("Failed to parse JSON response: ", responseText);
     }
   }
-  
 
   async function PushPrescription(val) {
     if (!l_id || !caseno) {
       console.error("Error: caseno or l_id is not set.");
       return;
     }
-  
+
     const form = document.getElementById(val);
     const formData = new FormData(form);
     const lastInsertedId = caseno || l_id;
     console.log(lastInsertedId);
-  
+
     const formDataObj = {
       medicine: [],
       dose: [],
-      date: []
+      date: [],
     };
-  
+
     formData.forEach((value, key) => {
       if (key.startsWith("medicine[")) {
         formDataObj.medicine.push(value);
       } else if (key.startsWith("dose[")) {
         formDataObj.dose.push(value);
       } else if (key === "date") {
-        formDataObj.date.push(value);  // Add date values
+        formDataObj.date.push(value); // Add date values
       }
     });
-  
+
     formDataObj.caseno = caseno || l_id;
     console.log(formDataObj);
-  
+
     const response = await fetch(
       "http://localhost/HCM-React/hcm-react/action.php",
       {
@@ -404,11 +347,11 @@ function Input() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           data: formDataObj,
-          action: "insert_prescription"
+          action: "insert_prescription",
         }),
       }
     );
-  
+
     const responseText = await response.text();
     try {
       const result = JSON.parse(responseText);
@@ -421,10 +364,49 @@ function Input() {
       console.error("Failed to parse JSON response: ", responseText);
     }
   }
-  
-  
 
-  
+  async function PushPayment(val) {
+    if (!l_id || !caseno) {
+      console.error("Error: caseno or l_id is not set.");
+      return;
+    }
+
+    const form = document.getElementById(val);
+    const formData = new FormData(form);
+    const lastInsertedId = caseno || l_id;
+    console.log(lastInsertedId);
+
+    const formDataObj = {};
+    formData.forEach((value, key) => {
+      formDataObj[key] = value;
+    });
+
+    formDataObj.caseno = lastInsertedId;
+
+    const response = await fetch(
+      "http://localhost/HCM-React/hcm-react/action.php",
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          data: formDataObj,
+          action: "insert_payment",
+        }),
+      }
+    );
+
+    const responseText = await response.text();
+    try {
+      const result = JSON.parse(responseText);
+      if (result.status) {
+        console.log("Payment data inserted successfully.");
+      } else {
+        console.error("Error: ", result.message);
+      }
+    } catch (error) {
+      console.error("Failed to parse JSON response: ", responseText);
+    }
+  }
 
   async function UpdateData(val) {
     const form = document.getElementById(val);
@@ -1628,7 +1610,6 @@ function Input() {
                         type="date"
                         id="date-checkup"
                         ref={dateCheckupRef}
-
                         name="date"
                         className="form-control border-0"
                         aria-label="Sizing example input"
@@ -1706,127 +1687,215 @@ function Input() {
                 </form>
               </div>
               <div id="menu12" className="tab-pane fade">
-      <form action="" id="prescription">
-        <div className="rounded-3 p-2" style={{ backgroundColor: "#0e825dc6" }}>
-          <input
-            type="hidden"
-            id="date-prescription"
-            name="date"
-            className="form-control border-0"
-            aria-label="Sizing example input"
-            aria-describedby="inputGroup-sizing-default"
-            placeholder="Enter Date"
-            value={dateValue}
-            readOnly
-          />
-          <div className="rounded-3" style={{ maxHeight: "75vh", overflowY: "auto" }}>
-            <div id="input-fields">
-              <div className="input-group" style={{ maxHeight: "70vh" }}>
-                <div className="input-group input-group-custom">
-                  <input
-                    type="text"
-                    className="form-control p-3 border-0 rounded-3 me-1"
-                    id="medicine-input"
-                    name="medicine[]"
-                    placeholder="Enter Medicine"
-                    style={{ backgroundColor: "#ffffff", color: "black", minWidth: "37%" }}
-                  />
-                  <input
-                    type="text"
-                    className="form-control p-3 border-0 rounded-3 ms-1 me-1"
-                    id="dose-input"
-                    name="dose[]"
-                    placeholder="Enter Dose"
-                    style={{ backgroundColor: "#ffffff", color: "black", minWidth: "37%" }}
-                  />
-                  <button
-                    type="button"
-                    className="form-control p-2 border-0 rounded-3 me-1 ms-1"
-                    id="remove"
-                    onClick={() => removeInputFields(this)}
-                    style={{ backgroundColor: "rgba(255, 0, 0, 0.654)", color: "bisque", minWidth: "5%", textAlign: "center" }}
+                <form action="" id="prescription">
+                  <div
+                    className="rounded-3 p-2"
+                    style={{ backgroundColor: "#0e825dc6" }}
                   >
-                    -
-                  </button>
-                  <button
-                    type="button"
-                    className="form-control p-2 border-0 rounded-3 ms-1"
-                    onClick={() => addInputFields()}
-                    id="add"
-                    style={{ backgroundColor: "#1da453", color: "bisque", minWidth: "5%", textAlign: "center" }}
-                  >
-                    +
-                  </button>
-                </div>
+                    <input
+                      type="hidden"
+                      id="date-prescription"
+                      name="date"
+                      className="form-control border-0"
+                      aria-label="Sizing example input"
+                      aria-describedby="inputGroup-sizing-default"
+                      placeholder="Enter Date"
+                      value={dateValue}
+                      readOnly
+                    />
+                    <div
+                      className="rounded-3"
+                      style={{ maxHeight: "75vh", overflowY: "auto" }}
+                    >
+                      <div id="input-fields">
+                        <div
+                          className="input-group"
+                          style={{ maxHeight: "70vh" }}
+                        >
+                          <div className="input-group input-group-custom">
+                            <input
+                              type="text"
+                              className="form-control p-3 border-0 rounded-3 me-1"
+                              id="medicine-input"
+                              name="medicine[]"
+                              placeholder="Enter Medicine"
+                              style={{
+                                backgroundColor: "#ffffff",
+                                color: "black",
+                                minWidth: "37%",
+                              }}
+                            />
+                            <input
+                              type="text"
+                              className="form-control p-3 border-0 rounded-3 ms-1 me-1"
+                              id="dose-input"
+                              name="dose[]"
+                              placeholder="Enter Dose"
+                              style={{
+                                backgroundColor: "#ffffff",
+                                color: "black",
+                                minWidth: "37%",
+                              }}
+                            />
+                            <button
+                              type="button"
+                              className="form-control p-2 border-0 rounded-3 me-1 ms-1"
+                              id="remove"
+                              onClick={() => removeInputFields(this)}
+                              style={{
+                                backgroundColor: "rgba(255, 0, 0, 0.654)",
+                                color: "bisque",
+                                minWidth: "5%",
+                                textAlign: "center",
+                              }}
+                            >
+                              -
+                            </button>
+                            <button
+                              type="button"
+                              className="form-control p-2 border-0 rounded-3 ms-1"
+                              onClick={() => addInputFields()}
+                              id="add"
+                              style={{
+                                backgroundColor: "#1da453",
+                                color: "bisque",
+                                minWidth: "5%",
+                                textAlign: "center",
+                              }}
+                            >
+                              +
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <button
+                      id="payment-button"
+                      value="prescription"
+                      className="rounded-3 p-3 mt-2 border-0 w-100"
+                      style={{ backgroundColor: "#019fdece", color: "bisque" }}
+                      onClick={(e) => {
+                        e.preventDefault();
+                        PushPrescription(e.target.value);
+                      }}
+                    >
+                      PAYMENT{" "}
+                      <img
+                        src="Images And Icons/arrow-right-solid (1).svg"
+                        style={{
+                          height: "10px",
+                          opacity: "100%",
+                          transform: "translateY(-15%)",
+                        }}
+                        alt=""
+                      />
+                    </button>
+                  </div>
+                </form>
               </div>
-            </div>
-          </div>
-          <button
-            id="payment-button"
-            value="prescription"
-            className="rounded-3 p-3 mt-2 border-0 w-100"
-            style={{ backgroundColor: "#019fdece", color: "bisque" }}
-            onClick={(e) => {
-              e.preventDefault();
-              PushPrescription(e.target.value);
-            }}
-          >
-            PAYMENT{" "}
-            <img
-              src="Images And Icons/arrow-right-solid (1).svg"
-              style={{ height: "10px", opacity: "100%", transform: "translateY(-15%)" }}
-              alt=""
-            />
-          </button>
-        </div>
-      </form>
-    </div>
 
-    <div className="tab-pane fade w-100" id="menu22">
-      <div className="rounded-3 text-align-center p-2 fs-6" style={{ minWidth: "100%", backgroundColor: "#0e825dc6" }}>
-        <div className="justify-content-center align-items-center form-control p-3 rounded-3 input-group-text-right" style={{ backgroundColor: "#ffffff", color: "black" }}>
-          <span>Amount Previously Left to be paid:</span> <b id="prev_amt">₹{prevAmt.toFixed(2)}</b>
-        </div>
-        <form onSubmit={handleFormSubmit}>
-          <div className="input-group mt-2">
-            <span className="input-group-text p-3 border-0" style={{ backgroundColor: "rgb(255, 255, 255)", color: "black", fontWeight: 500, minWidth: "26%" }}>To be paid</span>
-            <input
-              id="present_amt"
-              type="number"
-              className="form-control border-0 right-align"
-              style={{ backgroundColor: "rgba(255, 255, 255, 0.801)" }}
-              placeholder="Enter Here"
-              value={presentAmt}
-              onChange={(e) => setPresentAmt(e.target.value)}
-            />
-          </div>
-          <div className="input-group mt-2">
-            <span className="input-group-text p-3 border-0" style={{ backgroundColor: "rgb(255, 255, 255)", color: "black", fontWeight: 500, minWidth: "26%" }}>Amount paid</span>
-            <input
-              id="paid_amt"
-              type="number"
-              className="form-control border-0 right-align"
-              style={{ backgroundColor: "rgba(255, 255, 255, 0.801)" }}
-              placeholder="Enter Here"
-              value={paidAmt}
-              onChange={(e) => setPaidAmt(e.target.value)}
-            />
-          </div>
-          <div className="justify-content-center form-control align-items-center p-3 rounded-3 mt-2 input-group-text-right" style={{ backgroundColor: "#ffffff", color: "black" }}>
-            <span>Amount that will be left to be paid:</span> <b id="left_amt">₹{leftAmt}</b>
-          </div>
-          <button
-            className="rounded-3 p-3 mt-2 border-0 w-100"
-            id="save-payment-button"
-            style={{ backgroundColor: "#1da453", color: "white", fontWeight: 500 }}
-            type="submit"
-          >
-            SAVE <i className="fa-solid fa-check"></i>
-          </button>
-        </form>
-      </div>
-    </div>
-
+              <div id="menu22" className="tab-pane fade w-100">
+                <form action="" id="pay">
+                  <div
+                    className="rounded-3 text-align-center p-2 fs-6"
+                    style={{ minWidth: "100%", backgroundColor: "#0e825dc6" }}
+                  >
+                    <input
+                      type="hidden"
+                      id="date"
+                      className="form-control border-0 right-align"
+                      aria-label="Sizing example input"
+                      aria-describedby="inputGroup-sizing-default"
+                      placeholder="Enter Date"
+                      style={{ backgroundColor: "#d1d3ab3c" }}
+                    />
+                    <div
+                      className="justify-content-center align-items-center form-control p-3 rounded-3 input-group-text-right"
+                      style={{ backgroundColor: "#ffffff", color: "black" }}
+                    >
+                      <span>Amount Previously Left to be paid:</span>{" "}
+                      <b id="prev_amt_display"></b>
+                      <input type="hidden" id="prev_amt" name="prev_amt" />
+                    </div>
+                    <div className="input-group mt-2">
+                      <span
+                        className="input-group-text p-3 border-0"
+                        id="inputGroup-sizing-default"
+                        style={{
+                          backgroundColor: "rgb(255, 255, 255)",
+                          color: "black",
+                          fontWeight: 500,
+                          minWidth: "26%",
+                        }}
+                      >
+                        To be paid
+                      </span>
+                      <input
+                        id="present_amt"
+                        name="present_amt"
+                        type="number"
+                        className="form-control border-0 right-align"
+                        aria-label="Sizing example input"
+                        aria-describedby="inputGroup-sizing-default"
+                        style={{
+                          backgroundColor: "rgba(255, 255, 255, 0.801)",
+                        }}
+                        placeholder="Enter Here"
+                      />
+                    </div>
+                    <div className="input-group mt-2">
+                      <span
+                        className="input-group-text p-3 border-0"
+                        id="inputGroup-sizing-default"
+                        style={{
+                          backgroundColor: "rgb(255, 255, 255)",
+                          color: "black",
+                          fontWeight: 500,
+                          minWidth: "26%",
+                        }}
+                      >
+                        Amount paid
+                      </span>
+                      <input
+                        id="paid_amt"
+                        name="paid_amt"
+                        type="number"
+                        className="form-control border-0 right-align"
+                        aria-label="Sizing example input"
+                        aria-describedby="inputGroup-sizing-default"
+                        style={{
+                          backgroundColor: "rgba(255, 255, 255, 0.801)",
+                        }}
+                        placeholder="Enter Here"
+                      />
+                    </div>
+                    <div
+                      className="justify-content-center form-control align-items-center p-3 rounded-3 mt-2 input-group-text-right"
+                      style={{ backgroundColor: "#ffffff", color: "black" }}
+                    >
+                      <span>Amount that will be left to be paid:</span>{" "}
+                      <b id="left_amt_display"></b>
+                      <input type="hidden" id="left_amt" name="future_amt" />
+                    </div>
+                    <button
+                      className="rounded-3 p-3 mt-2 border-0 w-100"
+                      id="save-payment-button"
+                      value="pay"
+                      onClick={(e) => {
+                        e.preventDefault();
+                        PushPayment(e.target.value);
+                      }}
+                      style={{
+                        backgroundColor: "#1da453",
+                        color: "white",
+                        fontWeight: 500,
+                      }}
+                    >
+                      SAVE <i className="fa-solid fa-check"></i>
+                    </button>
+                  </div>
+                </form>
+              </div>
 
               <div id="menu32" className="tab-pane fade w-100">
                 <div className="w-100">

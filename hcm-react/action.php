@@ -78,7 +78,14 @@ try {
                 }
                 break;
 
-
+                case 'insert_payment':
+                    $response = DB::insert('payment', $input['data']);
+                    if ($response['status'] == "Insert Successfully") {
+                        echo json_encode(['status' => true, "message" => "Inserted Successfully", 'data' => $response]);
+                    } else {
+                        echo json_encode(['status' => false, "message" => "Could not insert", 'data' => $response]);
+                    }
+                    break;
 
 
 
