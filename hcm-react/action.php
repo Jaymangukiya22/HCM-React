@@ -35,7 +35,7 @@ try {
                     break;
             
                     case 'insert_lab':
-                        // Assuming $input['lab'], $input['dt'], $input['remarks'], and $input['file'] are arrays
+                        // Assuming $input['medicine'], $input['dt'], $input['remarks'], and $input['file'] are arrays
                         $labs = $input['data']['lab'];
                         $dates = $input['data']['dt'];
                         $remarks = $input['data']['remarks'];
@@ -67,6 +67,7 @@ try {
                           echo json_encode(['status' => false, 'message' => 'Could not insert', 'errors' => $errors]);
                         }
                         break;
+
                 
 
                     
@@ -95,6 +96,38 @@ try {
                                 echo json_encode(['status' => false, "message" => "Could not update", 'data' => $response]);
                             }
                             break;
+
+                            case 'insert_prescription':
+                                $medicines = $input['data']['medicine'];
+                                $doses = $input['data']['dose'];
+                                $caseno = $input['data']['caseno'];
+                                // $dates = $input['data']['date']; // Dates array
+                    
+                                $errors = [];
+                                foreach ($medicines as $index => $medicine) {
+                                    $dose = $doses[$index];
+                                    // $date = $dates[$index]; // Use the provided date
+                    
+                                    $response = DB::insert('prescriptions', [
+                                        'medicine' => $medicine,
+                                        'dose' => $dose,
+                                        'caseno' => $caseno,
+                                        // 'date' => $date
+                                    ]);
+                    
+                                    if ($response['status'] !== "Insert Successfully") {
+                                        $errors[] = "Error inserting medicine entry $index: " . $response['message'];
+                                    }
+                                }
+                    
+                                if (empty($errors)) {
+                                    echo json_encode(['status' => true, 'message' => 'Inserted Successfully']);
+                                } else {
+                                    echo json_encode(['status' => false, 'message' => 'Could not insert', 'errors' => $errors]);
+                                }
+                                break;
+                            
+
                         
                         
                         
