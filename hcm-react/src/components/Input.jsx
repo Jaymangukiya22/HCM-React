@@ -1,7 +1,12 @@
 import React, { useState, useEffect,useRef } from "react";
+import axios from 'axios';
+
 import "./styles/nav-styles.css";
 import "./styles/details.css";
 // import   {  useRef } from 'react';
+
+
+
 
 const MyComponent = () => {
   const hiddenInputRef = useRef(null);
@@ -54,6 +59,56 @@ const MyComponent = () => {
 
 
 function Input() {
+
+  // import axios from 'axios';
+  const [prevAmt, setPrevAmt] = useState(0);
+  const [presentAmt, setPresentAmt] = useState('');
+  const [paidAmt, setPaidAmt] = useState('');
+  const [leftAmt, setLeftAmt] = useState('');
+
+  useEffect(() => {
+    fetchPaymentDetails(caseno); // Replace '106' with your dynamic caseno if needed
+  }, []);
+
+  const fetchPaymentDetails = (caseno) => {
+
+    axios.get(` http://localhost/HCM-React/hcm-react/payment.php?caseno=${caseno}`)
+      .then(response => {
+        const { prev_amt } = response.data; // Assuming response structure includes prev_amt
+        setPrevAmt(prev_amt || 0); // Ensure prev_amt is set to a default value if undefined
+        setLeftAmt(prev_amt || 0); // Initialize leftAmt with prev_amt
+      })
+      .catch(error => {
+        console.error('Error fetching payment details:', error);
+      });
+  };
+
+  const handleFormSubmit = (e) => {
+    e.preventDefault();
+    const data = {
+      caseno: caseno,
+      prev_amt: prevAmt,
+      present_amt: parseFloat(presentAmt),
+      paid_amt: parseFloat(paidAmt)
+    };
+  
+    fetch('http://localhost/HCM-React/hcm-react/payment.php', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(data),
+    })
+    .then(response => response.json())
+    .then(data => {
+      console.log('Payment details updated successfully:', data);
+      // Handle success response here
+    })
+    .catch(error => {
+      console.error('Error updating payment details:', error);
+    });
+  };
+  
   const [caseno, setCaseno] = useState(null);
   const [l_id, setL_id] = useState(null);
 
@@ -1727,97 +1782,51 @@ function Input() {
       </form>
     </div>
 
-              <div id="menu22" className="tab-pane fade w-100">
-                <div
-                  className="rounded-3 text-align-center p-2 fs-6"
-                  style={{ minWidth: "100%", backgroundColor: "#0e825dc6" }}
-                >
-                  <input
-                    type="hidden"
-                    id="date"
-                    className="form-control border-0 right-align"
-                    aria-label="Sizing example input"
-                    aria-describedby="inputGroup-sizing-default"
-                    placeholder="Enter Date"
-                    style={{ backgroundColor: "#d1d3ab3c" }}
-                  />
-                  <div
-                    className="justify-content-center align-items-center form-control p-3 rounded-3 input-group-text-right"
-                    style={{ backgroundColor: "#ffffff", color: "black" }}
-                  >
-                    <span>Amount Previously Left to be paid:</span>{" "}
-                    <b id="prev_amt">₹400.00</b>
-                  </div>
-                  <div className="input-group mt-2">
-                    <span
-                      className="input-group-text p-3 border-0"
-                      id="inputGroup-sizing-default"
-                      style={{
-                        backgroundColor: "rgb(255, 255, 255)",
-                        color: "black",
-                        fontWeight: 500,
-                        minWidth: "26%",
-                      }}
-                    >
-                      To be paid
-                    </span>
-                    <input
-                      id="present_amt"
-                      type="number"
-                      className="form-control border-0 right-align"
-                      aria-label="Sizing example input"
-                      aria-describedby="inputGroup-sizing-default"
-                      style={{
-                        backgroundColor: "rgba(255, 255, 255, 0.801)",
-                      }}
-                      placeholder="Enter Here"
-                    />
-                  </div>
-                  <div className="input-group mt-2">
-                    <span
-                      className="input-group-text p-3 border-0"
-                      id="inputGroup-sizing-default"
-                      style={{
-                        backgroundColor: "rgb(255, 255, 255)",
-                        color: "black",
-                        fontWeight: 500,
-                        minWidth: "26%",
-                      }}
-                    >
-                      Amount paid
-                    </span>
-                    <input
-                      id="paid_amt"
-                      type="number"
-                      className="form-control border-0 right-align"
-                      aria-label="Sizing example input"
-                      aria-describedby="inputGroup-sizing-default"
-                      style={{
-                        backgroundColor: "rgba(255, 255, 255, 0.801)",
-                      }}
-                      placeholder="Enter Here"
-                    />
-                  </div>
-                  <div
-                    className="justify-content-center form-control align-items-center p-3 rounded-3 mt-2 input-group-text-right"
-                    style={{ backgroundColor: "#ffffff", color: "black" }}
-                  >
-                    <span>Amount that will be left to be paid:</span>{" "}
-                    <b id="left_amt">₹400.00</b>
-                  </div>
-                  <button
-                    className="rounded-3 p-3 mt-2 border-0 w-100"
-                    id="save-payment-button"
-                    style={{
-                      backgroundColor: "#1da453",
-                      color: "white",
-                      fontWeight: 500,
-                    }}
-                  >
-                    SAVE <i className="fa-solid fa-check"></i>
-                  </button>
-                </div>
-              </div>
+    <div className="tab-pane fade w-100" id="menu22">
+      <div className="rounded-3 text-align-center p-2 fs-6" style={{ minWidth: "100%", backgroundColor: "#0e825dc6" }}>
+        <div className="justify-content-center align-items-center form-control p-3 rounded-3 input-group-text-right" style={{ backgroundColor: "#ffffff", color: "black" }}>
+          <span>Amount Previously Left to be paid:</span> <b id="prev_amt">₹{prevAmt.toFixed(2)}</b>
+        </div>
+        <form onSubmit={handleFormSubmit}>
+          <div className="input-group mt-2">
+            <span className="input-group-text p-3 border-0" style={{ backgroundColor: "rgb(255, 255, 255)", color: "black", fontWeight: 500, minWidth: "26%" }}>To be paid</span>
+            <input
+              id="present_amt"
+              type="number"
+              className="form-control border-0 right-align"
+              style={{ backgroundColor: "rgba(255, 255, 255, 0.801)" }}
+              placeholder="Enter Here"
+              value={presentAmt}
+              onChange={(e) => setPresentAmt(e.target.value)}
+            />
+          </div>
+          <div className="input-group mt-2">
+            <span className="input-group-text p-3 border-0" style={{ backgroundColor: "rgb(255, 255, 255)", color: "black", fontWeight: 500, minWidth: "26%" }}>Amount paid</span>
+            <input
+              id="paid_amt"
+              type="number"
+              className="form-control border-0 right-align"
+              style={{ backgroundColor: "rgba(255, 255, 255, 0.801)" }}
+              placeholder="Enter Here"
+              value={paidAmt}
+              onChange={(e) => setPaidAmt(e.target.value)}
+            />
+          </div>
+          <div className="justify-content-center form-control align-items-center p-3 rounded-3 mt-2 input-group-text-right" style={{ backgroundColor: "#ffffff", color: "black" }}>
+            <span>Amount that will be left to be paid:</span> <b id="left_amt">₹{leftAmt}</b>
+          </div>
+          <button
+            className="rounded-3 p-3 mt-2 border-0 w-100"
+            id="save-payment-button"
+            style={{ backgroundColor: "#1da453", color: "white", fontWeight: 500 }}
+            type="submit"
+          >
+            SAVE <i className="fa-solid fa-check"></i>
+          </button>
+        </form>
+      </div>
+    </div>
+
 
               <div id="menu32" className="tab-pane fade w-100">
                 <div className="w-100">
