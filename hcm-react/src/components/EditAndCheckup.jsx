@@ -196,6 +196,32 @@ const Input = () => {
     remarks: "",
   });
   const [message, setMessage] = useState("");
+  const [paymentData, setPaymentData] = useState({
+    present_amt: "",
+    paid_amt: "",
+    future_amt: "",
+    prev_amt: "",
+  });
+
+  useEffect(() => {
+    const fetchPaymentData = async () => {
+      try {
+        const response = await fetch(
+          `http://localhost/HCM-React/hcm-react/get_payment_data.php?caseno=${caseno}`
+        );
+        const data = await response.json();
+        if (data.error) {
+          setMessage(data.error);
+        } else {
+          setPaymentData(data);
+        }
+      } catch (error) {
+        setMessage("Failed to fetch payment data");
+      }
+    };
+
+    fetchPaymentData();
+  }, [caseno]);
 
   useEffect(() => {
     const fetchPatientData = async () => {
@@ -1902,7 +1928,7 @@ const Input = () => {
                       style={{ backgroundColor: "#ffffff", color: "black" }}
                     >
                       <span>Amount Previously Left to be paid:</span>{" "}
-                      <b id="prev_amt_display"></b>
+                      <b id="prev_amt_display">{paymentData.future_amt}</b>
                       <input type="hidden" id="prev_amt" name="prev_amt" />
                     </div>
                     <div className="input-group mt-2">
