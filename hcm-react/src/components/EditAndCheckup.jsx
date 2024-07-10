@@ -1650,7 +1650,7 @@ const Input = () => {
             </div>
           </div>
           <div className="col-md-5 p-2" style={{ padding: "0px" }}>
-            <ul
+          <ul
               className="nav nav-fill rounded-3"
               style={{ borderRadius: "20px" }}
             >
@@ -1663,6 +1663,7 @@ const Input = () => {
                   className="p-3 text nav-link rounded-3 right-nav right-nav-item active"
                   data-toggle="tab"
                   href="#home2"
+                  id="checkup-anchor"
                 >
                   Checkup
                 </a>
@@ -1676,6 +1677,7 @@ const Input = () => {
                   className="p-3 text nav-link rounded-3 right-nav right-nav-item"
                   data-toggle="tab"
                   href="#menu12"
+                  id="prescriptions-anchor"
                 >
                   Prescriptions
                 </a>
@@ -1689,6 +1691,7 @@ const Input = () => {
                   className="p-3 text nav-link rounded-3 right-nav right-nav-item"
                   data-toggle="tab"
                   href="#menu22"
+                  id="payment-anchor"
                 >
                   Payment
                 </a>
@@ -1702,6 +1705,7 @@ const Input = () => {
                   className="p-3 text nav-link rounded-3 right-nav right-nav-item"
                   data-toggle="tab"
                   href="#menu32"
+                  id="checkup-history-anchor"
                 >
                   History
                 </a>
@@ -1785,7 +1789,10 @@ const Input = () => {
                       onClick={(e) => {
                         e.preventDefault();
                         PushCheckupData(e.target.value);
+                        document.getElementById("prescriptions-anchor").click();
+
                       }}
+
                       id="save-checkup-button"
                       style={{
                         backgroundColor: "#1da453",
@@ -1794,7 +1801,7 @@ const Input = () => {
                       }}
                     >
                       SAVE{" "}
-                      <img
+                      {/* <img
                         src="Images And Icons/arrow-right-solid (1).svg"
                         style={{
                           height: "10px",
@@ -1802,7 +1809,9 @@ const Input = () => {
                           transform: "translateY(-15%)",
                         }}
                         alt=""
-                      />
+                      /> */}
+                      {/* <i className="fa-solid fa-check"></i> */}
+                      <i className="fa-solid fa-arrow-right"></i>
                     </button>
                   </div>
                 </form>
@@ -1898,10 +1907,12 @@ const Input = () => {
                       onClick={(e) => {
                         e.preventDefault();
                         PushPrescription(e.target.value);
+                        document.getElementById("payment-anchor").click();
+
                       }}
                     >
                       PAYMENT{" "}
-                      <img
+                      {/* <img
                         src="Images And Icons/arrow-right-solid (1).svg"
                         style={{
                           height: "10px",
@@ -1909,7 +1920,8 @@ const Input = () => {
                           transform: "translateY(-15%)",
                         }}
                         alt=""
-                      />
+                      /> */}
+                      <i className="fa-solid fa-arrow-right"></i>
                     </button>
                   </div>
                 </form>
@@ -2005,6 +2017,8 @@ const Input = () => {
                       onClick={(e) => {
                         e.preventDefault();
                         UpdatePaymentData(e.target.value);
+                        document.getElementById("checkup-history-anchor").click();
+
                       }}
                       style={{
                         backgroundColor: "#1da453",

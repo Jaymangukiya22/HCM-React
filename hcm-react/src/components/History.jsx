@@ -36,36 +36,51 @@ const History = ({ caseno }) => {
         return <p>Invalid data format: Expected an object</p>;
     }
 
-    const { test_details = {}, checkup_remarks = {}, prescriptions = [] } = historyData;
+    const formatDate = (inputDate) => {
+        const dateObj = new Date(inputDate);
+        const formattedDate = dateObj.toLocaleDateString('en-GB'); // Adjust locale as needed
+        return formattedDate;
+    };
+
+    const renderPrescriptions = (prescriptions) => {
+        if (prescriptions.length === 0) {
+            return <p>No prescriptions found</p>;
+        }
+
+        return prescriptions.map((prescription, index) => (
+            <span key={index}>
+                {prescription.medicine} X {prescription.dose}<br />
+            </span>
+        ));
+    };
+
+    // Get sorted dates in descending order
+    const sortedDates = Object.keys(historyData).sort((a, b) => {
+        const dateA = new Date(a);
+        const dateB = new Date(b);
+        return dateB - dateA;
+    });
 
     return (
-        <div className="history-div rounded-3" style={{ maxHeight: '45vh', overflowY: 'scroll' }}>
-            <div className="justify-content-center align-items-center mb-1 mt-3 p-3 rounded-3" style={{ backgroundColor: '#d1d3ab' }}>
-                <div className="input-group">
-                    <span className="p-3 border-0 rounded-3 w-100 mb-3 d-flex justify-content-between align-items-center" style={{ backgroundColor: '#0b6e4f', color: 'bisque', textAlign: 'center', fontWeight: 600, fontSize: '20px' }}>
-                        <span>{test_details.date}</span>
-                        {checkup_remarks.file && (
-                            <img src="Images And Icons/image-preview.svg" alt="file icon" style={{ cursor: 'pointer', height: '27px', width: '27px' }} onClick={() => showModal(checkup_remarks.file)} />
-                        )}
-                    </span>
-                    <span className="p-3 border-0 rounded-3 me-auto" style={{ backgroundColor: '#0b6e4f', color: 'bisque', width: '49%' }}>
-                        <p>{checkup_remarks.remarks}</p>
-                    </span>
-                    <span className="p-3 border-0 rounded-3 ms-auto" style={{ backgroundColor: '#0b6e4f', color: 'bisque', width: '49%' }}>
-                        <p>
-                            {prescriptions.length > 0 ? (
-                                prescriptions.map(prescription => (
-                                    <span key={prescription.id}>
-                                        {prescription.medicine} X {prescription.dose}<br />
-                                    </span>
-                                ))
-                            ) : (
-                                <p>No prescriptions found</p>
-                            )}
-                        </p>
-                    </span>
+        <div className="history-div rounded-3" style={{ maxHeight: '81vh', overflowY: 'scroll' }}>
+            {sortedDates.map(date => (
+                <div key={date} className="justify-content-center align-items-center mb-3 mt-1 p-1 rounded-3" style={{ backgroundColor: '#d1d3ab' }}>
+                    <div className="input-group">
+                        <span className="p-3 border-0 rounded-3 w-100 mb-1 d-flex justify-content-between align-items-center" style={{ backgroundColor: '#0b6e4f', color: 'bisque', textAlign: 'center', fontWeight: 600, fontSize: '20px' }}>
+                            <span>{formatDate(date)}</span>
+                            {/* {historyData[date].checkup_remarks.file && (
+                                <img src="Images And Icons/image-preview.svg" alt="file icon" style={{ cursor: 'pointer', height: '27px', width: '27px' }} onClick={() => showModal(historyData[date].checkup_remarks.file)} />
+                            )} */}
+                        </span>
+                        <span className="p-3 border-0 rounded-3 me-auto" style={{ backgroundColor: '#0b6e4f', color: 'bisque', width: '49.75%' }}>
+                            <p>{historyData[date].checkup_remarks.remarks}</p>
+                        </span>
+                        <span className="p-3 border-0 rounded-3 ms-auto" style={{ backgroundColor: '#0b6e4f', color: 'bisque', width: '49.75%' }}>
+                            {renderPrescriptions(historyData[date].prescriptions)}
+                        </span>
+                    </div>
                 </div>
-            </div>
+            ))}
         </div>
     );
 };
