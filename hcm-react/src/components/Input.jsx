@@ -56,8 +56,33 @@ function Input() {
   const [caseno, setCaseno] = useState(null);
   const [l_id, setL_id] = useState(null);
 
-  const [dateValue, setDateValue] = useState("");
+  const [dateValue, setDateValue] = useState('');
   const dateCheckupRef = useRef(null);
+
+  useEffect(() => {
+    // Function to update dateValue from the date-checkup element
+    const updateDateValue = () => {
+      const dateCheckupElement = document.getElementById('date-checkup');
+      if (dateCheckupElement) {
+        setDateValue(dateCheckupElement.value);
+      }
+    };
+
+    // Initial update when component mounts
+    updateDateValue();
+
+    // Add event listener to update dateValue when date-checkup changes
+    if (dateCheckupRef.current) {
+      dateCheckupRef.current.addEventListener('input', updateDateValue);
+    }
+
+    // Clean up event listener on unmount
+    return () => {
+      if (dateCheckupRef.current) {
+        dateCheckupRef.current.removeEventListener('input', updateDateValue);
+      }
+    };
+  }, []);
 
   useEffect(() => {
     function updateLeftToBePaid() {
