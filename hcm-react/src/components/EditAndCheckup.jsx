@@ -377,48 +377,6 @@ const Input = () => {
     }
   }
 
-  async function PushPayment(val) {
-    if (!caseno) {
-      console.error("Error: caseno or l_id is not set.");
-      return;
-    }
-
-    const form = document.getElementById(val);
-    const formData = new FormData(form);
-    const lastInsertedId = caseno;
-    console.log(lastInsertedId);
-
-    const formDataObj = {};
-    formData.forEach((value, key) => {
-      formDataObj[key] = value;
-    });
-
-    formDataObj.caseno = lastInsertedId;
-
-    const response = await fetch(
-      "http://localhost/HCM-React/hcm-react/action.php",
-      {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          data: formDataObj,
-          action: "insert_payment",
-        }),
-      }
-    );
-
-    const responseText = await response.text();
-    try {
-      const result = JSON.parse(responseText);
-      if (result.status) {
-        console.log("Payment data inserted successfully.");
-      } else {
-        console.error("Error: ", result.message);
-      }
-    } catch (error) {
-      console.error("Failed to parse JSON response: ", responseText);
-    }
-  }
   async function UpdateData(val) {
     const form = document.getElementById(val);
     const formData = new FormData(form);

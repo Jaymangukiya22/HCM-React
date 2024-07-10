@@ -10,17 +10,61 @@ ini_set('display_errors', 1); // Display errors
 
 try {
     if ($_SERVER['REQUEST_METHOD'] == "POST") {
+        // Check if it is a JSON request
         $input = json_decode(file_get_contents('php://input'), true);
+
+        // If $input is null, it means it's not a JSON request, so use $_POST
+        if ($input === null) {
+            $input = $_POST;
+        }
+
+        if (!isset($input['action'])) {
+            echo json_encode(['status' => false, "message" => "Invalid action"]);
+            exit;
+        }
+
         $action = $input['action'];
         $caseno;
 
         switch ($action) {
             case 'insert':
-                $response = DB::insert('test_details', $input['data']);
-                if ($response['status'] == "Insert Successfully") {
-                    echo json_encode(['status' => true, "message" => "Inserted Successfully", 'data' => $response]);
+                // Ensure the data is set correctly from the input
+                $data = isset($input['data']) ? $input['data'] : $input;
+                unset($data['action']);
+                // Handle file upload
+                $fileUploadSuccess = false;
+                $message = '';
+        
+                if (isset($_FILES['photo']) && $_FILES['photo']['error'] === UPLOAD_ERR_OK) {
+                    $fileTmpPath = $_FILES['photo']['tmp_name'];
+                    $fileName = $_FILES['photo']['name'];
+                    $fileSize = $_FILES['photo']['size'];
+                    $fileType = $_FILES['photo']['type'];
+                    $fileNameCmps = explode(".", $fileName);
+                    $fileExtension = strtolower(end($fileNameCmps));
+        
+                    // Set upload file path
+                    $uploadFileDir = './uploaded_files/';
+                    $dest_path = $uploadFileDir . $fileName;
+        
+                    if (move_uploaded_file($fileTmpPath, $dest_path)) {
+                        $fileUploadSuccess = true;
+                        $data['photo'] = $dest_path; // Store the file name in the database
+                        $message = 'File is successfully uploaded.';
+                    } else {
+                        $message = 'There was some error moving the file to upload directory.';
+                    }
                 } else {
-                    echo json_encode(['status' => false, "message" => "Could not insert", 'data' => $response]);
+                    $message = 'No file uploaded.';
+                }
+
+        
+                // Insert data into the database
+                $response = DB::insert('test_details', $data);
+                if ($response['status'] == "Insert Successfully") {
+                    echo json_encode(['status' => true, "message" => "Inserted Successfully. " . $message, 'data' => $response]);
+                } else {
+                    echo json_encode(['status' => false, "message" => "Could not insert. " . $message, 'data' => $response]);
                 }
                 break;
 

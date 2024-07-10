@@ -56,13 +56,13 @@ function Input() {
   const [caseno, setCaseno] = useState(null);
   const [l_id, setL_id] = useState(null);
 
-  const [dateValue, setDateValue] = useState('');
+  const [dateValue, setDateValue] = useState("");
   const dateCheckupRef = useRef(null);
 
   useEffect(() => {
     // Function to update dateValue from the date-checkup element
     const updateDateValue = () => {
-      const dateCheckupElement = document.getElementById('date-checkup');
+      const dateCheckupElement = document.getElementById("date-checkup");
       if (dateCheckupElement) {
         setDateValue(dateCheckupElement.value);
       }
@@ -73,13 +73,13 @@ function Input() {
 
     // Add event listener to update dateValue when date-checkup changes
     if (dateCheckupRef.current) {
-      dateCheckupRef.current.addEventListener('input', updateDateValue);
+      dateCheckupRef.current.addEventListener("input", updateDateValue);
     }
 
     // Clean up event listener on unmount
     return () => {
       if (dateCheckupRef.current) {
-        dateCheckupRef.current.removeEventListener('input', updateDateValue);
+        dateCheckupRef.current.removeEventListener("input", updateDateValue);
       }
     };
   }, []);
@@ -183,20 +183,15 @@ function Input() {
     const form = document.getElementById(val);
     const formData = new FormData(form);
 
-    const formDataObj = {};
-    formData.forEach((value, key) => {
-      formDataObj[key] = value;
-    });
-    console.log(formDataObj);
-
-    delete formDataObj.photo;
+    // Log the form data for debugging
+    // Add the action to the form data
+    formData.append("action", "insert");
 
     const response = await fetch(
       "http://localhost/HCM-React/hcm-react/action.php",
       {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ data: formDataObj, action: "insert" }),
+        body: formData, // Send the form data directly
       }
     );
 
