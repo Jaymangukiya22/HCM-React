@@ -468,6 +468,55 @@ const Input = () => {
     }
   }
 
+  async function UpdatePaymentData(val) {
+    const form = document.getElementById(val);
+    const formData = new FormData(form);
+
+    const formDataObj = {};
+    formData.forEach((value, key) => {
+      if (key === "mind[]") {
+        if (!formDataObj[key]) {
+          formDataObj[key] = [];
+        }
+        formDataObj[key].push(value);
+      } else {
+        formDataObj[key] = value;
+      }
+    });
+    // if (formDataObj["mind[]"]) {
+    //   formDataObj["mind"] = formDataObj["mind[]"];
+    //   delete formDataObj["mind[]"];
+    // }
+    delete formDataObj.photo;
+    // console.log(l_id);
+    console.log(formDataObj);
+
+    const response = await fetch(
+      "http://localhost/HCM-React/hcm-react/action.php",
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          data: formDataObj,
+          action: "update_payment",
+          id: caseno,
+        }),
+      }
+    );
+
+    const responseText = await response.text();
+    try {
+      const result = JSON.parse(responseText);
+      if (result.status) {
+        console.log(result);
+      } else {
+        console.error("Error: ", result.message);
+      }
+    } catch (error) {
+      console.error("Failed to parse JSON response: ", responseText);
+    }
+  }
+
   return (
     <div style={{ backgroundColor: "#0b6e4f" }}>
       <form>
@@ -1997,7 +2046,7 @@ const Input = () => {
                       value="pay"
                       onClick={(e) => {
                         e.preventDefault();
-                        PushPayment(e.target.value);
+                        UpdatePaymentData(e.target.value);
                       }}
                       style={{
                         backgroundColor: "#1da453",

@@ -78,6 +78,26 @@ try {
                 }
                 break;
 
+                case 'update_payment':
+                    if (!isset($input['id'])) {
+                        echo json_encode(['status' => false, "message" => "ID not provided"]);
+                        exit;
+                    }
+                    $id = $input['id'];
+                    $data = $input['data'];
+                    if (isset($data['mind'])) {
+                        $data['mind'] = implode(",", $data['mind']);
+                    }
+                    $response = DB::update('payment', $data, ['caseno' => $id]);
+                    if ($response == "Update Successfully") {
+                        echo json_encode(['status' => true, "message" => "Updated Successfully", 'data' => $response]);
+                    } else {
+                        error_log("Update failed: " . print_r($response, true));
+                        echo json_encode(['status' => false, "message" => "Could not update", 'data' => $response]);
+                    }
+                    break;
+    
+
                 case 'insert_payment':
                     $response = DB::insert('payment', $input['data']);
                     if ($response['status'] == "Insert Successfully") {
