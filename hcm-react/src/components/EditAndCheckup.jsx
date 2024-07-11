@@ -1716,11 +1716,13 @@ const Input = () => {
                 <div className="col-md-9 p-1">
                   <div className=" rounded-3 ">
                     <div
-                      className="ps-2 p-2 rounded-3 mb-2"
+                      className="  rounded-3 mb-2"
                       style={{
                         textAlign: "left",
                         backgroundColor: "#ffffff",
                         color: "black",
+                        paddingLeft:"10px",
+                        padding:"10px"
                       }}
                     >
                       {" "}
