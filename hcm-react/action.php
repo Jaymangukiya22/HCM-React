@@ -69,7 +69,35 @@ try {
                 break;
 
             case 'insert_checkup':
-                $response = DB::insert('checkup_remarks', $input['data']);
+                $data = isset($input['data']) ? $input['data'] : $input;
+                unset($data['action']);
+                // Handle file upload
+                $fileUploadSuccess = false;
+                $message = '';
+        
+                if (isset($_FILES['file']) && $_FILES['file']['error'] === UPLOAD_ERR_OK) {
+                    $fileTmpPath = $_FILES['file']['tmp_name'];
+                    $fileName = $_FILES['file']['name'];
+                    $fileSize = $_FILES['file']['size'];
+                    $fileType = $_FILES['file']['type'];
+                    $fileNameCmps = explode(".", $fileName);
+                    $fileExtension = strtolower(end($fileNameCmps));
+        
+                    // Set upload file path
+                    $uploadFileDir = './uploaded_files/';
+                    $dest_path = $uploadFileDir . $fileName;
+        
+                    if (move_uploaded_file($fileTmpPath, $dest_path)) {
+                        $fileUploadSuccess = true;
+                        $data['file'] = $dest_path; // Store the file name in the database
+                        $message = 'File is successfully uploaded.';
+                    } else {
+                        $message = 'There was some error moving the file to upload directory.';
+                    }
+                } else {
+                    $message = 'No file uploaded.';
+                }
+                $response = DB::insert('checkup_remarks',$data);
                 if ($response['status'] == "Insert Successfully") {
                     echo json_encode(['status' => true, "message" => "Inserted Successfully", 'data' => $response]);
                 } else {
@@ -77,31 +105,57 @@ try {
                 }
                 break;
 
-            case 'insert_lab':
-                $labs = $input['data']['lab'];
-                $dates = $input['data']['dt'];
-                $remarks = $input['data']['remarks'];
-                $caseno = $input['data']['caseno'];
-                $errors = [];
-                foreach ($labs as $index => $lab) {
-                    $date = $dates[$index];
-                    $remark = $remarks[$index];
-                    $response = DB::insert('lab_test', [
-                        'lab' => $lab,
-                        'date' => $date,
-                        'remarks' => $remark,
-                        'caseno' => $caseno
-                    ]);
-                    if ($response['status'] !== "Insert Successfully") {
-                        $errors[] = "Error inserting lab entry $index: " . $response['message'];
+                case 'insert_lab':
+                    $labs = isset($_POST['lab']) ? $_POST['lab'] : [];
+                    $dates = isset($_POST['dt']) ? $_POST['dt'] : [];
+                    $remarks = isset($_POST['remarks']) ? $_POST['remarks'] : [];
+                    $caseno = isset($_POST['caseno']) ? $_POST['caseno'] : null;
+                    $errors = [];
+                
+                    // Handle file uploads
+                    $uploadFileDir = './uploaded_files/';
+                    $files = isset($_FILES['file']) ? $_FILES['file'] : null;
+                
+                    foreach ($labs as $index => $lab) {
+                        $date = isset($dates[$index]) ? $dates[$index] : null;
+                        $remark = isset($remarks[$index]) ? $remarks[$index] : null;
+                        $filePath = null;
+                
+                        // Handle the file upload for this lab entry
+                        if ($files && isset($files['name'][$index]) && $files['error'][$index] === UPLOAD_ERR_OK) {
+                            $fileTmpPath = $files['tmp_name'][$index];
+                            $fileName = $files['name'][$index];
+                            $destPath = $uploadFileDir . $fileName;
+                
+                            if (move_uploaded_file($fileTmpPath, $destPath)) {
+                                $filePath = $destPath; // Store the file path
+                            } else {
+                                $errors[] = "Error moving file for lab entry $index: $fileName";
+                            }
+                        }
+                
+                        $response = DB::insert('lab_test', [
+                            'lab' => $lab,
+                            'date' => $date,
+                            'remarks' => $remark,
+                            'caseno' => $caseno,
+                            'file' => $filePath // Add the file path to the database
+                        ]);
+                
+                        if ($response['status'] !== "Insert Successfully") {
+                            $errors[] = "Error inserting lab entry $index: " . $response['message'];
+                        }
                     }
-                }
-                if (empty($errors)) {
-                    echo json_encode(['status' => true, 'message' => 'Inserted Successfully']);
-                } else {
-                    echo json_encode(['status' => false, 'message' => 'Could not insert', 'errors' => $errors]);
-                }
-                break;
+                
+                    if (empty($errors)) {
+                        echo json_encode(['status' => true, 'message' => 'Inserted Successfully']);
+                    } else {
+                        echo json_encode(['status' => false, 'message' => 'Could not insert', 'errors' => $errors]);
+                    }
+                    break;
+                
+                
+                
 
             case 'update':
                 if (!isset($input['id'])) {

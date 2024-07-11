@@ -212,6 +212,61 @@ function Input() {
     }
   }
 
+  // async function PushLabData(val) {
+  //   if (!l_id || !caseno) {
+  //     console.error("Error: caseno or l_id is not set.");
+  //     return;
+  //   }
+
+  //   const form = document.getElementById(val);
+  //   const formData = new FormData(form);
+  //   const lastInsertedId = caseno || l_id;
+  //   console.log(lastInsertedId);
+
+  //   const formDataObj = {
+  //     lab: [],
+  //     dt: [],
+  //     remarks: [],
+  //     file: [],
+  //   };
+
+  //   formData.forEach((value, key) => {
+  //     if (key.startsWith("lab[")) {
+  //       formDataObj.lab.push(value);
+  //     } else if (key.startsWith("dt[")) {
+  //       formDataObj.dt.push(value);
+  //     } else if (key.startsWith("remarks[")) {
+  //       formDataObj.remarks.push(value);
+  //     } else if (key.startsWith("file[")) {
+  //       formDataObj.file.push(value);
+  //     }
+  //   });
+
+  //   formDataObj.caseno = caseno || l_id;
+  //   console.log(formDataObj);
+
+  //   const response = await fetch(
+  //     "http://localhost/HCM-React/hcm-react/action.php",
+  //     {
+  //       method: "POST",
+  //       headers: { "Content-Type": "application/json" },
+  //       body: JSON.stringify({ data: formDataObj, action: "insert_lab" }),
+  //     }
+  //   );
+
+  //   const responseText = await response.text();
+  //   try {
+  //     const result = JSON.parse(responseText);
+  //     if (result.status) {
+  //       console.log("Lab data inserted successfully.");
+  //     } else {
+  //       console.error("Error: ", result.message);
+  //     }
+  //   } catch (error) {
+  //     console.error("Failed to parse JSON response: ", responseText);
+  //   }
+  // }
+
   async function PushLabData(val) {
     if (!l_id || !caseno) {
       console.error("Error: caseno or l_id is not set.");
@@ -223,31 +278,15 @@ function Input() {
     const lastInsertedId = caseno || l_id;
     console.log(lastInsertedId);
 
-    const formDataObj = {
-      lab: [],
-      dt: [],
-      remarks: [],
-    };
-
-    formData.forEach((value, key) => {
-      if (key.startsWith("lab[")) {
-        formDataObj.lab.push(value);
-      } else if (key.startsWith("dt[")) {
-        formDataObj.dt.push(value);
-      } else if (key.startsWith("remarks[")) {
-        formDataObj.remarks.push(value);
-      }
-    });
-
-    formDataObj.caseno = caseno || l_id;
-    console.log(formDataObj);
+    // Append the caseno to the form data
+    formData.append("caseno", lastInsertedId);
+    formData.append("action", "insert_lab");
 
     const response = await fetch(
       "http://localhost/HCM-React/hcm-react/action.php",
       {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ data: formDataObj, action: "insert_lab" }),
+        body: formData, // Send the form data directly
       }
     );
 
@@ -275,22 +314,15 @@ function Input() {
     const lastInsertedId = caseno || l_id;
     console.log(lastInsertedId);
 
-    const formDataObj = {};
-    formData.forEach((value, key) => {
-      formDataObj[key] = value;
-    });
-
-    formDataObj.caseno = lastInsertedId;
+    // Add the caseno to the form data
+    formData.append("caseno", lastInsertedId);
+    formData.append("action", "insert_checkup");
 
     const response = await fetch(
       "http://localhost/HCM-React/hcm-react/action.php",
       {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          data: formDataObj,
-          action: "insert_checkup",
-        }),
+        body: formData, // Send the form data directly
       }
     );
 
@@ -1648,6 +1680,7 @@ function Input() {
                           borderTopLeftRadius: "0px",
                           borderBottomLeftRadius: "0px",
                         }}
+                        name="file"
                         type="file"
                         placeholder=""
                         aria-label=""
