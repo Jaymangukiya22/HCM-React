@@ -1710,7 +1710,7 @@ const Input = () => {
               <div className="row " style={{paddingLeft:"10px",paddingRight:"10px"}}>
                 <div className="col-md-9 p-1">
                   <div className=" rounded-3 ">
-                   <div className="ps-3 p-2 rounded-3 mb-2" style={{textAlign:"left",backgroundColor:"#cfe5de",color:"black"}}> {patientData.name}</div> 
+                   <div className="ps-3 p-2 rounded-3 mb-2" style={{textAlign:"left",backgroundColor:"#ffffff",color:"black"}}> {patientData.name}</div> 
                     <div className="input-group">
                       {/* <span
                         className="input-group-text fixed-width p-3 border-0"
@@ -1732,7 +1732,7 @@ const Input = () => {
                         aria-label="Sizing example input"
                         aria-describedby="inputGroup-sizing-default"
                         placeholder="Enter Date"
-                        style={{textAlign:"left",backgroundColor:"#cfe5de",color:"black"}}
+                        style={{textAlign:"left",backgroundColor:"#ffffff",color:"black"}}
                       />
                     </div>
                   </div>
