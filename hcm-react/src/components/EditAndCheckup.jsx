@@ -3,7 +3,6 @@ import History from "./History";
 // import photodisplay from "./add_patient.png"
 import account from "./Images And Icons/admin.png";
 
-
 import { useParams } from "react-router-dom";
 const MyComponent = () => {
   const hiddenInputRef = useRef(null);
@@ -1706,11 +1705,27 @@ const Input = () => {
             </div>
           </div>
           <div className="col-md-5 p-2" style={{ padding: "0px" }}>
-            <div className="w-100 rounded-3 p-2  mb-2" style={{backgroundColor:"#0d7e5a"}}>
-              <div className="row " style={{paddingLeft:"10px",paddingRight:"10px"}}>
+            <div
+              className="w-100 rounded-3 p-2  mb-2"
+              style={{ backgroundColor: "#0d7e5a" }}
+            >
+              <div
+                className="row "
+                style={{ paddingLeft: "10px", paddingRight: "10px" }}
+              >
                 <div className="col-md-9 p-1">
                   <div className=" rounded-3 ">
-                   <div className="ps-3 p-2 rounded-3 mb-2" style={{textAlign:"left",backgroundColor:"#ffffff",color:"black"}}> {patientData.name}</div> 
+                    <div
+                      className="ps-2 p-2 rounded-3 mb-2"
+                      style={{
+                        textAlign: "left",
+                        backgroundColor: "#ffffff",
+                        color: "black",
+                      }}
+                    >
+                      {" "}
+                      {patientData.name}
+                    </div>
                     <div className="input-group">
                       {/* <span
                         className="input-group-text fixed-width p-3 border-0"
@@ -1732,18 +1747,38 @@ const Input = () => {
                         aria-label="Sizing example input"
                         aria-describedby="inputGroup-sizing-default"
                         placeholder="Enter Date"
-                        style={{textAlign:"left",backgroundColor:"#ffffff",color:"black"}}
+                        style={{
+                          textAlign: "left",
+                          backgroundColor: "#ffffff",
+                          color: "black",
+                        }}
                       />
                     </div>
                   </div>
                 </div>
                 <div className="col-md-3 p-1 ">
-                <div className="bg-light rounded-3">
-  <div className="p-3" style={{ maxHeight: "12.5vh",  display: "flex", justifyContent: "center", alignItems: "center" }}>
-    <img className="image-fluid" style={{ maxHeight: "10.5vh", maxWidth: "100%", objectFit: "contain" }} src={account} alt="img-not-available" />
-  </div>
-</div>
-
+                  <div className="bg-light rounded-3">
+                    <div
+                      className="p-3"
+                      style={{
+                        maxHeight: "12.5vh",
+                        display: "flex",
+                        justifyContent: "center",
+                        alignItems: "center",
+                      }}
+                    >
+                      <img
+                        className="image-fluid"
+                        style={{
+                          maxHeight: "10.5vh",
+                          maxWidth: "100%",
+                          objectFit: "contain",
+                        }}
+                        src={account}
+                        alt="img-not-available"
+                      />
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
@@ -1817,8 +1852,7 @@ const Input = () => {
                     className="rounded-3 p-2"
                     style={{ backgroundColor: "#d1d3ab21" }}
                   >
-
-                      {/* <span
+                    {/* <span
                         className="input-group-text fixed-width p-3 border-0"
                         id="inputGroup-sizing-default"
                         style={{
@@ -1829,8 +1863,8 @@ const Input = () => {
                       >
                         Date
                       </span> */}
-                      {/* <input */}
-                      <input
+                    {/* <input */}
+                    <input
                       type="hidden"
                       id="date-prescription"
                       name="date"
@@ -1841,7 +1875,6 @@ const Input = () => {
                       value={dateValue}
                       readOnly
                     />
-
 
                     <div className="input-group ">
                       <span
