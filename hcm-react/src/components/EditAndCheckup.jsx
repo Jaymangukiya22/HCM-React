@@ -1,5 +1,8 @@
 import React, { useState, useEffect, useRef } from "react";
 import History from "./History";
+// import photodisplay from "./add_patient.png"
+import account from "./Images And Icons/admin.png";
+
 
 import { useParams } from "react-router-dom";
 const MyComponent = () => {
@@ -50,6 +53,31 @@ const Input = () => {
   // const [l_id, setL_id] = useState(null);
   const [dateValue, setDateValue] = useState("");
   const dateCheckupRef = useRef(null);
+
+  useEffect(() => {
+    // Function to update dateValue from the date-checkup element
+    const updateDateValue = () => {
+      const dateCheckupElement = document.getElementById("date-checkup");
+      if (dateCheckupElement) {
+        setDateValue(dateCheckupElement.value);
+      }
+    };
+
+    // Initial update when component mounts
+    updateDateValue();
+
+    // Add event listener to update dateValue when date-checkup changes
+    if (dateCheckupRef.current) {
+      dateCheckupRef.current.addEventListener("input", updateDateValue);
+    }
+
+    // Clean up event listener on unmount
+    return () => {
+      if (dateCheckupRef.current) {
+        dateCheckupRef.current.removeEventListener("input", updateDateValue);
+      }
+    };
+  }, []);
 
   useEffect(() => {
     function updateLeftToBePaid() {
@@ -1678,6 +1706,48 @@ const Input = () => {
             </div>
           </div>
           <div className="col-md-5 p-2" style={{ padding: "0px" }}>
+            <div className="w-100 rounded-3 p-2  mb-2" style={{backgroundColor:"#0d7e5a"}}>
+              <div className="row " style={{paddingLeft:"10px",paddingRight:"10px"}}>
+                <div className="col-md-9 p-1">
+                  <div className=" rounded-3 ">
+                   <div className="ps-3 p-2 rounded-3 mb-2" style={{textAlign:"left",backgroundColor:"#cfe5de",color:"black"}}> {patientData.name}</div> 
+                    <div className="input-group">
+                      {/* <span
+                        className="input-group-text fixed-width p-3 border-0"
+                        id="inputGroup-sizing-default"
+                        style={{
+                          borderTopLeftRadius: "8px",
+                          borderBottomLeftRadius: "8px",
+                          color: "bisque",
+                        }}
+                      >
+                        Date
+                      </span> */}
+                      <input
+                        type="date"
+                        id="date-checkup"
+                        ref={dateCheckupRef}
+                        name="date"
+                        className="form-control border-0 p-2 ps-2"
+                        aria-label="Sizing example input"
+                        aria-describedby="inputGroup-sizing-default"
+                        placeholder="Enter Date"
+                        style={{textAlign:"left",backgroundColor:"#cfe5de",color:"black"}}
+                      />
+                    </div>
+                  </div>
+                </div>
+                <div className="col-md-3 p-1 ">
+                <div className="bg-light rounded-3">
+  <div className="p-3" style={{ maxHeight: "12.5vh",  display: "flex", justifyContent: "center", alignItems: "center" }}>
+    <img className="image-fluid" style={{ maxHeight: "10.5vh", maxWidth: "100%", objectFit: "contain" }} src={account} alt="img-not-available" />
+  </div>
+</div>
+
+                </div>
+              </div>
+            </div>
+
             <ul
               className="nav nav-fill rounded-3"
               style={{ borderRadius: "20px" }}
@@ -1747,8 +1817,8 @@ const Input = () => {
                     className="rounded-3 p-2"
                     style={{ backgroundColor: "#d1d3ab21" }}
                   >
-                    <div className="input-group">
-                      <span
+
+                      {/* <span
                         className="input-group-text fixed-width p-3 border-0"
                         id="inputGroup-sizing-default"
                         style={{
@@ -1758,19 +1828,22 @@ const Input = () => {
                         }}
                       >
                         Date
-                      </span>
+                      </span> */}
+                      {/* <input */}
                       <input
-                        type="date"
-                        id="date-checkup"
-                        ref={dateCheckupRef}
-                        name="date"
-                        className="form-control border-0"
-                        aria-label="Sizing example input"
-                        aria-describedby="inputGroup-sizing-default"
-                        placeholder="Enter Date"
-                      />
-                    </div>
-                    <div className="input-group mt-2">
+                      type="hidden"
+                      id="date-prescription"
+                      name="date"
+                      className="form-control border-0"
+                      aria-label="Sizing example input"
+                      aria-describedby="inputGroup-sizing-default"
+                      placeholder="Enter Date"
+                      value={dateValue}
+                      readOnly
+                    />
+
+
+                    <div className="input-group ">
                       <span
                         className="input-group-text fixed-width p-3 border-0"
                         id="inputGroup-sizing-default"
