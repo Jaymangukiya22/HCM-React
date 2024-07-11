@@ -1,5 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import axios from "axios";
+import account from "./Images And Icons/admin.png";
+
 
 import "./styles/nav-styles.css";
 import "./styles/details.css";
@@ -493,7 +495,7 @@ function Input() {
               className="p-2 rounded-3"
               style={{ backgroundColor: "#ffffff" }}
             >
-              <ul className="nav rounded-3">
+              <ul className="nav rounded-3 mb-2">
                 <li className="nav-item">
                   <a
                     className="nav-link left-nav-item active"
@@ -576,6 +578,17 @@ function Input() {
               </ul>
 
               <div
+                className="w-100"
+                style={{
+                  backgroundColor: "#0b6e4f",
+                  color: "white",
+                  maxHeight: "1px",
+                }}
+              >
+                .
+              </div>
+
+              <div
                 className="tab-content p-3"
                 id="content"
                 style={{
@@ -599,6 +612,8 @@ function Input() {
                           PushData(e.target.value);
                           document.getElementById("history-anchor").click();
                         }}
+                        style={{ backgroundColor: "#1da453" }}
+
                       >
                         Save
                       </button>
@@ -823,6 +838,8 @@ function Input() {
                             .getElementById("measurements-anchor")
                             .click();
                         }}
+                        style={{ backgroundColor: "#1da453" }}
+
                       >
                         Save
                       </button>
@@ -901,6 +918,8 @@ function Input() {
                           UpdateData(e.target.value);
                           document.getElementById("mind-anchor").click();
                         }}
+                        style={{ backgroundColor: "#1da453" }}
+
                       >
                         Save
                       </button>
@@ -1024,6 +1043,8 @@ function Input() {
                             .getElementById("observations-anchor")
                             .click();
                         }}
+                        style={{ backgroundColor: "#1da453" }}
+
                       >
                         Save
                       </button>
@@ -1087,7 +1108,6 @@ function Input() {
                     </div>
                   </form>
                 </div>
-
                 <div id="observations" className="tab-pane fade">
                   <form action="" id="observations1">
                     <div className="d-flex justify-content-between align-items-center mb-3">
@@ -1101,6 +1121,8 @@ function Input() {
                           UpdateData(e.target.value);
                           document.getElementById("vitals-anchor").click();
                         }}
+                        style={{ backgroundColor: "#1da453" }}
+
                       >
                         Save
                       </button>
@@ -1275,6 +1297,8 @@ function Input() {
                           //   });
                           document.getElementById("symptoms-anchor").click();
                         }}
+                        style={{ backgroundColor: "#1da453" }}
+
                       >
                         Save
                       </button>
@@ -1374,6 +1398,8 @@ function Input() {
                           //   });
                           document.getElementById("lab-anchor").click();
                         }}
+                        style={{ backgroundColor: "#1da453" }}
+
                       >
                         Save
                       </button>
@@ -1454,6 +1480,8 @@ function Input() {
                           e.preventDefault();
                           PushLabData(e.target.value);
                         }}
+                        style={{ backgroundColor: "#1da453" }}
+
                       >
                         Save
                       </button>
@@ -1558,6 +1586,90 @@ function Input() {
             </div>
           </div>
           <div className="col-md-5 p-2" style={{ padding: "0px" }}>
+
+          <div
+              className="w-100 rounded-3 p-2  mb-2"
+              style={{ backgroundColor: "#0d7e5a" }}
+            >
+              <div
+                className="row "
+                style={{ paddingLeft: "10px", paddingRight: "10px" }}
+              >
+                <div className="col-md-9 p-1">
+                  <div className=" rounded-3 ">
+                    <div
+                      className="  rounded-3 mb-2"
+                      style={{
+                        textAlign: "left",
+                        backgroundColor: "#ffffff",
+                        color: "black",
+                        paddingLeft:"10px",
+                        padding:"10px"
+                      }}
+                    >
+                      {" "}
+                      {/* {patientData.name} */}
+                      Umnag Hirani
+                    </div>
+                    <div className="input-group">
+                      {/* <span
+                        className="input-group-text fixed-width p-3 border-0"
+                        id="inputGroup-sizing-default"
+                        style={{
+                          borderTopLeftRadius: "8px",
+                          borderBottomLeftRadius: "8px",
+                          color: "bisque",
+                        }}
+                      >
+                        Date
+                      </span> */}
+                      <input
+                        type="date"
+                        id="date-checkup"
+                        ref={dateCheckupRef}
+                        name="date"
+                        className="form-control border-0 p-2 ps-2"
+                        aria-label="Sizing example input"
+                        aria-describedby="inputGroup-sizing-default"
+                        placeholder="Enter Date"
+                        style={{
+                          textAlign: "left",
+                          backgroundColor: "#ffffff",
+                          color: "black",
+                        }}
+                      />
+                    </div>
+                  </div>
+                </div>
+                <div className="col-md-3 p-1 ">
+                  <div className="bg-light rounded-3">
+                    <div
+                      className="p-3"
+                      style={{
+                        maxHeight: "12.5vh",
+                        display: "flex",
+                        justifyContent: "center",
+                        alignItems: "center",
+                      }}
+                    >
+                      <img
+                        className="image-fluid"
+                        style={{
+                          maxHeight: "10.5vh",
+                          maxWidth: "100%",
+                          objectFit: "contain",
+                        }}
+                        src={account}
+                        alt="img-not-available"
+                      />
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+
+
             <ul
               className="nav nav-fill rounded-3"
               style={{ borderRadius: "20px" }}
@@ -1624,7 +1736,7 @@ function Input() {
                     style={{ backgroundColor: "#d1d3ab21" }}
                   >
                     <div className="input-group">
-                      <span
+                      {/* <span
                         className="input-group-text fixed-width p-3 border-0"
                         id="inputGroup-sizing-default"
                         style={{
@@ -1634,19 +1746,20 @@ function Input() {
                         }}
                       >
                         Date
-                      </span>
+                      </span> */}
                       <input
-                        type="date"
-                        id="date-checkup"
-                        ref={dateCheckupRef}
-                        name="date"
-                        className="form-control border-0"
-                        aria-label="Sizing example input"
-                        aria-describedby="inputGroup-sizing-default"
-                        placeholder="Enter Date"
-                      />
+                      type="hidden"
+                      id="date-prescription"
+                      name="date"
+                      className="form-control border-0"
+                      aria-label="Sizing example input"
+                      aria-describedby="inputGroup-sizing-default"
+                      placeholder="Enter Date"
+                      value={dateValue}
+                      readOnly
+                    />
                     </div>
-                    <div className="input-group mt-2">
+                    <div className="input-group ">
                       <span
                         className="input-group-text fixed-width p-3 border-0"
                         id="inputGroup-sizing-default"
