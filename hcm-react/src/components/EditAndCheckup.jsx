@@ -487,7 +487,7 @@ const Input = () => {
               className="p-2 rounded-3"
               style={{ backgroundColor: "#ffffff" }}
             >
-              <ul className="nav rounded-3">
+              <ul className="nav rounded-3 mb-2">
                 <li className="nav-item">
                   <a
                     className="nav-link left-nav-item active"
@@ -569,10 +569,31 @@ const Input = () => {
                 </li>
               </ul>
 
+              {/* style={{ backgroundColor: "#1da453" }} */}
+
+              {/* <hr
+                style={{
+                  backgroundColor: "#0b6e4f",
+                  border: "solid black 1px",
+                }}
+              /> */}
+
+              <div
+                className="w-100"
+                style={{
+                  backgroundColor: "#0b6e4f",
+                  color: "white",
+                  maxHeight: "1px",
+                }}
+              >
+                .
+              </div>
+
               <div
                 className="tab-content p-3"
                 id="content"
                 style={{
+                  // paddintTop:"10px",
                   maxHeight: "80vh",
                   overflowY: "scroll",
                   contentStyle,
@@ -593,6 +614,7 @@ const Input = () => {
                           UpdateData(e.target.value);
                           document.getElementById("history-anchor").click();
                         }}
+                        style={{ backgroundColor: "#1da453" }}
                       >
                         Save
                       </button>
@@ -836,6 +858,7 @@ const Input = () => {
                         value="history1"
                         type="button"
                         className="btn btn-success save-button"
+                        style={{ backgroundColor: "#1da453" }}
                         onClick={(e) => {
                           e.preventDefault();
                           UpdateData(e.target.value);
@@ -926,6 +949,7 @@ const Input = () => {
                         value="measurements1"
                         type="button"
                         className="btn btn-success save-button"
+                        style={{ backgroundColor: "#1da453" }}
                         onClick={(e) => {
                           e.preventDefault();
                           UpdateData(e.target.value);
@@ -1140,6 +1164,7 @@ const Input = () => {
                         value="observations1"
                         type="button"
                         className="btn btn-success save-button"
+                        style={{ backgroundColor: "#1da453" }}
                         onClick={(e) => {
                           e.preventDefault();
                           UpdateData(e.target.value);
@@ -1332,6 +1357,7 @@ const Input = () => {
                         value="vitals1"
                         type="button"
                         id="vitals-save"
+                        style={{ backgroundColor: "#1da453" }}
                         className="btn btn-success save-button"
                         onClick={(e) => {
                           e.preventDefault();
@@ -1445,6 +1471,7 @@ const Input = () => {
                         value="symptoms1"
                         type="button"
                         id="symptoms-save"
+                        style={{ backgroundColor: "#1da453" }}
                         className="btn btn-success save-button"
                         onClick={(e) => {
                           e.preventDefault();
@@ -1541,6 +1568,7 @@ const Input = () => {
                       <button
                         type="button"
                         className="btn btn-success save-button"
+                        style={{ backgroundColor: "#1da453" }}
                         value="lab1"
                         onClick={(e) => {
                           e.preventDefault();
@@ -1650,7 +1678,7 @@ const Input = () => {
             </div>
           </div>
           <div className="col-md-5 p-2" style={{ padding: "0px" }}>
-          <ul
+            <ul
               className="nav nav-fill rounded-3"
               style={{ borderRadius: "20px" }}
             >
@@ -1790,12 +1818,12 @@ const Input = () => {
                         e.preventDefault();
                         PushCheckupData(e.target.value);
                         document.getElementById("prescriptions-anchor").click();
-
                       }}
-
                       id="save-checkup-button"
                       style={{
+                        // backgroundColor: "#1da453",
                         backgroundColor: "#1da453",
+
                         color: "white",
                         fontWeight: 500,
                       }}
@@ -1908,7 +1936,6 @@ const Input = () => {
                         e.preventDefault();
                         PushPrescription(e.target.value);
                         document.getElementById("payment-anchor").click();
-
                       }}
                     >
                       PAYMENT{" "}
@@ -2017,8 +2044,9 @@ const Input = () => {
                       onClick={(e) => {
                         e.preventDefault();
                         UpdatePaymentData(e.target.value);
-                        document.getElementById("checkup-history-anchor").click();
-
+                        document
+                          .getElementById("checkup-history-anchor")
+                          .click();
                       }}
                       style={{
                         backgroundColor: "#1da453",
