@@ -268,6 +268,64 @@ function Input() {
   //   }
   // }
 
+  const [labData, setLabData] = useState([]);
+
+  useEffect(() => {
+    const fetchLabData = async () => {
+      try {
+        const response = await fetch(
+          `http://localhost/HCM-React/hcm-react/get_lab_data.php?caseno=${caseno}`
+        );
+        const data = await response.json();
+        console.log("Fetched data:", data.data);
+
+        if (data.error) {
+          setMessage(data.error);
+        } else {
+          // const LA1 = Object.entries(data.data);
+          // console.table("LA1", LA1);
+          const newData = data.data;
+          console.log(newData);
+          // const labArray = Array.isArray(data.data) ? data : [data.data];
+          setLabData(newData);
+          // console.log("in the fetch array", labArray);
+          // console.log("in the fetch func", labData);
+          lab_table(newData);
+        }
+      } catch (error) {
+        setMessage("Failed to fetch lab data");
+      }
+    };
+
+    fetchLabData();
+  }, [caseno]);
+
+  const fetchLabData = async () => {
+    try {
+      const response = await fetch(
+        `http://localhost/HCM-React/hcm-react/get_lab_data.php?caseno=${caseno}`
+      );
+      const data = await response.json();
+      console.log("Fetched data:", data.data);
+
+      if (data.error) {
+        setMessage(data.error);
+      } else {
+        // const LA1 = Object.entries(data.data);
+        // console.table("LA1", LA1);
+        const newData = data.data;
+        console.log(newData);
+        // const labArray = Array.isArray(data.data) ? data : [data.data];
+        setLabData(newData);
+        // console.log("in the fetch array", labArray);
+        // console.log("in the fetch func", labData);
+        lab_table(newData);
+      }
+    } catch (error) {
+      setMessage("Failed to fetch lab data");
+    }
+  };
+
   async function PushLabData(val) {
     if (!l_id || !caseno) {
       console.error("Error: caseno or l_id is not set.");
@@ -296,6 +354,7 @@ function Input() {
       const result = JSON.parse(responseText);
       if (result.status) {
         console.log("Lab data inserted successfully.");
+        fetchLabData();
       } else {
         console.error("Error: ", result.message);
       }
@@ -303,6 +362,41 @@ function Input() {
       console.error("Failed to parse JSON response: ", responseText);
     }
   }
+
+  const lab_table = (labData) => {
+    const tbody = document.getElementById("table-body");
+    tbody.innerHTML = ""; // Clear existing rows
+    console.log("lab_table data:", labData);
+
+    if (labData.length > 0) {
+      let rows = "";
+      labData.forEach((lab, index) => {
+        rows += `
+          <tr key="${index}">
+            <td>${lab.caseno}</td>
+            <td>${lab.date}</td>
+            <td>${lab.lab}</td>
+            <td>${lab.remarks}</td>
+            <td>
+              ${
+                lab.file
+                  ? `<a href="../${lab.file}" target="_blank" rel="noopener noreferrer">View File</a>`
+                  : "No file"
+              }
+            </td>
+          </tr>
+        `;
+      });
+
+      tbody.innerHTML = rows;
+    } else {
+      tbody.innerHTML = `
+        <tr>
+          <td colSpan="5">No lab data available</td>
+        </tr>
+      `;
+    }
+  };
 
   async function PushCheckupData(val) {
     if (!l_id || !caseno) {
@@ -438,24 +532,21 @@ function Input() {
     }
   }
 
-
-  const [name, setName] = useState('');
+  const [name, setName] = useState("");
 
   const handleInputChange = (e) => {
     const value = e.target.value.trim();
-    if (value === '') {
-      setName('Patient Name');
+    if (value === "") {
+      setName("Patient Name");
     } else {
       setName(e.target.value);
     }
   };
 
-
   useEffect(() => {
-    setName('Patient Name');
+    setName("Patient Name");
     document.getElementById("name-value").value = "";
   }, []);
-  
 
   async function UpdateData(val) {
     const form = document.getElementById(val);
@@ -637,18 +728,18 @@ function Input() {
                     </div>
                     {/* Rest of personal details form */}
                     <div id="content">
-                    <div className="form-floating mb-3">
-        <input
-          type="text"
-          className="form-control"
-          id="name-value"
-          placeholder="name"
-          name="name"
-          value={name === 'Patient Name' ? '' : name}
-          onChange={handleInputChange}
-        />
-        <label htmlFor="name">Name</label>
-      </div>
+                      <div className="form-floating mb-3">
+                        <input
+                          type="text"
+                          className="form-control"
+                          id="name-value"
+                          placeholder="name"
+                          name="name"
+                          value={name === "Patient Name" ? "" : name}
+                          onChange={handleInputChange}
+                        />
+                        <label htmlFor="name">Name</label>
+                      </div>
                       <div className="form-group">
                         <div className="row">
                           <div className="col-md-5">
@@ -1568,13 +1659,13 @@ function Input() {
                             }
                             disabled={!isEditable}
                           />
-                          <button
+                          {/* <button
                             className="btn btn-success save-button"
                             type="button"
                             onClick={savelab}
                           >
                             <i className="fa-solid fa-check"></i>
-                          </button>
+                          </button> */}
                           <button
                             className="btn btn-danger"
                             type="button"
@@ -1593,6 +1684,26 @@ function Input() {
                       ))}
                     </div>
                   </form>
+                  <div
+                    className="mt-4 rounded-3"
+                    // style={{ backgroundColor: "green" }}
+                  >
+                    <table
+                      className=" table table-bordered table-striped table-hover"
+                      id="table"
+                    >
+                      <thead className="thead-dark">
+                        <tr>
+                          <th>ID</th>
+                          <th>Date</th>
+                          <th>Lab Test</th>
+                          <th>Remarks</th>
+                          <th>File</th>
+                        </tr>
+                      </thead>
+                      <tbody id="table-body"></tbody>
+                    </table>
+                  </div>
                 </div>
               </div>
             </div>
@@ -1608,18 +1719,18 @@ function Input() {
               >
                 <div className="col-md-9 p-1">
                   <div className=" rounded-3 ">
-                  <div
-        className="rounded-3 mb-2"
-        style={{
-          textAlign: "left",
-          backgroundColor: "#ffffff",
-          color: "black",
-          paddingLeft: "10px",
-          padding: "10px",
-        }}
-      >
-        {name}
-      </div>
+                    <div
+                      className="rounded-3 mb-2"
+                      style={{
+                        textAlign: "left",
+                        backgroundColor: "#ffffff",
+                        color: "black",
+                        paddingLeft: "10px",
+                        padding: "10px",
+                      }}
+                    >
+                      {name}
+                    </div>
                     <div className="input-group">
                       {/* <span
                         className="input-group-text fixed-width p-3 border-0"
@@ -2095,8 +2206,14 @@ function Input() {
                         </li>
                       </ul>
 
-                      <div id="paymenthistorydiv"  className="tab-pane fade w-100"></div>
-                      <div id="checkuphistorydiv"   className="tab-pane fade w-100">
+                      <div
+                        id="paymenthistorydiv"
+                        className="tab-pane fade w-100"
+                      ></div>
+                      <div
+                        id="checkuphistorydiv"
+                        className="tab-pane fade w-100"
+                      >
                         {" "}
                         <div className="input-group">
                           <span
