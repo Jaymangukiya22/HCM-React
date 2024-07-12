@@ -1,4 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
+import { useNavigate } from 'react-router-dom';
+
 import History from "./History";
 // import photodisplay from "./add_patient.png"
 import account from "./Images And Icons/admin.png";
@@ -10,6 +12,7 @@ import "./styles/details.css";
 
 import { useParams } from "react-router-dom";
 const MyComponent = () => {
+
   const hiddenInputRef = useRef(null);
 
   useEffect(() => {
@@ -53,6 +56,12 @@ const MyComponent = () => {
 };
 
 const EditAndCheckup = () => {
+  
+  const navigate = useNavigate();
+
+  const handleClick = () => {
+    navigate('/');
+  };
   // const [caseno, setCaseno] = useState(null);
   // const [l_id, setL_id] = useState(null);
   const [dateValue, setDateValue] = useState("");
@@ -675,8 +684,10 @@ const EditAndCheckup = () => {
                   <a
                     className="nav-link left-nav-item back-button border-0 "
                     data-toggle="tab"
-                    href=""
-                  >
+                    href="http://localhost:5173/"
+                    onClick={handleClick}
+                    
+                    >
                     <i className="fa-solid fa-arrow-left"></i>
                   </a>
                 </li>
