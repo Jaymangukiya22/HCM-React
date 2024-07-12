@@ -2,7 +2,6 @@ import React, { useState, useEffect, useRef } from "react";
 import axios from "axios";
 import account from "./Images And Icons/admin.png";
 
-
 import "./styles/nav-styles.css";
 import "./styles/details.css";
 // import   {  useRef } from 'react';
@@ -439,6 +438,25 @@ function Input() {
     }
   }
 
+
+  const [name, setName] = useState('');
+
+  const handleInputChange = (e) => {
+    const value = e.target.value.trim();
+    if (value === '') {
+      setName('Patient Name');
+    } else {
+      setName(e.target.value);
+    }
+  };
+
+
+  useEffect(() => {
+    setName('Patient Name');
+    document.getElementById("name-value").value = "";
+  }, []);
+  
+
   async function UpdateData(val) {
     const form = document.getElementById(val);
     const formData = new FormData(form);
@@ -613,23 +631,24 @@ function Input() {
                           document.getElementById("history-anchor").click();
                         }}
                         style={{ backgroundColor: "#1da453" }}
-
                       >
                         Save
                       </button>
                     </div>
                     {/* Rest of personal details form */}
                     <div id="content">
-                      <div className="form-floating mb-3">
-                        <input
-                          type="text"
-                          className="form-control"
-                          id="name"
-                          placeholder="name"
-                          name="name"
-                        />
-                        <label htmlFor="name">Name</label>
-                      </div>
+                    <div className="form-floating mb-3">
+        <input
+          type="text"
+          className="form-control"
+          id="name-value"
+          placeholder="name"
+          name="name"
+          value={name === 'Patient Name' ? '' : name}
+          onChange={handleInputChange}
+        />
+        <label htmlFor="name">Name</label>
+      </div>
                       <div className="form-group">
                         <div className="row">
                           <div className="col-md-5">
@@ -839,7 +858,6 @@ function Input() {
                             .click();
                         }}
                         style={{ backgroundColor: "#1da453" }}
-
                       >
                         Save
                       </button>
@@ -919,7 +937,6 @@ function Input() {
                           document.getElementById("mind-anchor").click();
                         }}
                         style={{ backgroundColor: "#1da453" }}
-
                       >
                         Save
                       </button>
@@ -1044,7 +1061,6 @@ function Input() {
                             .click();
                         }}
                         style={{ backgroundColor: "#1da453" }}
-
                       >
                         Save
                       </button>
@@ -1122,7 +1138,6 @@ function Input() {
                           document.getElementById("vitals-anchor").click();
                         }}
                         style={{ backgroundColor: "#1da453" }}
-
                       >
                         Save
                       </button>
@@ -1298,7 +1313,6 @@ function Input() {
                           document.getElementById("symptoms-anchor").click();
                         }}
                         style={{ backgroundColor: "#1da453" }}
-
                       >
                         Save
                       </button>
@@ -1399,7 +1413,6 @@ function Input() {
                           document.getElementById("lab-anchor").click();
                         }}
                         style={{ backgroundColor: "#1da453" }}
-
                       >
                         Save
                       </button>
@@ -1481,7 +1494,6 @@ function Input() {
                           PushLabData(e.target.value);
                         }}
                         style={{ backgroundColor: "#1da453" }}
-
                       >
                         Save
                       </button>
@@ -1586,8 +1598,7 @@ function Input() {
             </div>
           </div>
           <div className="col-md-5 p-2" style={{ padding: "0px" }}>
-
-          <div
+            <div
               className="w-100 rounded-3 p-2  mb-2"
               style={{ backgroundColor: "#0d7e5a" }}
             >
@@ -1597,20 +1608,18 @@ function Input() {
               >
                 <div className="col-md-9 p-1">
                   <div className=" rounded-3 ">
-                    <div
-                      className="  rounded-3 mb-2"
-                      style={{
-                        textAlign: "left",
-                        backgroundColor: "#ffffff",
-                        color: "black",
-                        paddingLeft:"10px",
-                        padding:"10px"
-                      }}
-                    >
-                      {" "}
-                      {/* {patientData.name} */}
-                      Umnag Hirani
-                    </div>
+                  <div
+        className="rounded-3 mb-2"
+        style={{
+          textAlign: "left",
+          backgroundColor: "#ffffff",
+          color: "black",
+          paddingLeft: "10px",
+          padding: "10px",
+        }}
+      >
+        {name}
+      </div>
                     <div className="input-group">
                       {/* <span
                         className="input-group-text fixed-width p-3 border-0"
@@ -1667,8 +1676,6 @@ function Input() {
                 </div>
               </div>
             </div>
-
-
 
             <ul
               className="nav nav-fill rounded-3"
@@ -1748,16 +1755,16 @@ function Input() {
                         Date
                       </span> */}
                       <input
-                      type="hidden"
-                      id="date-prescription"
-                      name="date"
-                      className="form-control border-0"
-                      aria-label="Sizing example input"
-                      aria-describedby="inputGroup-sizing-default"
-                      placeholder="Enter Date"
-                      value={dateValue}
-                      readOnly
-                    />
+                        type="hidden"
+                        id="date-prescription"
+                        name="date"
+                        className="form-control border-0"
+                        aria-label="Sizing example input"
+                        aria-describedby="inputGroup-sizing-default"
+                        placeholder="Enter Date"
+                        value={dateValue}
+                        readOnly
+                      />
                     </div>
                     <div className="input-group ">
                       <span
@@ -2047,24 +2054,65 @@ function Input() {
                     style={{ maxHeight: "100vh", overflowY: "scroll" }}
                   >
                     <div
-                      className="justify-content-center align-items-center mb-1 mt-1 p-1 rounded-3"
-                      style={{ backgroundColor: "#d1d3ab" }}
+                      className="justify-content-center align-items-center mb-1  p-1 rounded-3"
+                      style={{ backgroundColor: "#0d7e5a" }}
                     >
-                      <div className="input-group">
-                        <span
-                          className="p-3 border-0 rounded-3 w-100 "
-                          id="inputGroup-sizing-default"
-                          style={{
-                            backgroundColor: "#0b6e4fef",
-                            color: "bisque",
-                            textAlign: "center",
-                            fontWeight: 600,
-                            fontSize: "20px",
-                          }}
+                      <ul
+                        className="nav nav-fill rounded-3"
+                        style={{ borderRadius: "20px" }}
+                      >
+                        <li
+                          className="nav-item mb-1"
+                          style={{ paddingLeft: "0px", paddingRight: "3px" }}
                         >
-                          No history for the patient yet.
-                        </span>
-                        {/* <span
+                          <a
+                            style={{
+                              textAlign: "center",
+                              // backgroundColor: "#ffffff75",
+                            }}
+                            className="p-2 text nav-link rounded-3 right-right-nav right-right-nav-item active"
+                            data-toggle="tab"
+                            href="#paymenthistorydiv"
+                            // id="checkup-anchor"
+                          >
+                            Payment History
+                          </a>
+                        </li>
+
+                        <li
+                          className="nav-item mb-1 "
+                          style={{ paddingLeft: "3px", paddingRight: "0px" }}
+                        >
+                          <a
+                            style={{ textAlign: "center" }}
+                            className="p-2 text nav-link rounded-3 right-right-nav right-right-nav-item  "
+                            data-toggle="tab"
+                            href="#checkuphistorydiv"
+                            // id="checkup-history-anchor"
+                          >
+                            Checkup History
+                          </a>
+                        </li>
+                      </ul>
+
+                      <div id="paymenthistorydiv"  className="tab-pane fade w-100"></div>
+                      <div id="checkuphistorydiv"   className="tab-pane fade w-100">
+                        {" "}
+                        <div className="input-group">
+                          <span
+                            className="p-3 border-0 rounded-3 w-100 "
+                            id="inputGroup-sizing-default"
+                            style={{
+                              backgroundColor: "#0b6e4fef",
+                              color: "bisque",
+                              textAlign: "center",
+                              fontWeight: 600,
+                              fontSize: "20px",
+                            }}
+                          >
+                            No history for the patient yet.
+                          </span>
+                          {/* <span
                           className="p-3 border-0 rounded-3 me-auto"
                           id="inputGroup-sizing-default"
                           style={{
@@ -2093,6 +2141,7 @@ function Input() {
                           <p>Medicine No. 1 x 3 Doze</p>
                           <p>Medicine No. 1 x 3 Doze</p>
                         </span> */}
+                        </div>
                       </div>
                     </div>
                   </div>

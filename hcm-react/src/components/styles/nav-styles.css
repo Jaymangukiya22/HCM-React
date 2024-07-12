@@ -34,18 +34,60 @@ a {
 
 }
 
-.nav-item {
-
-    border: none;
-
-}
-
 .right-nav-item.active {
     background-color: #d1d3ab !important;
     /* Yellowish tone background */
     color: #0b6e4f !important;
     /* Dark greenish text color */
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+.right-right-nav {
+    background-color: none !important;
+    font-weight: 500px !important;
+    color: white !important;
+    border: 1.5px rgba(255, 255, 255, 0.397) solid !important;
+    
+}
+
+.right-right-nav-item.active {
+    border: 1.5px rgba(255, 255, 255, 0.397) solid !important;
+    color: #0b6e4f !important;
+    background-color: #ffffffed !important;
+    /* Yellowish tone background */
+    /* Dark greenish text color */
+}
+
+
+
+
+
+
+
+
+
+
+
+
+.nav-item {
+
+    border: none;
+
+}
+
 
 .left-nav-item.active {
     /* background-color: #d1d3ab00 !important; */
