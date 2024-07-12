@@ -268,6 +268,35 @@ function Input() {
   //   }
   // }
 
+  const [message, setMessage] = useState("");
+  const [paymentData, setPaymentData] = useState({
+    present_amt: "",
+    paid_amt: "",
+    future_amt: "",
+    prev_amt: "",
+  });
+
+  useEffect(() => {
+    const fetchPaymentData = async () => {
+      try {
+        const response = await fetch(
+          `http://localhost/HCM-React/hcm-react/get_payment_data.php?caseno=${caseno}`
+        );
+        const data = await response.json();
+
+        if (data.error) {
+          setMessage(data.error);
+        } else {
+          setPaymentData(data);
+        }
+      } catch (error) {
+        setMessage("Failed to fetch payment data");
+      }
+    };
+
+    fetchPaymentData();
+  }, [caseno]);
+
   const [labData, setLabData] = useState([]);
 
   useEffect(() => {
@@ -323,6 +352,83 @@ function Input() {
       }
     } catch (error) {
       setMessage("Failed to fetch lab data");
+    }
+  };
+
+  useEffect(() => {
+    const fetchLabData = async () => {
+      try {
+        const response = await fetch(
+          `http://localhost/HCM-React/hcm-react/get_lab_data.php?caseno=${caseno}`
+        );
+        const data = await response.json();
+        console.log("Fetched data:", data.data);
+
+        if (data.error) {
+          setMessage(data.error);
+        } else {
+          // const LA1 = Object.entries(data.data);
+          // console.table("LA1", LA1);
+          const newData = data.data;
+          console.log(newData);
+          // const labArray = Array.isArray(data.data) ? data : [data.data];
+          setLabData(newData);
+          // console.log("in the fetch array", labArray);
+          // console.log("in the fetch func", labData);
+          lab_table(newData);
+        }
+      } catch (error) {
+        setMessage("Failed to fetch lab data");
+      }
+    };
+
+    fetchLabData();
+  }, [caseno]);
+
+  const fetchPaymentData = async () => {
+    try {
+      const response = await fetch(
+        `http://localhost/HCM-React/hcm-react/get_payment_data.php?caseno=${caseno}`
+      );
+      const data = await response.json();
+
+      if (data.error) {
+        setMessage(data.error);
+      } else {
+        setPaymentData(data.data);
+        payment_table(data.data);
+      }
+    } catch (error) {
+      setMessage("Failed to fetch payment data");
+    }
+  };
+
+  const payment_table = (paymentData) => {
+    const tbody = document.getElementById("table-pay");
+    tbody.innerHTML = ""; // Clear existing rows
+    console.log("payment_table data:", paymentData);
+
+    if (paymentData.length > 0) {
+      let rows = "";
+      paymentData.forEach((pay, index) => {
+        rows += `
+          <tr key="${index}">
+            <td>${pay.caseno}</td>
+            <td>${pay.present_amt}</td>
+            <td>${pay.paid_amt}</td>
+            <td>${pay.future_amt}</td>
+            
+          </tr>
+        `;
+      });
+
+      tbody.innerHTML = rows;
+    } else {
+      tbody.innerHTML = `
+        <tr>
+          <td colSpan="4">No lab data available</td>
+        </tr>
+      `;
     }
   };
 
@@ -524,6 +630,7 @@ function Input() {
       const result = JSON.parse(responseText);
       if (result.status) {
         console.log("Payment data inserted successfully.");
+        fetchPaymentData();
       } else {
         console.error("Error: ", result.message);
       }
@@ -2063,6 +2170,17 @@ function Input() {
                   >
                     <input
                       type="hidden"
+                      id="date-prescription"
+                      name="date"
+                      className="form-control border-0"
+                      aria-label="Sizing example input"
+                      aria-describedby="inputGroup-sizing-default"
+                      placeholder="Enter Date"
+                      value={dateValue}
+                      readOnly
+                    />
+                    <input
+                      type="hidden"
                       id="date"
                       className="form-control border-0 right-align"
                       aria-label="Sizing example input"
@@ -2165,7 +2283,7 @@ function Input() {
                     style={{ maxHeight: "100vh", overflowY: "scroll" }}
                   >
                     <div
-                      className="justify-content-center align-items-center mb-1  p-1 rounded-3"
+                      className="justify-content-center align-items-center mb-1 p-1 rounded-3"
                       style={{ backgroundColor: "#0d7e5a" }}
                     >
                       <ul
@@ -2177,29 +2295,23 @@ function Input() {
                           style={{ paddingLeft: "0px", paddingRight: "3px" }}
                         >
                           <a
-                            style={{
-                              textAlign: "center",
-                              // backgroundColor: "#ffffff75",
-                            }}
+                            style={{ textAlign: "center" }}
                             className="p-2 text nav-link rounded-3 right-right-nav right-right-nav-item active"
                             data-toggle="tab"
                             href="#paymenthistorydiv"
-                            // id="checkup-anchor"
                           >
                             Payment History
                           </a>
                         </li>
-
                         <li
-                          className="nav-item mb-1 "
+                          className="nav-item mb-1"
                           style={{ paddingLeft: "3px", paddingRight: "0px" }}
                         >
                           <a
                             style={{ textAlign: "center" }}
-                            className="p-2 text nav-link rounded-3 right-right-nav right-right-nav-item  "
+                            className="p-2 text nav-link rounded-3 right-right-nav right-right-nav-item"
                             data-toggle="tab"
                             href="#checkuphistorydiv"
-                            // id="checkup-history-anchor"
                           >
                             Checkup History
                           </a>
@@ -2209,15 +2321,33 @@ function Input() {
                       <div
                         id="paymenthistorydiv"
                         className="tab-pane fade w-100"
-                      ></div>
+                      >
+                        <div className="input-group">
+                          <table className="table table-striped table-bordered">
+                            <thead>
+                              <tr>
+                                <th>ID</th>
+                                <th>Amount to be Paid</th>
+                                <th>Amount Paid</th>
+                                <th>Amount Left to be Paid</th>
+                              </tr>
+                            </thead>
+                            <tbody id="table-pay">
+                              {/* Sample data, replace with dynamic data */}
+
+                              {/* Add more rows as needed */}
+                            </tbody>
+                          </table>
+                        </div>
+                      </div>
+
                       <div
                         id="checkuphistorydiv"
                         className="tab-pane fade w-100"
                       >
-                        {" "}
                         <div className="input-group">
                           <span
-                            className="p-3 border-0 rounded-3 w-100 "
+                            className="p-3 border-0 rounded-3 w-100"
                             id="inputGroup-sizing-default"
                             style={{
                               backgroundColor: "#0b6e4fef",
@@ -2229,35 +2359,6 @@ function Input() {
                           >
                             No history for the patient yet.
                           </span>
-                          {/* <span
-                          className="p-3 border-0 rounded-3 me-auto"
-                          id="inputGroup-sizing-default"
-                          style={{
-                            backgroundColor: "#0b6e4fef",
-                            color: "bisque",
-                            width: "50%",
-                          }}
-                        >
-                          <p>
-                            Lorem ipsum dolor sit, amet consectetur adipisicing
-                            elit. Voluptas asperiores dolores maiores fugit
-                            facilis ipsam ab, nemo provident quae ad{" "}
-                          </p>
-                        </span>
-                        <span
-                          className="p-3 border-0 rounded-3 ms-auto"
-                          id="inputGroup-sizing-default"
-                          style={{
-                            backgroundColor: "#0b6e4fef",
-                            color: "bisque",
-                            width: "49%",
-                          }}
-                        >
-                          <p>Medicine No. 1 x 3 Doze</p>
-                          <p>Medicine No. 1 x 3 Doze</p>
-                          <p>Medicine No. 1 x 3 Doze</p>
-                          <p>Medicine No. 1 x 3 Doze</p>
-                        </span> */}
                         </div>
                       </div>
                     </div>
