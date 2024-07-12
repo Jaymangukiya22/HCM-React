@@ -41,15 +41,33 @@ a {
     /* Dark greenish text color */
 }
 
+.back-button{ 
+    background-color: #d1d3ab !important;
+    color: #085039 !important;
+    /* font-weight: 900 !important; */
+    /* border:  !important; */
+}
+
+/* .active:hover{
+
+    background-color: none !important;
+    
+} */
+
+
+.right-nav:hover{
+    border-radius: 30px !important;
+    /* color: white !important; */
+    background-color: #0b6e4f !important;
+    opacity: 100%;
+}
 
 
 
-
-
-
-
-
-
+.right-nav.active:hover{
+    opacity: 100%;
+    background-color: #d1d3ab !important;
+}
 
 
 
@@ -67,6 +85,7 @@ a {
     border: 1.5px rgba(255, 255, 255, 0.397) solid !important;
     color: #0b6e4f !important;
     background-color: #ffffffed !important;
+
     /* Yellowish tone background */
     /* Dark greenish text color */
 }
@@ -121,6 +140,18 @@ a.left-nav-item:hover {
 
 
 }
+
+a.left-nav-item.active:hover  {
+
+    background-color:  #085039  !important;
+    border: #0b6e4f63 1px solid !important;
+    opacity: 100%;
+    
+
+
+}
+
+
 
 a:hover {
     opacity: 80%;

@@ -3,6 +3,11 @@ import History from "./History";
 // import photodisplay from "./add_patient.png"
 import account from "./Images And Icons/admin.png";
 
+// import account from "./Images And Icons/admin.png";
+
+import "./styles/nav-styles.css";
+import "./styles/details.css";
+
 import { useParams } from "react-router-dom";
 const MyComponent = () => {
   const hiddenInputRef = useRef(null);
@@ -17,7 +22,7 @@ const MyComponent = () => {
         }
       };
 
-      // Initial value set
+      // Initial vFFalue set
       updateValue();
 
       // Event listener for input changes
@@ -666,6 +671,15 @@ const EditAndCheckup = () => {
               style={{ backgroundColor: "#ffffff" }}
             >
               <ul className="nav rounded-3 mb-2">
+                <li className="nav-item">
+                  <a
+                    className="nav-link left-nav-item back-button border-0 "
+                    data-toggle="tab"
+                    href=""
+                  >
+                    <i className="fa-solid fa-arrow-left"></i>
+                  </a>
+                </li>
                 <li className="nav-item">
                   <a
                     className="nav-link left-nav-item active"
@@ -1856,7 +1870,7 @@ const EditAndCheckup = () => {
                     // style={{ backgroundColor: "green" }}
                   >
                     <table
-                      className=" table table-bordered table-striped table-hover"
+                      className=" table table-bordered table-striped table-hover "
                       id="table"
                     >
                       <thead className="thead-dark">
