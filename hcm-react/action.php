@@ -120,18 +120,20 @@ try {
                         $date = isset($dates[$index]) ? $dates[$index] : null;
                         $remark = isset($remarks[$index]) ? $remarks[$index] : null;
                         $filePath = null;
+
                 
                         // Handle the file upload for this lab entry
                         if ($files && isset($files['name'][$index]) && $files['error'][$index] === UPLOAD_ERR_OK) {
                             $fileTmpPath = $files['tmp_name'][$index];
                             $fileName = $files['name'][$index];
                             $destPath = $uploadFileDir . $fileName;
-                
+                            if($destPath!==$fileTmpPath){
                             if (move_uploaded_file($fileTmpPath, $destPath)) {
                                 $filePath = $destPath; // Store the file path
                             } else {
                                 $errors[] = "Error moving file for lab entry $index: $fileName";
                             }
+                        }
                         }
                 
                         $response = DB::insert('lab_test', [

@@ -237,6 +237,7 @@ const EditAndCheckup = () => {
           `http://localhost/HCM-React/hcm-react/get_payment_data.php?caseno=${caseno}`
         );
         const data = await response.json();
+
         if (data.error) {
           setMessage(data.error);
         } else {
@@ -259,11 +260,20 @@ const EditAndCheckup = () => {
           `http://localhost/HCM-React/hcm-react/get_lab_data.php?caseno=${caseno}`
         );
         const data = await response.json();
-        console.log("Fetched data:", data);
+        console.log("Fetched data:", data.data);
+
         if (data.error) {
           setMessage(data.error);
         } else {
-          setLabData(data);
+          // const LA1 = Object.entries(data.data);
+          // console.table("LA1", LA1);
+          const newData = data.data;
+          console.log(newData);
+          // const labArray = Array.isArray(data.data) ? data : [data.data];
+          setLabData(newData);
+          // console.log("in the fetch array", labArray);
+          // console.log("in the fetch func", labData);
+          lab_table(newData);
         }
       } catch (error) {
         setMessage("Failed to fetch lab data");
@@ -272,41 +282,124 @@ const EditAndCheckup = () => {
 
     fetchLabData();
   }, [caseno]);
-  // const lab_table = (labData) => {
-  //   const tbody = document.getElementById("table-body");
-  //   tbody.innerHTML = ""; // Clear existing rows
-  //   console.log("lab_table data:", labData);
 
-  //   if (labData.length > 0) {
-  //     const rows = labData
-  //       .map(
-  //         (lab, index) => `
-  //           <tr key="${index}">
-  //             <td>${lab.id}</td>
-  //             <td>${lab.date}</td>
-  //             <td>${lab.lab}</td>
-  //             <td>${lab.remarks}</td>
-  //             <td>
-  //               ${
-  //                 lab.file
-  //                   ? `<a href="${lab.file}" target="_blank" rel="noopener noreferrer">View File</a>`
-  //                   : "No file"
-  //               }
-  //             </td>
-  //           </tr>
-  //         `
-  //       )
-  //       .join("");
+  const fetchLabData = async () => {
+    try {
+      const response = await fetch(
+        `http://localhost/HCM-React/hcm-react/get_lab_data.php?caseno=${caseno}`
+      );
+      const data = await response.json();
+      console.log("Fetched data:", data.data);
 
-  //     tbody.innerHTML = rows;
-  //   } else {
-  //     tbody.innerHTML = `
-  //       <tr>
-  //         <td colSpan="5">No lab data available</td>
-  //       </tr>
-  //     `;
+      if (data.error) {
+        setMessage(data.error);
+      } else {
+        // const LA1 = Object.entries(data.data);
+        // console.table("LA1", LA1);
+        const newData = data.data;
+        console.log(newData);
+        // const labArray = Array.isArray(data.data) ? data : [data.data];
+        setLabData(newData);
+        // console.log("in the fetch array", labArray);
+        // console.log("in the fetch func", labData);
+        lab_table(newData);
+      }
+    } catch (error) {
+      setMessage("Failed to fetch lab data");
+    }
+  };
+
+  // const renderLabData = () => {
+  //   if (!Array.isArray(labData) || labData.length === 0) {
+  //     return <p>No lab data available</p>;
   //   }
+
+  //   return labData.map((lab, index) => (
+  //     <p key={index}>
+  //       ID: {lab.id}, Date: {lab.date}, Lab Test: {lab.lab}, Remarks:{" "}
+  //       {lab.remarks}, File:{" "}
+  //       {lab.file ? (
+  //         <a href={lab.file} target="_blank" rel="noopener noreferrer">
+  //           View File
+  //         </a>
+  //       ) : (
+  //         "No file"
+  //       )}
+  //     </p>
+  //   ));
   // };
+  async function PushLabData(val) {
+    if (!caseno) {
+      console.error("Error: caseno or l_id is not set.");
+      return;
+    }
+
+    const form = document.getElementById(val);
+    const formData = new FormData(form);
+    const lastInsertedId = caseno;
+    console.log(lastInsertedId);
+    console.log(labData);
+
+    // Append the caseno to the form data
+    formData.append("caseno", lastInsertedId);
+    formData.append("action", "insert_lab");
+
+    const response = await fetch(
+      "http://localhost/HCM-React/hcm-react/action.php",
+      {
+        method: "POST",
+        body: formData, // Send the form data directly
+      }
+    );
+
+    const responseText = await response.text();
+    try {
+      const result = JSON.parse(responseText);
+      if (result.status) {
+        console.log("Lab data inserted successfully.");
+        fetchLabData();
+      } else {
+        console.error("Error: ", result.message);
+      }
+    } catch (error) {
+      console.error("Failed to parse JSON response: ", responseText);
+    }
+  }
+
+  const lab_table = (labData) => {
+    const tbody = document.getElementById("table-body");
+    tbody.innerHTML = ""; // Clear existing rows
+    console.log("lab_table data:", labData);
+
+    if (labData.length > 0) {
+      let rows = "";
+      labData.forEach((lab, index) => {
+        rows += `
+          <tr key="${index}">
+            <td>${lab.caseno}</td>
+            <td>${lab.date}</td>
+            <td>${lab.lab}</td>
+            <td>${lab.remarks}</td>
+            <td>
+              ${
+                lab.file
+                  ? `<a href="../${lab.file}" target="_blank" rel="noopener noreferrer">View File</a>`
+                  : "No file"
+              }
+            </td>
+          </tr>
+        `;
+      });
+
+      tbody.innerHTML = rows;
+    } else {
+      tbody.innerHTML = `
+        <tr>
+          <td colSpan="5">No lab data available</td>
+        </tr>
+      `;
+    }
+  };
 
   useEffect(() => {
     const fetchPatientData = async () => {
@@ -1733,13 +1826,13 @@ const EditAndCheckup = () => {
                             }
                             disabled={!isEditable}
                           />
-                          <button
+                          {/* <button
                             className="btn btn-success save-button"
                             type="button"
                             onClick={savelab}
                           >
                             <i className="fa-solid fa-check"></i>
-                          </button>
+                          </button> */}
                           <button
                             className="btn btn-danger"
                             type="button"
@@ -1758,7 +1851,7 @@ const EditAndCheckup = () => {
                       ))}
                     </div>
                   </form>
-                  {/* <div
+                  <div
                     className="mt-4 rounded-3"
                     // style={{ backgroundColor: "green" }}
                   >
@@ -1777,29 +1870,6 @@ const EditAndCheckup = () => {
                       </thead>
                       <tbody id="table-body"></tbody>
                     </table>
-                  </div> */}
-                  <div className="mt-4 rounded-2 p-3">
-                    {labData.length >= 0 ? (
-                      labData.map((lab, index) => (
-                        <p key={index}>
-                          ID: {lab.id}, Date: {lab.date}, Lab Test: {lab.lab},
-                          Remarks: {lab.remarks}, File:{" "}
-                          {lab.file ? (
-                            <a
-                              href={lab.file}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                            >
-                              View File
-                            </a>
-                          ) : (
-                            "No file"
-                          )}
-                        </p>
-                      ))
-                    ) : (
-                      <p>No lab data available</p>
-                    )}
                   </div>
                 </div>
               </div>
