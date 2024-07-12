@@ -242,6 +242,8 @@ const EditAndCheckup = () => {
     prev_amt: "",
   });
 
+  const [amtleft, setamtleft] = useState();
+
   useEffect(() => {
     const fetchPaymentData = async () => {
       try {
@@ -253,7 +255,8 @@ const EditAndCheckup = () => {
         if (data.error) {
           setMessage(data.error);
         } else {
-          setPaymentData(data);
+          setPaymentData(data.data);
+          console.log("jm", paymentData);
         }
       } catch (error) {
         setMessage("Failed to fetch payment data");
@@ -264,6 +267,68 @@ const EditAndCheckup = () => {
   }, [caseno]);
 
   const [labData, setLabData] = useState([]);
+
+  const fetchPaymentData = async () => {
+    try {
+      const response = await fetch(
+        `http://localhost/HCM-React/hcm-react/get_payment_data.php?caseno=${caseno}`
+      );
+      const data = await response.json();
+
+      if (data.error) {
+        setMessage(data.error);
+        console.log("payment_table data:", data.data);
+      } else {
+        setPaymentData(data.data);
+        payment_table(data.data);
+      }
+    } catch (error) {
+      setMessage("Failed to fetch payment data");
+    }
+  };
+  useEffect(() => {
+    fetchPaymentData();
+  }, []); // empty dependency array means this will run once when the component mounts
+
+  // fetchPaymentData();
+
+  const payment_table = (paymentData) => {
+    const tbody = document.getElementById("table-pay");
+    tbody.innerHTML = ""; // Clear existing rows
+    console.log("payment_table data:", paymentData);
+
+    if (paymentData.length > 0) {
+      let rows = "";
+      let sum = 0;
+      paymentData.forEach((pay, index) => {
+        rows += `
+          <tr key="${index}">
+            <td>${pay.caseno}</td>
+            <td>${pay.date}</td>
+            <td>${pay.present_amt}</td>
+            <td>${pay.paid_amt}</td>
+            <td>${pay.future_amt}</td>
+            
+          </tr>
+        `;
+        sum += Number(pay.future_amt);
+      });
+      setamtleft(sum);
+
+      tbody.innerHTML = rows;
+      // let row = `<tr>
+      // <td>Total
+      //   <td colspan="3" >${sum}
+      // </tr>`;
+      // tbody.innerHTML = row;
+    } else {
+      tbody.innerHTML = `
+        <tr>
+          <td colSpan="4">No lab data available</td>
+        </tr>
+      `;
+    }
+  };
 
   useEffect(() => {
     const fetchLabData = async () => {
@@ -616,28 +681,23 @@ const EditAndCheckup = () => {
     }
   }
 
-  async function UpdatePaymentData(val) {
+  async function PushPayment(val) {
+    if (!caseno) {
+      console.error("Error: caseno or l_id is not set.");
+      return;
+    }
+
     const form = document.getElementById(val);
     const formData = new FormData(form);
+    const lastInsertedId = caseno;
+    console.log(lastInsertedId);
 
     const formDataObj = {};
     formData.forEach((value, key) => {
-      if (key === "mind[]") {
-        if (!formDataObj[key]) {
-          formDataObj[key] = [];
-        }
-        formDataObj[key].push(value);
-      } else {
-        formDataObj[key] = value;
-      }
+      formDataObj[key] = value;
     });
-    // if (formDataObj["mind[]"]) {
-    //   formDataObj["mind"] = formDataObj["mind[]"];
-    //   delete formDataObj["mind[]"];
-    // }
-    delete formDataObj.photo;
-    // console.log(l_id);
-    console.log(formDataObj);
+
+    formDataObj.caseno = lastInsertedId;
 
     const response = await fetch(
       "http://localhost/HCM-React/hcm-react/action.php",
@@ -646,8 +706,7 @@ const EditAndCheckup = () => {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           data: formDataObj,
-          action: "update_payment",
-          id: caseno,
+          action: "insert_payment",
         }),
       }
     );
@@ -656,7 +715,8 @@ const EditAndCheckup = () => {
     try {
       const result = JSON.parse(responseText);
       if (result.status) {
-        console.log(result);
+        console.log("Payment data inserted successfully.");
+        fetchPaymentData();
       } else {
         console.error("Error: ", result.message);
       }
@@ -2263,6 +2323,17 @@ const EditAndCheckup = () => {
                   >
                     <input
                       type="hidden"
+                      id="date-prescription"
+                      name="date"
+                      className="form-control border-0"
+                      aria-label="Sizing example input"
+                      aria-describedby="inputGroup-sizing-default"
+                      placeholder="Enter Date"
+                      value={dateValue}
+                      readOnly
+                    />
+                    <input
+                      type="hidden"
                       id="date"
                       className="form-control border-0 right-align"
                       aria-label="Sizing example input"
@@ -2275,7 +2346,7 @@ const EditAndCheckup = () => {
                       style={{ backgroundColor: "#ffffff", color: "black" }}
                     >
                       <span>Amount Previously Left to be paid:</span>{" "}
-                      <b id="prev_amt_display">{paymentData.future_amt}</b>
+                      <b id="prev_amt_display">{amtleft}</b>
                       <input type="hidden" id="prev_amt" name="prev_amt" />
                     </div>
                     <div className="input-group mt-2">
@@ -2344,7 +2415,7 @@ const EditAndCheckup = () => {
                       value="pay"
                       onClick={(e) => {
                         e.preventDefault();
-                        UpdatePaymentData(e.target.value);
+                        PushPayment(e.target.value);
                         document
                           .getElementById("checkup-history-anchor")
                           .click();
@@ -2367,7 +2438,87 @@ const EditAndCheckup = () => {
                     className="history-div rounded-3"
                     style={{ maxHeight: "100vh", overflowY: "scroll" }}
                   >
-                    <History caseno={caseno} />
+                    <div
+                      className="justify-content-center align-items-center mb-1 p-1 rounded-3"
+                      style={{ backgroundColor: "#0d7e5a" }}
+                    >
+                      <ul
+                        className="nav nav-fill rounded-3"
+                        style={{ borderRadius: "20px" }}
+                      >
+                        <li
+                          className="nav-item mb-1"
+                          style={{ paddingLeft: "0px", paddingRight: "3px" }}
+                        >
+                          <a
+                            style={{ textAlign: "center" }}
+                            className="p-2 text nav-link rounded-3 right-right-nav right-right-nav-item active"
+                            data-toggle="tab"
+                            href="#paymenthistorydiv"
+                          >
+                            Payment History
+                          </a>
+                        </li>
+                        <li
+                          className="nav-item mb-1"
+                          style={{ paddingLeft: "3px", paddingRight: "0px" }}
+                        >
+                          <a
+                            style={{ textAlign: "center" }}
+                            className="p-2 text nav-link rounded-3 right-right-nav right-right-nav-item"
+                            data-toggle="tab"
+                            href="#checkuphistorydiv"
+                          >
+                            Checkup History
+                          </a>
+                        </li>
+                      </ul>
+
+                      <div
+                        id="paymenthistorydiv"
+                        className="tab-pane fade w-100"
+                      >
+                        <div className="input-group">
+                          <table className="table table-striped table-bordered">
+                            <thead>
+                              <tr>
+                                <th>Case</th>
+                                <th>Date</th>
+                                <th>Amount to be Paid</th>
+                                <th>Amount Paid</th>
+                                <th>Amount Left to be Paid</th>
+                              </tr>
+                            </thead>
+                            <tbody id="table-pay">
+                              {/* Sample data, replace with dynamic data */}
+
+                              {/* Add more rows as needed */}
+                            </tbody>
+                          </table>
+                        </div>
+                      </div>
+
+                      <div
+                        id="checkuphistorydiv"
+                        className="tab-pane fade w-100"
+                      >
+                        <div className="input-group">
+                          <span
+                            className="p-3 border-0 rounded-3 w-100"
+                            id="inputGroup-sizing-default"
+                            style={{
+                              backgroundColor: "#0b6e4fef",
+                              color: "bisque",
+                              textAlign: "center",
+                              fontWeight: 600,
+                              fontSize: "20px",
+                            }}
+                          >
+                            <History caseno={caseno} />
+                          </span>
+                        </div>
+                      </div>
+                    </div>
                   </div>
                 </div>
               </div>
