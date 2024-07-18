@@ -2029,7 +2029,7 @@ const EditAndCheckup = () => {
                           maxWidth: "100%",
                           objectFit: "contain",
                         }}
-                        src={account}
+                        src={patientData.photo}
                         alt="img-not-available"
                       />
                     </div>
