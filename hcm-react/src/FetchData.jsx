@@ -8,7 +8,7 @@ const FetchData = () => {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const response = await fetch('http://localhost/HCM-React/hcm-react/fetch_data.php');
+                const response = await fetch('http://localhost/HCM-React/hcm-php/fetch_data.php');
                 if (!response.ok) {
                     throw new Error(`Failed to fetch data: ${response.statusText}`);
                 }

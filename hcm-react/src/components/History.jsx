@@ -8,7 +8,7 @@ const History = ({ caseno }) => {
     useEffect(() => {
         const fetchHistory = async () => {
             try {
-                const response = await fetch(`http://localhost/HCM-React/hcm-react/fetch_history.php?caseno=${caseno}`);
+                const response = await fetch(`http://localhost/HCM-React/hcm-php/fetch_history.php?caseno=${caseno}`);
                 if (!response.ok) {
                     throw new Error('Failed to fetch history data');
                 }

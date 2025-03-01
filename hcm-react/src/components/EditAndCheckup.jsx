@@ -248,7 +248,7 @@ const EditAndCheckup = () => {
     const fetchPaymentData = async () => {
       try {
         const response = await fetch(
-          `http://localhost/HCM-React/hcm-react/get_payment_data.php?caseno=${caseno}`
+          `http://localhost/HCM-React/hcm-php/get_payment_data.php?caseno=${caseno}`
         );
         const data = await response.json();
 
@@ -271,7 +271,7 @@ const EditAndCheckup = () => {
   const fetchPaymentData = async () => {
     try {
       const response = await fetch(
-        `http://localhost/HCM-React/hcm-react/get_payment_data.php?caseno=${caseno}`
+        `http://localhost/HCM-React/hcm-php/get_payment_data.php?caseno=${caseno}`
       );
       const data = await response.json();
 
@@ -334,7 +334,7 @@ const EditAndCheckup = () => {
     const fetchLabData = async () => {
       try {
         const response = await fetch(
-          `http://localhost/HCM-React/hcm-react/get_lab_data.php?caseno=${caseno}`
+          `http://localhost/HCM-React/hcm-php/get_lab_data.php?caseno=${caseno}`
         );
         const data = await response.json();
         console.log("Fetched data:", data.data);
@@ -363,7 +363,7 @@ const EditAndCheckup = () => {
   const fetchLabData = async () => {
     try {
       const response = await fetch(
-        `http://localhost/HCM-React/hcm-react/get_lab_data.php?caseno=${caseno}`
+        `http://localhost/HCM-React/hcm-php/get_lab_data.php?caseno=${caseno}`
       );
       const data = await response.json();
       console.log("Fetched data:", data.data);
@@ -422,7 +422,7 @@ const EditAndCheckup = () => {
     formData.append("action", "insert_lab");
 
     const response = await fetch(
-      "http://localhost/HCM-React/hcm-react/action.php",
+      "http://localhost/HCM-React/hcm-php/action.php",
       {
         method: "POST",
         body: formData, // Send the form data directly
@@ -482,7 +482,7 @@ const EditAndCheckup = () => {
     const fetchPatientData = async () => {
       try {
         const response = await fetch(
-          `http://localhost/HCM-React/hcm-react/get_patient_data.php?caseno=${caseno}`
+          `http://localhost/HCM-React/hcm-php/get_patient_data.php?caseno=${caseno}`
         );
         const data = await response.json();
         if (data.error) {
@@ -514,7 +514,7 @@ const EditAndCheckup = () => {
     e.preventDefault();
     try {
       const response = await fetch(
-        "http://localhost/HCM-React/hcm-react/update_patient_data.php",
+        "http://localhost/HCM-React/hcm-php/update_patient_data.php",
         {
           method: "POST",
           headers: {
@@ -553,7 +553,7 @@ const EditAndCheckup = () => {
     formDataObj.caseno = lastInsertedId;
 
     const response = await fetch(
-      "http://localhost/HCM-React/hcm-react/action.php",
+      "http://localhost/HCM-React/hcm-php/action.php",
       {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -608,7 +608,7 @@ const EditAndCheckup = () => {
     console.log(formDataObj);
 
     const response = await fetch(
-      "http://localhost/HCM-React/hcm-react/action.php",
+      "http://localhost/HCM-React/hcm-php/action.php",
       {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -656,7 +656,7 @@ const EditAndCheckup = () => {
     console.log(formDataObj);
 
     const response = await fetch(
-      "http://localhost/HCM-React/hcm-react/action.php",
+      "http://localhost/HCM-React/hcm-php/action.php",
       {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -700,7 +700,7 @@ const EditAndCheckup = () => {
     formDataObj.caseno = lastInsertedId;
 
     const response = await fetch(
-      "http://localhost/HCM-React/hcm-react/action.php",
+      "http://localhost/HCM-React/hcm-php/action.php",
       {
         method: "POST",
         headers: { "Content-Type": "application/json" },

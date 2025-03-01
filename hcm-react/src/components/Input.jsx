@@ -189,7 +189,7 @@ function Input() {
     formData.append("action", "insert");
 
     const response = await fetch(
-      "http://localhost/HCM-React/hcm-react/action.php",
+      "http://localhost/HCM-React/hcm-php/action.php",
       {
         method: "POST",
         body: formData, // Send the form data directly
@@ -247,7 +247,7 @@ function Input() {
   //   console.log(formDataObj);
 
   //   const response = await fetch(
-  //     "http://localhost/HCM-React/hcm-react/action.php",
+  //     "http://localhost/HCM-React/hcm-php/action.php",
   //     {
   //       method: "POST",
   //       headers: { "Content-Type": "application/json" },
@@ -280,7 +280,7 @@ function Input() {
     const fetchPaymentData = async () => {
       try {
         const response = await fetch(
-          `http://localhost/HCM-React/hcm-react/get_payment_data.php?caseno=${caseno}`
+          `http://localhost/HCM-React/hcm-php/get_payment_data.php?caseno=${caseno}`
         );
         const data = await response.json();
 
@@ -303,7 +303,7 @@ function Input() {
     const fetchLabData = async () => {
       try {
         const response = await fetch(
-          `http://localhost/HCM-React/hcm-react/get_lab_data.php?caseno=${caseno}`
+          `http://localhost/HCM-React/hcm-php/get_lab_data.php?caseno=${caseno}`
         );
         const data = await response.json();
         console.log("Fetched data:", data.data);
@@ -332,7 +332,7 @@ function Input() {
   const fetchLabData = async () => {
     try {
       const response = await fetch(
-        `http://localhost/HCM-React/hcm-react/get_lab_data.php?caseno=${caseno}`
+        `http://localhost/HCM-React/hcm-php/get_lab_data.php?caseno=${caseno}`
       );
       const data = await response.json();
       console.log("Fetched data:", data.data);
@@ -359,7 +359,7 @@ function Input() {
     const fetchLabData = async () => {
       try {
         const response = await fetch(
-          `http://localhost/HCM-React/hcm-react/get_lab_data.php?caseno=${caseno}`
+          `http://localhost/HCM-React/hcm-php/get_lab_data.php?caseno=${caseno}`
         );
         const data = await response.json();
         console.log("Fetched data:", data.data);
@@ -388,7 +388,7 @@ function Input() {
   const fetchPaymentData = async () => {
     try {
       const response = await fetch(
-        `http://localhost/HCM-React/hcm-react/get_payment_data.php?caseno=${caseno}`
+        `http://localhost/HCM-React/hcm-php/get_payment_data.php?caseno=${caseno}`
       );
       const data = await response.json();
 
@@ -448,7 +448,7 @@ function Input() {
     formData.append("action", "insert_lab");
 
     const response = await fetch(
-      "http://localhost/HCM-React/hcm-react/action.php",
+      "http://localhost/HCM-React/hcm-php/action.php",
       {
         method: "POST",
         body: formData, // Send the form data directly
@@ -520,7 +520,7 @@ function Input() {
     formData.append("action", "insert_checkup");
 
     const response = await fetch(
-      "http://localhost/HCM-React/hcm-react/action.php",
+      "http://localhost/HCM-React/hcm-php/action.php",
       {
         method: "POST",
         body: formData, // Send the form data directly
@@ -571,7 +571,7 @@ function Input() {
     console.log(formDataObj);
 
     const response = await fetch(
-      "http://localhost/HCM-React/hcm-react/action.php",
+      "http://localhost/HCM-React/hcm-php/action.php",
       {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -614,7 +614,7 @@ function Input() {
     formDataObj.caseno = lastInsertedId;
 
     const response = await fetch(
-      "http://localhost/HCM-React/hcm-react/action.php",
+      "http://localhost/HCM-React/hcm-php/action.php",
       {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -678,7 +678,7 @@ function Input() {
     console.log(formDataObj);
 
     const response = await fetch(
-      "http://localhost/HCM-React/hcm-react/action.php",
+      "http://localhost/HCM-React/hcm-php/action.php",
       {
         method: "POST",
         headers: { "Content-Type": "application/json" },
